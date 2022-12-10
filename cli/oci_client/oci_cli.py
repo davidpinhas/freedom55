@@ -5,7 +5,7 @@ import base64
 import logging
 from oci import exceptions
 from utils.oci_config_validator import OciValidator
-
+from cli.functions import Functions as fn
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(type.__name__)
@@ -30,42 +30,17 @@ class Oci:
         self.key_id = key_id
         self.setup_logger()
 
-    def json_parse(json_input):
-        """ JSON parser """
-        json_data = json.loads(str(json_input))
-        logging.info("Running JSON parser")
-        if "ciphertext" in json_data:
-            jsonData = json_data["ciphertext"]
-        else:
-            jsonData = json_data["plaintext"]
-        logging.info("JSON parser done")
-        return jsonData
-
-    def bas64_encode(sample_string):
-        """ Base64 encode """
-        logging.info("Encoding string with Base64")
-        sample_string_bytes = sample_string.encode("ascii")
-        base64_bytes = base64.b64encode(sample_string_bytes)
-        base64_string = base64_bytes.decode("ascii")
-        return base64_string
-
-    def bas64_decode(sample_string):
-        """ Base64 decode """
-        logging.info("Decoding string with Base64")
-        b64decoded_string = base64.b64decode(sample_string + b'==')
-        return b64decoded_string
-
     def encrypt(plaintext):
         """ KMS encrypt """
         logging.info("Encrypting string with KMS")
-        encoded_plaintext = Oci.bas64_encode(plaintext)
+        encoded_plaintext = fn.base64_encode(plaintext)
         encrypt_response = Oci.oci_key_client.encrypt(
             encrypt_data_details=oci.key_management.models.EncryptDataDetails(
                 plaintext=encoded_plaintext,
                 key_id=Oci.config["key_id"],
                 key_version_id=Oci.config["key_version_id"]))
         logging.info(
-            f"Encrypted string value - {Oci.json_parse(encrypt_response.data)}")
+            f"Encrypted string value - {fn.json_parse(encrypt_response.data)}")
 
     def decrypt(plaintext):
         """ KMS decrypt """
@@ -75,9 +50,8 @@ class Oci:
                 ciphertext=plaintext,
                 key_id=Oci.config["key_id"],
                 key_version_id=Oci.config["key_version_id"]))
-        data = str(base64.b64decode(Oci.json_parse(decrypt_response.data)))
-        stripped_data = data.strip("b'").strip("'")
-        logging.info(f"Decrypted string - {stripped_data}")
+        data = fn.base64_decode(decrypt_response)
+        logging.info(f"Decrypted string - {data}")
 
     #### KMS SECRETS ####
 
