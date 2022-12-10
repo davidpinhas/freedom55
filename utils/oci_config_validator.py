@@ -21,7 +21,7 @@ class OciValidator:
     def validate_key(config):
         """ Validate config keys """
         keys_list = ["user", "fingerprint", "tenancy", "region",
-                     "key_file", "key_id", "key_version_id", "service_endpoint"]
+                     "key_file", "key_id", "key_version_id", "service_endpoint", "service_endpoint_mgmt"]
         logging.info("Validating OCI config file")
         for i in keys_list:
             if i not in config:

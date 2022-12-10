@@ -7,16 +7,22 @@ logger = logging.getLogger(type.__name__)
 
 class Functions:
     """ CLI functions """
-    def json_parse(json_input):
+
+    def json_parse(json_input, key=None):
         """ JSON parser """
-        json_data = json.loads(str(json_input))
         logging.info("Running parser")
-        if "ciphertext" in json_data:
-            jsonData = json_data["ciphertext"]
+        json_data = json.loads(str(json_input))
+        if key is None:
+            if "ciphertext" in json_data:
+                jsonData = json_data["ciphertext"]
+                json_output = jsonData
+            else:
+                jsonData = json_data["plaintext"]
+                json_output = jsonData
         else:
-            jsonData = json_data["plaintext"]
+            json_output = json_data[key]
         logging.info("Parser done")
-        return jsonData
+        return json_output
 
     def base64_encode(sample_string):
         """ Base64 encode """

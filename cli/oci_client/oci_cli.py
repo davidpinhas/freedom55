@@ -20,6 +20,7 @@ class Oci:
     config = OciValidator.validate_config_exist()
     OciValidator.validate_key(config)
     service_endpoint = config["service_endpoint"]
+    service_endpoint_mgmt = config["service_endpoint_mgmt"]
     oci_key_client = oci.key_management.KmsCryptoClient(
         config, service_endpoint)
 
@@ -52,6 +53,12 @@ class Oci:
                 key_version_id=Oci.config["key_version_id"]))
         data = fn.base64_decode(decrypt_response)
         logging.info(f"Decrypted string - {data}")
+
+    def retrieve_oci_vault_key_id():
+        key_management_client = oci.key_management.KmsManagementClient(Oci.config, Oci.service_endpoint_mgmt)
+        keys = key_management_client.list_keys(Oci.config["tenancy"])
+        keys_json = keys.data[0]
+        print(f"this is keys - {fn.json_parse(keys_json, test='id')}")
 
     #### KMS SECRETS ####
 
