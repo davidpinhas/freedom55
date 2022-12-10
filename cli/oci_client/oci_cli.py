@@ -4,6 +4,9 @@ import click
 import base64
 import logging
 from oci import exceptions
+from utils.oci_config_validator import OciValidator
+
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(type.__name__)
 
@@ -11,27 +14,21 @@ logger = logging.getLogger(type.__name__)
 class Oci:
     """ OCI tools """
     logger = None
-    config = None
     identity = None
     user = None
     key_id = None
-    config = oci.config.from_file("~/.oci/config", "DEFAULT")
+    config = OciValidator.validate_config_exist()
+    OciValidator.validate_key(config)
     service_endpoint = config["service_endpoint"]
     oci_key_client = oci.key_management.KmsCryptoClient(
         config, service_endpoint)
-    
+
     def __init__(self, config, identity, user, key_id):
         self.config = config
         self.identity = identity
         self.user = user
         self.key_id = key_id
         self.setup_logger()
-        try:
-            self.user_check = identity.get_user(config["user"]).data
-        except:
-            logging.error(f'The config file {config}'
-                          f' encountered an error')
-            exit(1)
 
     def json_parse(json_input):
         """ JSON parser """
