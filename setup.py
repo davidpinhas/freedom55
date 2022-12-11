@@ -17,10 +17,6 @@ setup(
     ],
 
     packages=find_packages(),
-    # include_package_data=True,
-    # package_data={
-    #     '': ['resources/*', 'scripts/*']
-    # },
     entry_points={
         'console_scripts': [
             'argus = cli.argus:main'
