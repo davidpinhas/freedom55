@@ -5,6 +5,7 @@ import base64
 import logging
 from oci import exceptions
 from utils.oci_config_validator import OciValidator
+from utils.oci_config_helper import OciConfigHelper
 from cli.functions import Functions as fn
 
 logging.basicConfig(level=logging.INFO)
@@ -17,12 +18,17 @@ class Oci:
     identity = None
     user = None
     key_id = None
+
     config = OciValidator.validate_config_exist()
-    OciValidator.validate_key(config)
+    config_key_check = OciValidator.validate_key(config)
     service_endpoint = config["service_endpoint"]
     service_endpoint_mgmt = config["service_endpoint_mgmt"]
     oci_key_client = oci.key_management.KmsCryptoClient(
         config, service_endpoint)
+    if config_key_check is not None and config_key_check[1] == True:
+        OciConfigHelper.setup_config_file(config_key_check[0])
+    else:
+        pass
 
     def __init__(self, config, identity, user, key_id):
         self.config = config
@@ -54,11 +60,9 @@ class Oci:
         data = fn.base64_decode(decrypt_response)
         logging.info(f"Decrypted string - {data}")
 
-    def retrieve_oci_vault_key_id():
-        key_management_client = oci.key_management.KmsManagementClient(Oci.config, Oci.service_endpoint_mgmt)
-        keys = key_management_client.list_keys(Oci.config["tenancy"])
-        keys_json = keys.data[0]
-        print(f"this is keys - {fn.json_parse(keys_json, test='id')}")
+    # Oci Config Helper tests
+    # OciConfigHelper.retrieve_oci_vault_key_id_versions()
+    # OciConfigHelper.retrieve_oci_service_accounts()
 
     #### KMS SECRETS ####
 

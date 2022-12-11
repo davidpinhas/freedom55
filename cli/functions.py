@@ -10,18 +10,22 @@ class Functions:
 
     def json_parse(json_input, key=None):
         """ JSON parser """
-        logging.info("Running parser")
+        logging.debug("Running parser")
         json_data = json.loads(str(json_input))
         if key is None:
+            logging.debug(f"Parsing without key")
             if "ciphertext" in json_data:
                 jsonData = json_data["ciphertext"]
                 json_output = jsonData
-            else:
+            elif "plaintext" in json_data:
                 jsonData = json_data["plaintext"]
                 json_output = jsonData
-        else:
+            else:
+                json_output = json_data
+        if key!=None:
+            logging.debug(f"Parsing with key {key}")
             json_output = json_data[key]
-        logging.info("Parser done")
+        logging.debug("Parser done")
         return json_output
 
     def base64_encode(sample_string):
