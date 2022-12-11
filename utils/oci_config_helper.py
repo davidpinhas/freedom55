@@ -60,6 +60,8 @@ class OciConfigHelper:
                     CRYPTO_VALUE = True
 
     def setup_config_file(invalid_key):
+        logging.info(f"Backing up existing config file")
+        fn.oci_config_backup()
         logging.info(f"Updating config file")
         exit()
         # TO-DO:
