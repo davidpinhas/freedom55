@@ -5,13 +5,12 @@ from cli.functions import Functions as fn
 
 logging.basicConfig(encoding='utf-8', level=logging.INFO)
 
-oci_conf_path = Path('~/.oci/config')
-
 
 class OciValidator:
     """ OCI config validator """
 
     def validate_config_exist():
+        oci_conf_path = fn.find_config_file()
         try:
             config = oci.config.from_file(f"{oci_conf_path}", "DEFAULT")
         except:

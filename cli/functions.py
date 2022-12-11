@@ -1,6 +1,7 @@
 import json
 import base64
 import logging
+import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(type.__name__)
 
@@ -39,3 +40,14 @@ class Functions:
         """ Base64 decode """
         data = str(base64.b64decode(Functions.json_parse(sample_string.data)))
         return data.strip("b'").strip("'")
+
+    def find_config_file():
+        config_file_name = ".oci/config"
+        home_dir = os.path.expanduser("~")
+        config_file_path = os.path.join(home_dir, config_file_name)
+        if os.path.exists(config_file_path):
+            logging.debug("The config file was found at: " + config_file_path)
+        else:
+            logging.error("The OCI config file was not found.")
+            exit()
+        return config_file_path

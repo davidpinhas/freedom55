@@ -12,6 +12,7 @@ class OciConfigHelper:
     config = OciValidator.validate_config_exist()
     service_endpoint = config["service_endpoint"]
     service_endpoint_mgmt = config["service_endpoint_mgmt"]
+    config_path = fn.find_config_file()
 
     def __init__(self):
         self.setup_logger()
