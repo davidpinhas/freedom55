@@ -20,15 +20,10 @@ class Oci:
     key_id = None
 
     config = OciValidator.validate_config_exist()
-    config_key_check = OciValidator.validate_key(config)
     service_endpoint = config["service_endpoint"]
     service_endpoint_mgmt = config["service_endpoint_mgmt"]
     oci_key_client = oci.key_management.KmsCryptoClient(
         config, service_endpoint)
-    if config_key_check is not None and config_key_check[1] == True:
-        OciConfigHelper.setup_config_file(config_key_check[0])
-    else:
-        pass
 
     def __init__(self, config, identity, user, key_id):
         self.config = config
@@ -36,9 +31,17 @@ class Oci:
         self.user = user
         self.key_id = key_id
         self.setup_logger()
+        
+    def init_oci():
+        config_key_check = OciValidator.validate_key(Oci.config)
+        if config_key_check is not None and config_key_check[1] == True:
+            OciConfigHelper.setup_config_file(config_key_check[0])
+        else:
+            pass
 
     def encrypt(plaintext):
         """ KMS encrypt """
+        Oci.init_oci()
         logging.info("Encrypting string with KMS")
         encoded_plaintext = fn.base64_encode(plaintext)
         encrypt_response = Oci.oci_key_client.encrypt(
@@ -51,6 +54,7 @@ class Oci:
 
     def decrypt(plaintext):
         """ KMS decrypt """
+        Oci.init_oci()
         logging.info("Decrypting string with KMS")
         decrypt_response = Oci.oci_key_client.decrypt(
             decrypt_data_details=oci.key_management.models.DecryptDataDetails(
