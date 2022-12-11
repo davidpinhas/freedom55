@@ -2,7 +2,7 @@
 Argus CLI is an operational tool written in Python by David Pinhas to maintain, modify and operate a homelab.
 
 ```bash
-argus
+$ argus
 Usage: argus [OPTIONS] COMMAND [ARGS]...
 
   Argus CLI tools.
