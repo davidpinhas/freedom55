@@ -1,7 +1,9 @@
 import json
 import base64
 import logging
+import shutil
 import os
+import datetime
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(type.__name__)
 
@@ -51,3 +53,18 @@ class Functions:
             logging.error("The OCI config file was not found.")
             exit()
         return config_file_path
+
+    def oci_config_backup():
+        logging.info("Backing up OCI config file")
+        file_name = "config"
+        file_dir = Functions.find_config_file().strip('config')
+        backup_dir = f"{file_dir}conf_backup"
+        if not os.path.exists(backup_dir):
+            logging.warn(f"conf_backup directory doesn't exist, created the dir under {backup_dir}")
+            os.makedirs(backup_dir)
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        backup_file_name = file_name + "_" + timestamp
+        copy_file_name = os.path.join(backup_dir, backup_file_name)
+        os.rename(os.path.join(file_dir, file_name), os.path.join(backup_dir, backup_file_name))
+        shutil.copy(copy_file_name, os.path.join(file_dir, file_name))
+        logging.info(f"Backup finished successfully. The backup file is located at {copy_file_name}")
