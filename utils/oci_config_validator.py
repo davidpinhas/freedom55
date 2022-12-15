@@ -106,19 +106,11 @@ class OciValidator:
         
     def modify_config_file(missing_key=None, added_keys=[], auto_approve=False):
         config = OciValidator.validate_config_exist()
-        func_list = ['key_id', 'key_version_id']
-        while missing_key not in config:
-            if missing_key not in added_keys or missing_key not in config:
-                for i in range(len(func_list)):
-                    func_name = str(func_list[i])
-                    if func_list[i] == func_name and func_list[i] not in added_keys:
-                        func = getattr(OciValidator, f"retrieve_oci_{func_list[i]}")
-                        OciValidator.add_key_to_config(func_list[i], func())
-                        if func_name not in added_keys:
-                            added_keys.append(func_name)
-                    else:
-                        logging.info("All keys were added")
-                        return True
+        if missing_key not in config:
+            func = getattr(OciValidator, f"retrieve_oci_{missing_key}")
+            OciValidator.add_key_to_config(missing_key, func())
+        else:
+            logging.info(f"Key {missing_key} was added")
 
     def init_oci(config=None):
         OciValidator.validate_config_exist()
