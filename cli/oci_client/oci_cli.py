@@ -17,54 +17,48 @@ class Oci:
     user = None
     key_id = None
 
-    config = OciValidator.validate_config_exist()
-    service_endpoint = config["service_endpoint"]
-    service_endpoint_mgmt = config["service_endpoint_mgmt"]
-    oci_key_client = oci.key_management.KmsCryptoClient(
-        config, service_endpoint)
-
     def __init__(self, config, identity, user, key_id):
         self.config = config
         self.identity = identity
         self.user = user
         self.key_id = key_id
         self.setup_logger()
-        
-    if not OciValidator.init_oci():
-        config = oci.config.from_file(f"{fn.find_config_file()}", "DEFAULT")
-    elif OciValidator.init_oci():
-        OciValidator.config
-    else:
-        logging.warn(f"Something went wrong! This is the config - {config}")
-        logging.error(f"Failed to load config, exiting...")
-        exit()
+
+    def run_init_oci():
+        if not OciValidator.init_oci():
+            config = OciValidator.validate_config_exist()
+        elif OciValidator.init_oci():
+            config = OciValidator.validate_config_exist()
+        else:
+            logging.warn(f"Something went wrong! This is the config - {config}")
+            logging.error(f"Failed to load config, exiting...")
+            exit()
+        return config
 
     def encrypt(plaintext):
         """ KMS encrypt """
+        Oci.run_init_oci()
         logging.info("Encrypting string with KMS")
         encoded_plaintext = fn.base64_encode(plaintext)
-        encrypt_response = Oci.oci_key_client.encrypt(
+        encrypt_response = OciValidator.set_config_oci_key_client().encrypt(
             encrypt_data_details=oci.key_management.models.EncryptDataDetails(
                 plaintext=encoded_plaintext,
-                key_id=Oci.config["key_id"],
-                key_version_id=Oci.config["key_version_id"]))
+                key_id=OciValidator.set_config()["key_id"],
+                key_version_id=OciValidator.set_config()["key_version_id"]))
         logging.info(
             f"Encrypted string value - {fn.json_parse(encrypt_response.data)}")
 
     def decrypt(plaintext):
         """ KMS decrypt """
+        Oci.run_init_oci()
         logging.info("Decrypting string with KMS")
-        decrypt_response = Oci.oci_key_client.decrypt(
+        decrypt_response = OciValidator.set_config_oci_key_client().decrypt(
             decrypt_data_details=oci.key_management.models.DecryptDataDetails(
                 ciphertext=plaintext,
-                key_id=Oci.config["key_id"],
-                key_version_id=Oci.config["key_version_id"]))
+                key_id=OciValidator.set_config()["key_id"],
+                key_version_id=OciValidator.set_config()["key_version_id"]))
         data = fn.base64_decode(decrypt_response)
         logging.info(f"Decrypted string - {data}")
-
-    # Oci Config Helper tests
-    # OciConfigHelper.retrieve_oci_vault_key_id_versions()
-    # OciConfigHelper.retrieve_oci_service_accounts()
 
     #### KMS SECRETS ####
 

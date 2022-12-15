@@ -3,7 +3,6 @@ import logging
 from cli.functions import Functions as fn
 
 logging.basicConfig(encoding='utf-8', level=logging.INFO)
-config_path = fn.find_config_file()
 
 class OciValidator:
     """ OCI config validator """
@@ -16,18 +15,35 @@ class OciValidator:
                 "There was an issue with the OCI config, verify the file exists")
             exit()
         return config
-    config = validate_config_exist()
-    service_endpoint = config["service_endpoint"]
-    service_endpoint_mgmt = config["service_endpoint_mgmt"]
-    keys_list = ["user", "fingerprint", "tenancy", "region",
+
+    def set_config():
+        config = OciValidator.validate_config_exist()
+        return config
+    
+    def set_config_service_endpoint():
+        service_endpoint = OciValidator.set_config()["service_endpoint"]
+        return service_endpoint
+    
+    def set_config_service_endpoint_mgmt():
+        service_endpoint_mgmt = OciValidator.set_config()["service_endpoint_mgmt"]
+        return service_endpoint_mgmt
+
+    def oci_key_list():
+        keys_list = ["user", "fingerprint", "tenancy", "region",
                          "key_file", "key_id", "key_version_id", "service_endpoint", "service_endpoint_mgmt"]
+        return keys_list
+
+    def set_config_oci_key_client():
+        oci_key_client = oci.key_management.KmsCryptoClient(
+            OciValidator.set_config(), OciValidator.set_config_service_endpoint())
+        return oci_key_client
 
     def retrieve_oci_key_id():
         """ retrieve OCI key id  """
         key_management_client = oci.key_management.KmsManagementClient(
-            OciValidator.config, OciValidator.service_endpoint_mgmt)
+            OciValidator.set_config(), OciValidator.set_config_service_endpoint_mgmt())
         keys = key_management_client.list_keys(
-            OciValidator.config["tenancy"])
+            OciValidator.set_config()["tenancy"])
         keys_json = keys.data[0]
         logging.debug(f"Key ID - {fn.json_parse(keys_json, key='id')}")
         return str(fn.json_parse(keys_json, key='id'))
@@ -35,7 +51,7 @@ class OciValidator:
     def retrieve_oci_key_version_id():
         key_id = OciValidator.retrieve_oci_key_id()
         key_management_client = oci.key_management.KmsManagementClient(
-            OciValidator.config, OciValidator.service_endpoint_mgmt)
+            OciValidator.set_config(), OciValidator.set_config_service_endpoint_mgmt())
         keys = key_management_client.list_key_versions(key_id)
         keys_json = keys.data[0]
         logging.debug(f"Key ID versions - {fn.json_parse(keys_json, key='id')}")
@@ -43,9 +59,9 @@ class OciValidator:
 
     def retrieve_oci_service_accounts():
         key_management_client = oci.key_management.KmsVaultClient(
-            OciValidator.config)
+            OciValidator.set_config())
         keys = key_management_client.list_vaults(
-            OciValidator.config["tenancy"])
+            OciValidator.set_config()["tenancy"])
         MGMT_VALUE = None
         CRYPTO_VALUE = None
         data = keys.data
@@ -68,7 +84,7 @@ class OciValidator:
     def oci_find_missing_keys():
         logging.debug("Searching for missing keys")
         config = OciValidator.validate_config_exist()
-        key_list = OciValidator.keys_list
+        key_list = OciValidator.oci_key_list()
         new_list = []
         for i in key_list:
             if i not in config:
