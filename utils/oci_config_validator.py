@@ -1,14 +1,12 @@
 import oci
 import logging
-from pathlib import Path
 from cli.functions import Functions as fn
 
 logging.basicConfig(encoding='utf-8', level=logging.INFO)
-
+config_path = fn.find_config_file()
 
 class OciValidator:
     """ OCI config validator """
-
     def validate_config_exist():
         oci_conf_path = fn.find_config_file()
         try:
@@ -18,28 +16,101 @@ class OciValidator:
                 "There was an issue with the OCI config, verify the file exists")
             exit()
         return config
+    config = validate_config_exist()
+    service_endpoint = config["service_endpoint"]
+    service_endpoint_mgmt = config["service_endpoint_mgmt"]
+    keys_list = ["user", "fingerprint", "tenancy", "region",
+                         "key_file", "key_id", "key_version_id", "service_endpoint", "service_endpoint_mgmt"]
 
-    def validate_key(config):
-        modify_confing_file_flag = False
-        """ Validate config keys """
-        keys_list = ["user", "fingerprint", "tenancy", "region",
-                     "key_file", "key_id", "key_version_id", "service_endpoint", "service_endpoint_mgmt"]
-        logging.info("Validating OCI config file")
-        for i in keys_list:
-            if i not in config:
-                logging.error(f" Value '{i}' is incorrect or missing")
-                user_approval = input(f"Would you like to generate the key {i}? Y/N\n")
-                if user_approval == "y" or user_approval == "Y":
-                    modify_confing_file_flag=True
-                    values = (i, modify_confing_file_flag)
-                    return values
-                elif user_approval == "n" or user_approval == "N":
-                    logging.info("Exiting.")
-                    exit()
-                else:
-                    logging.error("Incorrect input, user 'y' or 'Y'")
-                    exit()
+    def retrieve_oci_key_id():
+        """ retrieve OCI key id  """
+        key_management_client = oci.key_management.KmsManagementClient(
+            OciValidator.config, OciValidator.service_endpoint_mgmt)
+        keys = key_management_client.list_keys(
+            OciValidator.config["tenancy"])
+        keys_json = keys.data[0]
+        logging.debug(f"Key ID - {fn.json_parse(keys_json, key='id')}")
+        return str(fn.json_parse(keys_json, key='id'))
+
+    def retrieve_oci_key_version_id():
+        key_id = OciValidator.retrieve_oci_key_id()
+        key_management_client = oci.key_management.KmsManagementClient(
+            OciValidator.config, OciValidator.service_endpoint_mgmt)
+        keys = key_management_client.list_key_versions(key_id)
+        keys_json = keys.data[0]
+        logging.debug(f"Key ID versions - {fn.json_parse(keys_json, key='id')}")
+        return fn.json_parse(keys_json, key='id')
+
+    def retrieve_oci_service_accounts():
+        key_management_client = oci.key_management.KmsVaultClient(
+            OciValidator.config)
+        keys = key_management_client.list_vaults(
+            OciValidator.config["tenancy"])
+        MGMT_VALUE = None
+        CRYPTO_VALUE = None
+        data = keys.data
+        fn.json_parse(data)
+        for i in range(len(keys.data)):
+            keys_json = keys.data[int(i)]
+            if str(fn.json_parse(keys_json, key='lifecycle_state')) == "DELETED":
+                logging.debug(f"Deleted asset {keys.data[i]}. Skipping")
+                continue
             else:
-                pass
+                if fn.json_parse(keys_json, key='management_endpoint') and MGMT_VALUE is None:
+                    MGMT_VALUE = True
+                    logging.info(
+                        f"this is management_endpoint - {fn.json_parse(keys_json, key='management_endpoint')}")
+                if fn.json_parse(keys_json, key='crypto_endpoint') and CRYPTO_VALUE is None:
+                    logging.info(
+                        f"this is crypto_endpoint - {fn.json_parse(keys_json, key='crypto_endpoint')}")
+                    CRYPTO_VALUE = True
 
-        logging.info("All config keys exist")
+    def oci_find_missing_keys():
+        logging.debug("Searching for missing keys")
+        config = OciValidator.validate_config_exist()
+        key_list = OciValidator.keys_list
+        new_list = []
+        for i in key_list:
+            if i not in config:
+                new_list.append(i)
+        return new_list
+
+    def modify_config_approval():
+        logging.warn(f"Required keys are missing from the config file")
+        user_approval = input(f"Would you like to generate the missing keys? Y/N: ")
+        if user_approval:
+            return True
+        else:
+            return False
+
+    def add_key_to_config(key_name, key_value):
+        config_path = fn.find_config_file()
+        with open(config_path, 'a') as f:
+            f.write(f"\n{key_name}={key_value}")
+        
+    def modify_config_file(missing_key=None, added_keys=[], auto_approve=False):
+        config = OciValidator.validate_config_exist()
+        func_list = ['key_id', 'key_version_id']
+        while missing_key not in config:
+            if missing_key not in added_keys or missing_key not in config:
+                for i in range(len(func_list)):
+                    func_name = str(func_list[i])
+                    if func_list[i] == func_name and func_list[i] not in added_keys:
+                        func = getattr(OciValidator, f"retrieve_oci_{func_list[i]}")
+                        OciValidator.add_key_to_config(func_list[i], func())
+                        if func_name not in added_keys:
+                            added_keys.append(func_name)
+                    else:
+                        logging.info("All keys were added")
+                        return True
+
+    def init_oci(config=None):
+        OciValidator.validate_config_exist()
+        missing_keys_list = OciValidator.oci_find_missing_keys()
+        if missing_keys_list:
+            OciValidator.modify_config_approval()
+            for i in missing_keys_list:
+                missing_keys_list = OciValidator.oci_find_missing_keys()
+                OciValidator.modify_config_file(missing_key=i)
+        else:
+            return True

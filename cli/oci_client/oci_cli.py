@@ -5,12 +5,10 @@ import base64
 import logging
 from oci import exceptions
 from utils.oci_config_validator import OciValidator
-from utils.oci_config_helper import OciConfigHelper
 from cli.functions import Functions as fn
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(type.__name__)
-
 
 class Oci:
     """ OCI tools """
@@ -32,16 +30,17 @@ class Oci:
         self.key_id = key_id
         self.setup_logger()
         
-    def init_oci():
-        config_key_check = OciValidator.validate_key(Oci.config)
-        if config_key_check is not None and config_key_check[1] == True:
-            OciConfigHelper.setup_config_file(config_key_check[0])
-        else:
-            pass
+    if not OciValidator.init_oci():
+        config = oci.config.from_file(f"{fn.find_config_file()}", "DEFAULT")
+    elif OciValidator.init_oci():
+        OciValidator.config
+    else:
+        logging.warn(f"Something went wrong! This is the config - {config}")
+        logging.error(f"Failed to load config, exiting...")
+        exit()
 
     def encrypt(plaintext):
         """ KMS encrypt """
-        Oci.init_oci()
         logging.info("Encrypting string with KMS")
         encoded_plaintext = fn.base64_encode(plaintext)
         encrypt_response = Oci.oci_key_client.encrypt(
@@ -54,7 +53,6 @@ class Oci:
 
     def decrypt(plaintext):
         """ KMS decrypt """
-        Oci.init_oci()
         logging.info("Decrypting string with KMS")
         decrypt_response = Oci.oci_key_client.decrypt(
             decrypt_data_details=oci.key_management.models.DecryptDataDetails(
