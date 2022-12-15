@@ -26,6 +26,15 @@ Commands:
 
 Follow [Oracle documentation](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm#configfile) to configure the OCI. 
 
+## Installation
+In order to install the CLI on your local machine, you can clone the repository and utilize the startup.sh script:
+```bash
+git clone https://github.com/davidpinhas/argus.git
+cd argus
+bash startup.sh
+```
+The script will create a virtual environment and provide steps to configure the alias for sourcing the venv.
+
 ## Usage
 To use the Argus CLI, we'll first call Argus, that the component and it's sub-command:
 ```bash
