@@ -1,9 +1,5 @@
 import oci
-import json
-import click
-import base64
 import logging
-from oci import exceptions
 from utils.oci_config_validator import OciValidator
 from cli.functions import Functions as fn
 
@@ -25,7 +21,7 @@ class Oci:
         self.setup_logger()
 
     def run_init_oci():
-        """ Verify OCI init state is ready """
+        """ Verify OCI init state is readyg """
         if not OciValidator.init_oci():
             config = OciValidator.validate_config_exist()
         elif OciValidator.init_oci():

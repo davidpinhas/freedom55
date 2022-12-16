@@ -63,7 +63,7 @@ class OciValidator:
             f"Key ID versions - {fn.json_parse(keys_json, key='id')}")
         return fn.json_parse(keys_json, key='id')
 
-    def retrieve_oci_service_accounts(MGMT_VALUE=None, CRYPTO_VALUE=None):
+    def retrieve_oci_service_accounts():
         """ Retrieve OCI crypto_endpoint and management_endpoint """
         data = OciValidator.oci_retrieve_service_accounts_keys()
         fn.json_parse(data)
@@ -74,13 +74,11 @@ class OciValidator:
                 continue
             else:
                 if fn.json_parse(keys_json, key='management_endpoint'):
-                    MGMT_VALUE = True
                     logging.debug(
                         f"this is management_endpoint - {fn.json_parse(keys_json, key='management_endpoint')}")
                 if fn.json_parse(keys_json, key='crypto_endpoint'):
                     logging.debug(
                         f"this is crypto_endpoint - {fn.json_parse(keys_json, key='crypto_endpoint')}")
-                    CRYPTO_VALUE = True
                 return [fn.json_parse(keys_json, key='management_endpoint'), fn.json_parse(keys_json, key='crypto_endpoint')]
 
     def oci_retrieve_service_accounts_keys():
@@ -119,7 +117,7 @@ class OciValidator:
         with open(config_path, 'a') as f:
             f.write(f"\n{key_name}={key_value}")
 
-    def modify_config_file(missing_key=None, added_keys=[], auto_approve=False):
+    def modify_config_file(missing_key=None):
         """ Modify OCI Config file """
         config = OciValidator.validate_config_exist()
         if missing_key not in config:
