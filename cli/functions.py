@@ -44,6 +44,7 @@ class Functions:
         return data.strip("b'").strip("'")
 
     def find_config_file():
+        """ Find OCI config file path """
         config_file_name = ".oci/config"
         home_dir = os.path.expanduser("~")
         config_file_path = os.path.join(home_dir, config_file_name)
@@ -55,6 +56,7 @@ class Functions:
         return config_file_path
 
     def oci_config_backup():
+        """ Backup OCI config file to conf_backup dir """
         logging.info("Backing up OCI config file")
         file_name = "config"
         file_dir = Functions.find_config_file().strip('config')

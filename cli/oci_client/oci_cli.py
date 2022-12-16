@@ -25,6 +25,7 @@ class Oci:
         self.setup_logger()
 
     def run_init_oci():
+        """ Verify OCI init state is ready """
         if not OciValidator.init_oci():
             config = OciValidator.validate_config_exist()
         elif OciValidator.init_oci():
