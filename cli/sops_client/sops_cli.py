@@ -18,6 +18,7 @@ class Sops:
         self.user = user
 
     def find_age_key_file():
+        """ Find Age encryption key file location """
         logging.debug("Locating Age key.txt file")
         operating_system = platform.system()
         if operating_system == "Windows":
@@ -33,6 +34,7 @@ class Sops:
         return key_file
 
     def find_age_key(key_file):
+        """ Locate the public key value """
         logging.debug(
             f"Searching for public key in key.txt file under {key_file} path")
         print(f"This is key {key_file}")
@@ -54,6 +56,7 @@ class Sops:
             exit()
 
     def encrypt(input_file, output_file, encrypted_regex=None):
+        """ Encrypt file with SOPS using Age """
         logging.info("Encrypting file with SOPS")
         key_id = Sops.find_age_key(Sops.find_age_key_file())
         if not encrypted_regex:
@@ -71,6 +74,7 @@ class Sops:
         logging.info(f"Finished encrypting {output_file} file")
 
     def decrypt(input_file, output_file):
+        """ Decrypt file with SOPS using Age """
         logging.info("Decrypting file with SOPS")
         cmd = ['sops', '-d', '--output', output_file, input_file]
         proc = subprocess.run(cmd, stdout=subprocess.PIPE,
