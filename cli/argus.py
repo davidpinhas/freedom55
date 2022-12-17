@@ -2,7 +2,7 @@ import click
 import logging
 from cli.cli_groups.oci import oci
 from cli.cli_groups.sops import sops
-
+from cli.cli_groups.tf import tf
 
 @click.group()
 @click.option('--log', default='INFO',
@@ -20,6 +20,7 @@ def main(ctx, log):
 
 main.add_command(oci)
 main.add_command(sops)
+main.add_command(tf)
 
 if __name__ == '__main__':
     main(obj={})
