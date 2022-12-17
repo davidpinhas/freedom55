@@ -1,6 +1,7 @@
 import click
 import logging
 from cli.cli_groups.oci import oci
+from cli.cli_groups.sops import sops
 
 
 @click.group()
@@ -18,7 +19,7 @@ def main(ctx, log):
 
 
 main.add_command(oci)
-
+main.add_command(sops)
 
 if __name__ == '__main__':
     main(obj={})
