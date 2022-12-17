@@ -14,10 +14,9 @@ def sops(ctx):
 @click.option('-o', '--output_file', help='encrypted output file', required=True)
 @click.option('-r', '--encrypted_regex', help='set the encrypted key suffix', required=False)
 @click.pass_context
-def encrypt(ctx, input_file, output_file, encrypted_regex, key_id=Sops.find_age_key(Sops.find_age_key_file())):
+def encrypt(ctx, input_file, output_file, encrypted_regex):
     """ Encrypt file using SOPS with Age encryption """
-    Sops.encrypt(input_file=input_file, output_file=output_file,
-                 key_id=key_id, encrypted_regex=encrypted_regex)
+    Sops.encrypt(input_file=input_file, output_file=output_file, encrypted_regex=encrypted_regex)
 
 
 @sops.command()
