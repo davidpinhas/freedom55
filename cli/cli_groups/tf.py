@@ -21,8 +21,8 @@ def init(ctx, path):
 @click.option('-p', '--path', help='path of Terraform project', required=True)
 @click.pass_context
 def plan(ctx, path):
-    TerraformCli.tf_plan(path)
     """ Run Terraform plan on the selected path """
+    TerraformCli.tf_plan(path)
 
 
 @tf.command()
