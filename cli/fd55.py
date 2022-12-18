@@ -11,9 +11,9 @@ from cli.cli_groups.argocd import argo
               required=False)
 @click.pass_context
 def main(ctx, log):
-    """Freedom55 CLI tools.
+    """Freedom 55 CLI tools.
 
-        The freedom55 CLI is an operational tool crafted by David Pinhas
+        The freedom 55 CLI is an operational tool crafted by David Pinhas
         To maintain, modify and operate a homelab."""
     ctx.ensure_object(dict)
     pass

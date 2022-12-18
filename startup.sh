@@ -15,7 +15,7 @@ fi
 current_dir=$PWD
 alias_name=$(printf "alias fd55CLI='cd %s/fd55 && source venv/bin/activate'" "$current_dir")
 
-echo "Freedom55 was initialized successfully.
+echo "Freedom 55 was initialized successfully.
 To configure the CLI on the local machine, Run the following commands:
 "
 printf 'echo "%s" >> %s' "$alias_name" "~/.bashrc"

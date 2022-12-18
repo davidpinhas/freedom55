@@ -6,7 +6,7 @@ with open("README.md", "r") as f:
 setup(
     name="fd55",
     version="1.0.0",
-    description="Freedom55 CLI is a operational tool to maintain a personal homelab",
+    description="Freedom 55 CLI is a operational tool to maintain a personal homelab",
     long_description=readme,
     long_description_content_type="text/markdown",
     license="MIT",
