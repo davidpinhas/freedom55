@@ -58,7 +58,7 @@ The vision is to provide you the freedom to work with multiple tools without ins
 
 Here's a list of currently supported tools (currently limited support):
 * [ArgoCD](###Argocd)
-* [OCI](###Oracle Cloud Infrastructure)
+* [OCI](###OCI)
 * [SOPS](###SOPS)
 * [Terraform](###Terraform)
 
@@ -75,8 +75,8 @@ Create an application:
 $ fd55 argo create-app -f application-yaml
 ```
 
-### Oracle Cloud Infrastructure
-OCI component utilizes the KMS feature and lets you encrypt and decrypt a string.
+### OCI
+OCI (Oracle Cloud Infrastructure) component utilizes the KMS feature and lets you encrypt and decrypt a string.
 
 To encrypt a secret, you can provide it as a string:
 ```bash
