@@ -4,15 +4,15 @@ with open("README.md", "r") as f:
     readme = f.read()
 
 setup(
-    name="argus",
+    name="fd55",
     version="1.0.0",
-    description="Argus CLI is a operational tool to maintain a personal homelab",
+    description="Freedom55 CLI is a operational tool to maintain a personal homelab",
     long_description=readme,
     long_description_content_type="text/markdown",
     license="MIT",
     author="Dave Pinhas",
     author_email="davepinhas89@gmail.com",
-    url="ssh://git@github.com:davidpinhas/argus.git",
+    url="ssh://git@github.com:davidpinhas/fd55.git",
     classifiers=["Programming Language :: Python :: 3.10"],
     packages=[
         "cli/cli_groups",
@@ -24,6 +24,6 @@ setup(
         "utils",
     ],
     include_package_data=True,
-    entry_points={"console_scripts": ["argus = cli.argus:main"]},
+    entry_points={"console_scripts": ["fd55 = cli.fd55:main"]},
     install_requires=["click", "oci", "requests", "python_terraform"],
 )

@@ -9,7 +9,7 @@ if [ "$#" -ne 3 ]; then
 fi
 
 # Cleanup
-rm -rf arg.spec argus.spec venv build dist ..spec argus.egg-info
+rm -rf arg.spec fd55.spec venv build dist ..spec fd55.egg-info
 
 # Binary creation
 python3 setup.py sdist bdist_wheel

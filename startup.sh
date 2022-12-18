@@ -13,12 +13,12 @@ else
 fi
 
 current_dir=$PWD
-alias_name=$(printf "alias argusCLI='cd %s/argus && source venv/bin/activate'" "$current_dir")
+alias_name=$(printf "alias fd55CLI='cd %s/fd55 && source venv/bin/activate'" "$current_dir")
 
-echo "Argus was initialized successfully.
+echo "Freedom55 was initialized successfully.
 To configure the CLI on the local machine, Run the following commands:
 "
 printf 'echo "%s" >> %s' "$alias_name" "~/.bashrc"
 echo "
 source ~/.bashrc
-argusCLI"
+fd55CLI"

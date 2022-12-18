@@ -1,13 +1,13 @@
-# Argus
-Argus CLI is an operational tool written in Python by David Pinhas to maintain, modify and operate a homelab.
+# Freedom55
+Freedom55 CLI is an operational tool written in Python by David Pinhas to maintain, modify and operate a homelab.
 
 ```bash
-$ argus
-Usage: argus [OPTIONS] COMMAND [ARGS]...
+$ fd55
+Usage: fd55 [OPTIONS] COMMAND [ARGS]...
 
-  Argus CLI tools.
+  Freedom55 CLI tools.
 
-  The Argus CLI is an operational tool crafted by David Pinhas To maintain,
+  The Freedom55 CLI is an operational tool crafted by David Pinhas To maintain,
   modify and operate a homelab.
 
 Options:
@@ -29,20 +29,20 @@ Follow [Oracle documentation](https://docs.oracle.com/en-us/iaas/Content/API/SDK
 ## Installation
 In order to install the CLI on your local machine, you can clone the repository and utilize the startup.sh script:
 ```bash
-git clone https://github.com/davidpinhas/argus.git
-cd argus
+git clone https://github.com/davidpinhas/fd55.git
+cd fd55
 bash startup.sh
 ```
 The script will create a virtual environment and provide steps to configure the alias for sourcing the venv.
 
 ## Usage
-To use the Argus CLI, we'll first call Argus, that the component and it's sub-command:
+To use the Freedom55 CLI, we'll first call fd55, than the component and it's sub-command:
 ```bash
-$ argus [COMPONENT] [COMMAND] [OPTIONS]
+$ fd55 [COMPONENT] [COMMAND] [OPTIONS]
 ```
 For example:
 ```bash
-$ argus oci encrypt --string "Random text"
+$ fd55 oci encrypt --string "Random text"
 ```
 
 ### Options
@@ -54,7 +54,7 @@ $ argus oci encrypt --string "Random text"
 ##### Encrypting a string:
 To encrypt a secret, you can provide it as a string:
 ```bash
-$ argus oci encrypt --string "This is my secret"
+$ fd55 oci encrypt --string "This is my secret"
 ```
 
 Expected output:
@@ -68,7 +68,7 @@ INFO:root:Encrypted string value - Qf7eN7k3cJBlAFpAtSVaPqM.... (KMS encrypted se
 ##### Decrypting a secret:
 For decrypting a secret, the KMS encrypted value needs to be provided as a string (decrpyting needs to be performed with the same key the value was encrypted to begin with):
 ```bash
-$ argus oci decrypt --string Qf7eN7k3cJBlAFpAtSVaPqM....
+$ fd55 oci decrypt --string Qf7eN7k3cJBlAFpAtSVaPqM....
 ```
 
 Expected output:

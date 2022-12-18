@@ -2,6 +2,6 @@ __pycache__
 venv*
 *egg-info
 *.obsidian*
-argus.spec
+fd55.spec
 *build/*
 *dist/*
