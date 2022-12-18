@@ -25,5 +25,3 @@ class TerraformCli:
 
     def tf_destroy(path):
         logging.info(TerraformCli.tf_path(path).destroy()[1])
-
-    logging.info("Done")
