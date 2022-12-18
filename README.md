@@ -1,26 +1,7 @@
 ![](images/menu.gif)
 # Freedom 55
 Freedom 55 CLI is an operational tool written in Python by David Pinhas to maintain, modify and operate a homelab.
-
-```bash
-$ fd55
-Usage: fd55 [OPTIONS] COMMAND [ARGS]...
-
-  Freedom 55 CLI tools.
-
-  The freedom 55 CLI is an operational tool crafted by David Pinhas To
-  maintain, modify and operate a homelab.
-
-Options:
-  --log TEXT  Logging level (INFO, WARNING, ERROR, CRITICAL, DEBUG)
-  --help      Show this message and exit.
-
-Commands:
-  argo  ArgoCD commands
-  oci   OCI commands
-  sops  SOPS with Age encryption commands
-  tf    Terraform commands
-```
+This multi-tool will expend over time and add more support to other components.
 
 ## Requirements
 - Python 3.10 or higher
