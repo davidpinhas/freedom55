@@ -6,6 +6,8 @@ setup(
     name='argus',
     version='1.0.0',
     description='Argus CLI is a operational tool to maintain a personal homelab',
+    long_description=README,
+    long_description_content_type="text/markdown",
     license='MIT',
 
     author='Dave Pinhas',
@@ -17,6 +19,7 @@ setup(
     ],
 
     packages=find_packages(),
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'argus = cli.argus:main'
