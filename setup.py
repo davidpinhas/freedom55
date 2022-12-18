@@ -25,6 +25,8 @@ setup(
 
     install_requires=[
         'click',
-        'oci'
+        'oci',
+        'requests',
+        'python_terraform'
     ],
 )
