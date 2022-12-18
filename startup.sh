@@ -1,3 +1,42 @@
+# Check the operating system
+if [ "$(uname)" == "Darwin" ]; then
+  # MacOS
+  if command -v figlet > /dev/null; then
+    brew install figlet
+  else
+    echo "Info: Figlet already installed"
+  fi
+elif [ "$(uname)" == "Linux" ]; then
+  # Linux
+  if command -v apt-get > /dev/null; then
+    # Debian-based systems (e.g. Ubuntu, Linux Mint)
+    apt-get update
+    apt-get install figlet
+  elif command -v yum > /dev/null; then
+    # Red Hat-based systems (e.g. CentOS, Fedora)
+    yum install figlet
+  elif command -v pacman > /dev/null; then
+    # Arch-based systems (e.g. Manjaro)
+    pacman -S figlet
+  else
+    echo "Error: unsupported Linux distribution"
+    exit 1
+  fi
+elif [ "$(uname)" == "FreeBSD" ]; then
+  # FreeBSD
+  pkg install figlet
+elif [ "$(uname)" == "MINGW64_NT-10.0" ] || [ "$(uname)" == "MINGW32_NT-10.0" ]; then
+  # Windows (using Chocolatey)
+  choco install figlet
+else
+  echo "Error: unsupported operating system"
+  exit 1
+fi
+
+echo "figlet installed successfully"
+
+figlet -f epic "Freedom 55"
+
 if [ -d "venv" ]; then
   # Virtualenv Exists
   source venv/bin/activate
