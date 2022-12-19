@@ -1,7 +1,10 @@
-# Freedom 55
-![](images/menu.gif)
+![](images/Freedom55.png)
+____
+
 Freedom 55 CLI is an operational tool written in Python by David Pinhas to maintain, modify and operate a homelab.
 This multi-tool will expend over time and add more support to other components.
+
+![](images/menu.gif)
 
 ## Requirements
 - Python 3.10 or higher
