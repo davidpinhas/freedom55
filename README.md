@@ -48,6 +48,7 @@ Here's a list of currently supported tools (currently limited support):
 * [Terraform](###Terraform)
 
 ### ArgoCD
+---
 The ArgoCD component will be able to retrieve app info along with managing the ArgoCD server and its applications.
 
 Get all ArgoCD applications:
@@ -61,6 +62,7 @@ $ fd55 argo create-app -f application-yaml
 ```
 
 ### OCI
+---
 OCI (Oracle Cloud Infrastructure) component utilizes the KMS feature and lets you encrypt and decrypt a string.
 
 To encrypt a secret, you can provide it as a string:
@@ -90,6 +92,7 @@ INFO:root:Decrypted string - This is my secret
 ```
 
 ### SOPS
+---
 You can use the SOPS component to encrypt and decrypt files using Age encryption.
 Both encrypt and decrypt operations require an input and output file arguments.
 
@@ -114,6 +117,7 @@ fd55 sops decrypt --input_file test.yaml --output_file test.yaml2
 ```
 
 ### Terraform
+---
 To run the Terraform commands, you will need to provide the path of Terraform project with ``--path`` or ``-p`` flags.
 
 For example, run the command below to get the output of the Terraform plan:
