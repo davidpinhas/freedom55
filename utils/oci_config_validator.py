@@ -2,8 +2,7 @@ import oci
 import logging
 from cli.functions import Functions as fn
 
-logging.basicConfig(encoding='utf-8', level=logging.INFO)
-
+logger = logging.getLogger()
 
 class OciValidator:
     """ OCI config validator """

@@ -3,8 +3,7 @@ import logging
 from utils.oci_config_validator import OciValidator
 from cli.functions import Functions as fn
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(type.__name__)
+logger = logging.getLogger()
 
 class Oci:
     """ OCI tools """

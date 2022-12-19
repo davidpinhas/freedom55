@@ -1,8 +1,7 @@
 from python_terraform import *
 import logging
 
-logging.basicConfig(level=logging.DEBUG,
-format='%(asctime)s %(levelname)s %(message)s')
+logger = logging.getLogger()
 
 class TerraformCli:
 

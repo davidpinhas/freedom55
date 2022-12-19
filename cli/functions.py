@@ -4,12 +4,13 @@ import logging
 import shutil
 import os
 import datetime
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(type.__name__)
-
+logger = logging.getLogger()
 
 class Functions:
     """ CLI functions """
+    def set_logger(verbosity):
+        logger = logging.basicConfig(level=verbosity, format='%(asctime)s|%(levelname)s|%(message)s')
+        return logger
 
     def json_parse(json_input, key=None):
         """ JSON parser """

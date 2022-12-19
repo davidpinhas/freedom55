@@ -6,8 +6,7 @@ import platform
 import os.path
 from os import path
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(type.__name__)
+logger = logging.getLogger()
 
 
 class Sops:
