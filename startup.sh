@@ -41,14 +41,14 @@ if [ -d "venv" ]; then
   # Virtualenv Exists
   source venv/bin/activate
   pip install -r requirements.txt
-  python3.10 setup.py develop
+  python3 setup.py develop
 else
   # Virtualenv created
-  virtualenv --python=python3.10 venv
+  virtualenv --python=python3 venv
   sleep 1
   source venv/bin/activate
   pip install -r requirements.txt
-  python3.10 setup.py develop
+  python3 setup.py develop
 fi
 
 current_dir=$PWD
