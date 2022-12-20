@@ -1,0 +1,9 @@
+name: Run Distribute Script
+
+on: [push]
+jobs:
+  run-bash-script:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run Bash Script
+      run: bash ./distribute.sh {{ secrets.USERNAME }} {{ secrets.PASSWORD }} {{ secrets.REPO_URL }}
