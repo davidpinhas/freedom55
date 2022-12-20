@@ -21,7 +21,7 @@ jobs:
         # Update the version in setup.py using sed
         sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
 
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -35,10 +35,19 @@ jobs:
         pip3 install build
     - name: Build package
       run: python3 -m build
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        repository: ${{ secrets.REPO_URL}}
     needs: [update-version]
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install JFrog CLI
+      run: |
+        pip install jfrog-cli-go
+    - name: Deploy package to Artifactory
+      run: |
+        ARTIFACTORY_URL=${{ secrets.ARTIFACTORY_URL }}
+        REPO=${{ secrets.REPO }}
+        PACKAGE_FILE=dist/*
+        jfrog rt u $PACKAGE_FILE $REPO --url $ARTIFACTORY_URL --user $ARTIFACTORY_USERNAME --password $ARTIFACTORY_PASSWORD
+    needs: [build]
