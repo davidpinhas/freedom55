@@ -9,6 +9,7 @@ jobs:
   update-version:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
     - name: Update setup.py
       run: |
         # Get the current version from setup.py
