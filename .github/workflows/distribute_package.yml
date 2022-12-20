@@ -19,7 +19,6 @@ jobs:
 
         # Update the version in setup.py using sed
         sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
-    needs: [deploy]
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,3 +40,4 @@ jobs:
         user: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         repository: ${{ secrets.REPO_URL}}
+    needs: [update-version]
