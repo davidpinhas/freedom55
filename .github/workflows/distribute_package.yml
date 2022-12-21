@@ -28,8 +28,9 @@ jobs:
           git config --local user.email "${{ secrets.USERNAME }}"
           git config --local user.name "${{ secrets.USERNAME }}"
           git add setup.py
+          cat setup.py
           git commit -m "Update version to $NEW_VERSION"
-          git push origin HEAD:master
+          git push origin
 
   build:
     runs-on: ubuntu-latest
