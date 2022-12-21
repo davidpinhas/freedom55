@@ -20,9 +20,6 @@ jobs:
 
         # Update the version in setup.py using sed
         sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
-    - uses: actions/checkout@v3
-    - name: Commit version update
-      run: |
         git config --local user.email "${{ secrets.USERNAME }}"
         git config --local user.name "${{ secrets.USERNAME }}"
         git add setup.py
