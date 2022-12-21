@@ -20,6 +20,16 @@ jobs:
 
         # Update the version in setup.py using sed
         sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
+    - name: Commit version update
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GIT_REPO_TOKEN }}
+        script: |
+          git config --local user.email "${{ secrets.USERNAME }}"
+          git config --local user.name "${{ secrets.USERNAME }}"
+          git add setup.py
+          git commit -m "Update version to $NEW_VERSION"
+          git push origin HEAD:master
 
   build:
     runs-on: ubuntu-latest
