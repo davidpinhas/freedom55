@@ -16,7 +16,7 @@ jobs:
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
 
         # Increment the patch version (e.g., 1.0.1 -> 1.0.2)
-        NEW_VERSION=$(awk -F. '{$NF = sprintf("%0*d", length($NF), ($NF+1)%20); print}' <<< "$CURRENT_VERSION")
+        NEW_VERSION=$(awk -F. '{$NF = sprintf("%0*d", length($NF), ($NF+1)%20); print}' <<< "$CURRENT_VERSION" | tr ' ' '.')
 
         # Update the version in setup.py using sed
         sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
