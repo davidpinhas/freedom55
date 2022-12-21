@@ -40,14 +40,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Install JFrog CLI
-      run: |
-        pip install jfrog-cli-go
+    - uses: jfrog/setup-jfrog-cli@v3
     - name: Deploy package to Artifactory
       run: |
-        ARTIFACTORY_URL=${{ secrets.ARTIFACTORY_URL }}
-        REPO=${{ secrets.REPO }}
-        PACKAGE_FILE=dist/*
-        jfrog rt u $PACKAGE_FILE $REPO --url $ARTIFACTORY_URL --user $ARTIFACTORY_USERNAME --password $ARTIFACTORY_PASSWORD
+        CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
+        jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-$CURRENT_VERSION-py3-none-any.whl ${{ secrets.REPO }}/fd55/$CURRENT_VERSION/fd55-$CURRENT_VERSION-py3-none-any.whl
+        jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-$CURRENT_VERSION.tar.gz ${{ secrets.REPO }}/fd55/$CURRENT_VERSION/fd55-$CURRENT_VERSION.tar.gz
     needs: [build]
