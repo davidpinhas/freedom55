@@ -27,7 +27,7 @@ jobs:
         git commit -m "Update version to $NEW_VERSION"
         git push origin
 
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -41,17 +41,11 @@ jobs:
         pip3 install build
     - name: Build package
       run: python3 -m build
-    needs: [update-version]
-
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: jfrog/setup-jfrog-cli@v3
     - name: Deploy package to Artifactory
+      uses: jfrog/setup-jfrog-cli@v3
       run: |
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
         echo ${CURRENT_VERSION}
         jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}-py3-none-any.whl ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}-py3-none-any.whl
         jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}.tar.gz ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}.tar.gz
-    needs: [build]
+    needs: [update-version]
