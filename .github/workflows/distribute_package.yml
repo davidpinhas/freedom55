@@ -45,6 +45,7 @@ jobs:
     - name: Deploy package to Artifactory
       run: |
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
-        jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-$CURRENT_VERSION-py3-none-any.whl ${{ secrets.REPO }}/fd55/$CURRENT_VERSION/fd55-$CURRENT_VERSION-py3-none-any.whl
-        jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-$CURRENT_VERSION.tar.gz ${{ secrets.REPO }}/fd55/$CURRENT_VERSION/fd55-$CURRENT_VERSION.tar.gz
+        echo ${CURRENT_VERSION}
+        jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}-py3-none-any.whl ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}-py3-none-any.whl
+        jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}.tar.gz ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}.tar.gz
     needs: [build]
