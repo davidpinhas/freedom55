@@ -42,8 +42,10 @@ jobs:
     - name: Build package
       run: python3 -m build
     - name: Deploy package to Artifactory
-      uses: jfrog/setup-jfrog-cli@v3
       run: |
+        wget -qO - https://releases.jfrog.io/artifactory/jfrog-gpg-public/jfrog_public_gpg.key | sudo apt-key add -
+        echo "deb https://releases.jfrog.io/artifactory/jfrog-debs xenial contrib" | sudo tee -a /etc/apt/sources.list && sudo apt update
+        sudo apt install -y jfrog-cli-v2-jf && jf intro
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
         echo ${CURRENT_VERSION}
         jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}-py3-none-any.whl ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}-py3-none-any.whl
