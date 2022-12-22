@@ -27,7 +27,7 @@ jobs:
         git commit -m "Update version to $NEW_VERSION"
         git push origin
 
-  build:
+  build-publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -47,34 +47,17 @@ jobs:
         pip3 install build
     - name: Build package
       run: python3 -m build
-    needs: [update-version]
-
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    # - name: Install dependencies
-    #   run: |
     - name: Deploy package to Artifactory
       run: |
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
         jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}-py3-none-any.whl ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}-py3-none-any.whl --build-name fd55-build-${CURRENT_VERSION} --build-number ${CURRENT_VERSION}
         jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}.tar.gz ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}.tar.gz --build-name fd55-build-${CURRENT_VERSION} --build-number ${CURRENT_VERSION}
-    needs: [build]
-
-  build-publish:
-    runs-on: ubuntu-latest
-    steps:
     - name: Publish build info
       run: |
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
         jf rt bag fd55-build-${CURRENT_VERSION} ${CURRENT_VERSION}
         jf rt bp fd55-build-${CURRENT_VERSION} ${CURRENT_VERSION}
-    needs: [deploy]
-
-  build-scan:
-    runs-on: ubuntu-latest
-    steps:
     - name: Scan published build
       run: |
         jf bs fd55-build-${CURRENT_VERSION} ${CURRENT_VERSION} --server-id=artifactory
-    needs: [build-publish]
+    needs: [update-version]
