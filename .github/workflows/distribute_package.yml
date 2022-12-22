@@ -59,5 +59,6 @@ jobs:
         jf rt bp fd55-build-${CURRENT_VERSION} ${CURRENT_VERSION}
     - name: Scan published build
       run: |
-        jf bs fd55-build-${CURRENT_VERSION} ${CURRENT_VERSION}
+        CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
+        jf bs fd55-build-${CURRENT_VERSION} ${CURRENT_VERSION} --server-id=artifactory
     needs: [update-version]
