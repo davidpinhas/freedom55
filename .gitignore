@@ -5,3 +5,4 @@ venv*
 fd55.spec
 *build/*
 *dist/*
+.jfrog/*
