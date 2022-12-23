@@ -8,6 +8,12 @@ logger = logging.getLogger()
 
 class Functions:
     """ CLI functions """
+    component_list = ["OCI", "SOPS", "ARGO", "TERRAFORM"]
+    oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file"]
+    argo_key_list = ["url", "user", "password"]
+    sops_key_list = []
+    tf_key_list = []
+
     def set_logger(verbosity):
         logger = logging.basicConfig(level=verbosity, format='%(asctime)s|%(levelname)s|%(message)s')
         return logger

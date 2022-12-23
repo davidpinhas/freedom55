@@ -2,7 +2,7 @@ import oci
 import logging
 from utils.oci_config_validator import OciValidator
 from cli.functions import Functions as fn
-
+from utils.fd55_config import Config
 logger = logging.getLogger()
 
 class Oci:
@@ -20,6 +20,8 @@ class Oci:
         self.setup_logger()
 
     def run_init_oci():
+        config = Config()
+        config.start_configuration(component="OCI", key_list=fn.oci_key_list)
         """ Verify OCI init state is ready """
         if not OciValidator.init_oci():
             config = OciValidator.validate_config_exist()
