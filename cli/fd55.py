@@ -4,6 +4,7 @@ from cli.cli_groups.oci import oci
 from cli.cli_groups.sops import sops
 from cli.cli_groups.tf import tf
 from cli.cli_groups.argocd import argo
+from cli.cli_groups.cli_config import config
 from cli.functions import Functions as fn
 import re
 
@@ -41,6 +42,7 @@ main.add_command(oci)
 main.add_command(sops)
 main.add_command(tf)
 main.add_command(argo)
+main.add_command(config)
 
 if __name__ == '__main__':
     main(obj={})
