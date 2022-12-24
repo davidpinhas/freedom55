@@ -21,7 +21,7 @@ class Oci:
 
     def run_init_oci():
         config = Config()
-        config.start_configuration(component="OCI", key_list=fn.oci_key_list)
+        config.start_configuration(component="OCI", key_list=config.oci_key_list)
         """ Verify OCI init state is ready """
         if not OciValidator.init_oci():
             config = OciValidator.validate_config_exist()

@@ -8,14 +8,29 @@ logger = logging.getLogger()
 
 class Functions:
     """ CLI functions """
-    oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file"]
-    argo_key_list = ["url", "user", "password"]
-    sops_key_list = []
-    tf_key_list = []
-
     def set_logger(verbosity):
         logger = logging.basicConfig(level=verbosity, format='%(asctime)s|%(levelname)s|%(message)s')
         return logger
+    
+    def file_exists(filename):
+        return os.path.exists(filename)
+    
+    def modify_config_approval(string: str):
+        """ Request user approval to modify file """
+        logging.warn(f"config file already exists")
+        user_approval = input(
+            f"{string}")
+        if user_approval:
+            return True
+        else:
+            return False
+
+    def delete_file(file_path):
+        if Functions.file_exists(f"{str(file_path)}"):
+            user_input = Functions.modify_config_approval("Config file already exists, would you like to replace it? Y/N: ")
+            if user_input:
+                os.remove(f"{str(file_path)}")
+                logging.info(f"Deleted config file {file_path}")
 
     def json_parse(json_input, key=None):
         """ JSON parser """

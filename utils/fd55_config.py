@@ -2,11 +2,17 @@ import logging
 import configparser
 import os
 import platform
+import inquirer
 from cli.functions import Functions as fn
 logger = logging.getLogger()
 component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM"]
 
 class Config:
+    oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file"]
+    argo_key_list = ["url", "user", "password"]
+    sops_key_list = []
+    tf_key_list = []
+
     def __init__(self):
         self.config_dir = self._get_config_dir()
         self.config_path = os.path.join(self.config_dir, 'config.ini')
@@ -25,18 +31,30 @@ class Config:
             os.makedirs(config_dir)
         return config_dir
 
-    def validate_config_section(self):
-        """ Validate the configuration file """
-        for component in component_list:
-            if not self.config.has_section(component):
-                return False
-            return True
+    def select_components_menu():
+        """ Prompt the user to select one or more components from a list """
+        config = Config()
+        fn.delete_file(f"{config._get_config_dir()}/config.ini")
+        prompt = [
+              inquirer.Checkbox('components',
+                    message="Select integrations to configure?",
+                    choices=component_list,
+                    ),
+        ]
+        selected_options = inquirer.prompt(prompt)
+        return selected_options['components']
 
-    def validate_config_option(self, key_list, component):
+    def validate_config_section(self, component):
         """ Validate the configuration file """
-        logging.info("Validating fd55 config file")
-        logging.debug(f"fd55 config file is located under {self._get_config_dir()}/config.ini")
         if not self.config.has_section(component):
+            return False
+        return True
+
+    def validate_config_option(self, component, key_list):
+        """ Validate the configuration file """
+        logging.debug("Validating fd55 config file")
+        logging.debug(f"fd55 config file is located under {self._get_config_dir()}/config.ini")
+        if not self.validate_config_section(component):
             return False
         else:
             for option in key_list:
@@ -44,22 +62,40 @@ class Config:
                     return False
         return True
 
-    def start_configuration(self, component=None, key_list=None):
+    def start_configuration(self, component, key_list):
         """ Prompt the user to configure the application """
-        logging.info(f"Setting up config file in {self.config_path}")
-        self.config.add_section(component)
-        for key in key_list:
-            value = input(f'Enter the value for {key}: ')
-            self.config.set(component, key, value)
-            with open(self.config_path, 'w') as config_file:
-                self.config.write(config_file)
-        return True
-
-    def run_config_validation(config):
-        if not config.validate_config_option(key_list=fn.oci_key_list ,component="OCI"):
-            if config.start_configuration(component="OCI", key_list=fn.oci_key_list):
-                print('Configuration complete!')
-            else:
-                print('Configuration failed.')
+        logging.debug(f"Modifying config file in {self.config_path}")
+        if not self.config.has_section(component):
+            self.config.add_section(component)
+            for key in key_list:
+                value = input(f'Enter the value for {key}: ')
+                self.config.set(component, key, value)
+                with open(self.config_path, 'w') as config_file:
+                    self.config.write(config_file)
         else:
-            print('Configuration is valid.')
+            return True
+        return True
+                        
+    def run_config_validation(config):
+        selected_items = Config.select_components_menu()
+        config = Config()
+        for component in selected_items:
+            logging.info(f"Setting up the {component} integration")
+            if component == "OCI":
+                if not config.validate_config_option(component, key_list=config.oci_key_list):
+                    if config.start_configuration(component=component, key_list=config.oci_key_list):
+                        pass
+            if component == "ARGOCD":
+                if not config.validate_config_option(component, key_list=config.argo_key_list):
+                    if config.start_configuration(component=component, key_list=config.argo_key_list):
+                        pass
+            if component == "SOPS":
+                if not config.validate_config_option(component, key_list=config.sops_key_list):
+                    if config.start_configuration(component=component, key_list=config.sops_key_list):
+                        pass
+            if component == "TERRAFORM":
+                if not config.validate_config_option(component, key_list=config.tf_key_list):
+                    if config.start_configuration(component=component, key_list=config.tf_key_list):
+                        pass
+                else:
+                    print('Configuration failed.')

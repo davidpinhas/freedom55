@@ -100,11 +100,11 @@ class OciValidator:
                 new_list.append(i)
         return new_list
 
-    def modify_config_approval():
+    def modify_config_approval(string: str):
         """ Request user approval to modify OCI config file """
         logging.warn(f"Required keys are missing from the config file")
         user_approval = input(
-            f"Would you like to generate the missing keys? Y/N: ")
+            f"{string}")
         if user_approval:
             return True
         else:
@@ -137,7 +137,7 @@ class OciValidator:
         OciValidator.validate_config_exist()
         missing_keys_list = OciValidator.oci_find_missing_keys()
         if missing_keys_list:
-            OciValidator.modify_config_approval()
+            fn.modify_config_approval("Would you like to generate the missing keys? Y/N: ")
             for i in missing_keys_list[::-1]:
                 missing_keys_list = OciValidator.oci_find_missing_keys()
                 OciValidator.modify_config_file(missing_key=i)
