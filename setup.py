@@ -1,13 +1,10 @@
 from setuptools import setup
 
-with open("README.md", "r") as f:
-    readme = f.read()
-
 setup(
     name="fd55",
     version="2.1.3",
     description="Freedom 55 CLI is a operational tool to maintain a personal homelab",
-    long_description=readme,
+    long_description="Null",
     long_description_content_type="text/markdown",
     license="MIT",
     author="Dave Pinhas",

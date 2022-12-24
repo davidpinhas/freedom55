@@ -6,17 +6,12 @@ from cli.cli_groups.tf import tf
 from cli.cli_groups.argocd import argo
 from cli.cli_groups.cli_config import config
 from cli.functions import Functions as fn
-import re
-
-with open('setup.py', 'r') as f:
-    setup_py = f.read()
-version = re.search(r'version=([\'"])([^\'"]+)\1', setup_py).group(2)
 
 @click.group()
 @click.option('-v', '--verbosity', default='info',
               help='Logging level (info, warn, error, debug)',
               required=False)
-@click.version_option(version=version)
+@click.version_option(version='2.1.3')
 @click.pass_context
 def main(ctx, verbosity):
     """Freedom 55 CLI tools.
