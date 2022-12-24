@@ -29,7 +29,7 @@ class ArgoCD:
 
     def get_applications(self):
         """ Get all ArgoCD applications """
-        argo = ArgoCD(api_endpoint=f"{config.get('ARGOCD', 'url')}", api_token=f"test")
+        argo = ArgoCD(api_endpoint=self.api_endpoint, api_token=self.api_token)
         argo.request()
 
     def create_application(self, application_name, repository_url):

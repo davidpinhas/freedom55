@@ -14,7 +14,7 @@ def argo(ctx):
 @click.pass_context
 def get_apps(ctx):
     """ Get ArgoCD applications """
-    argo = ArgoCD(api_endpoint=f"{config.get('ARGOCD', 'url')}", api_token=f"{config.get('ARGOCD', 'api_token')}")
+    argo = ArgoCD(api_endpoint=f"{config.get('ARGOCD', 'url')}", api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.get_applications()
 
 @argo.command()
