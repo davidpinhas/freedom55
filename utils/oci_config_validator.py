@@ -100,16 +100,6 @@ class OciValidator:
                 new_list.append(i)
         return new_list
 
-    def modify_config_approval(string: str):
-        """ Request user approval to modify OCI config file """
-        logging.warn(f"Required keys are missing from the config file")
-        user_approval = input(
-            f"{string}")
-        if user_approval:
-            return True
-        else:
-            return False
-
     def add_key_to_config(key_name, key_value):
         """ Append key to OCI config file """
         config_path = fn.find_config_file()
