@@ -1,5 +1,6 @@
 import requests
 from utils.fd55_config import Config
+import json
 
 config = Config()
 
@@ -22,15 +23,18 @@ class ArgoCD:
                 url, method=method, headers=headers, json=data)
         else:
             response = requests.request(url=url, method=method, headers=headers)
-        print(response)
         if response.status_code != 200:
             raise Exception(f"Failed to execute: {response.json()['message']}")
-        return response.json()["items"]
+        json_output = response.json()
+        return json.dumps(json_output, indent=4)
 
     def get_applications(self):
         """ Get all ArgoCD applications """
         argo = ArgoCD(api_endpoint=self.api_endpoint, api_token=self.api_token)
-        argo.request()
+        json_output = json.loads(argo.request())
+        print("ArgoCD applications:")
+        for i in range(len(json_output['items'])):
+            print(json.dumps(json_output['items'][i]['metadata']['name'], indent=4).strip('"'))
 
     def create_application(self, application_name, repository_url):
         """ Create an application """
