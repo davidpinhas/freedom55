@@ -44,7 +44,7 @@ jobs:
         jf c add artifactory --url ${{ secrets.ARTIFACTORY_URL }} --user ${{ secrets.USERNAME }} --password ${{ secrets.PASSWORD}} --interactive=false
         jf pip-config --server-id-resolve=artifactory --repo-resolve=pypi
         jf pip install -r requirements.txt --build-name fd55-build --build-number ${CURRENT_VERSION} --no-cache-dir --force-reinstall
-        pip3 install build
+        pip3 install -r requirements.txt
     - name: Build package
       run: python3 -m build
     - name: Deploy package to Artifactory
