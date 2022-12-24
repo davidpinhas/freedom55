@@ -1,6 +1,8 @@
 import requests
 from utils.fd55_config import Config
 import json
+import logging
+logger = logging.getLogger()
 
 config = Config()
 
@@ -30,9 +32,10 @@ class ArgoCD:
 
     def get_applications(self):
         """ Get all ArgoCD applications """
+        logging.info("Getting ArgoCD applications")
         argo = ArgoCD(api_endpoint=self.api_endpoint, api_token=self.api_token)
         json_output = json.loads(argo.request())
-        print("ArgoCD applications:")
+        print("\nArgoCD applications:")
         for i in range(len(json_output['items'])):
             print(json.dumps(json_output['items'][i]['metadata']['name'], indent=4).strip('"'))
 
