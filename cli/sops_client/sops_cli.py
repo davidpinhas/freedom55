@@ -36,11 +36,11 @@ class Sops:
         """ Locate the public key value """
         logging.debug(
             f"Searching for public key in key.txt file under {key_file} path")
-        print(f"This is key {key_file}")
+        logging.debug(f"This is key - {key_file}")
         if path.isfile(key_file):
             with open(key_file, "r") as f:
                 key_data = f.read()
-                print(f"This is key data - {key_data}")
+                logging.debug(f"This is key data - {key_data}")
             lines = key_data.split("\n")
             for line in lines:
                 if line.startswith("# public key:"):

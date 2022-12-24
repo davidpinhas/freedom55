@@ -3,6 +3,8 @@ import configparser
 import os
 import platform
 import inquirer
+import shutil
+import datetime
 from cli.functions import Functions as fn
 logger = logging.getLogger()
 component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM"]
@@ -45,10 +47,28 @@ class Config:
             os.makedirs(config_dir)
         return config_dir
 
+    def config_backup():
+        """ Backup OCI config file to conf_backup dir """
+        file_dir = Config().config_path.strip('config.ini')
+        backup_dir = f"{file_dir}config_backup"
+        if not os.path.exists(backup_dir):
+            logging.warn(f"conf_backup directory doesn't exist, created the dir under {backup_dir}")
+            os.makedirs(backup_dir)
+        if os.path.exists(Config().config_path):
+            logging.info("Backing up OCI config file")
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            backup_file_name = "config" + "_" + timestamp + ".ini"
+            copy_file_name = os.path.join(backup_dir, backup_file_name)
+            os.rename(os.path.join(file_dir, "config.ini"), os.path.join(backup_dir, backup_file_name))
+            shutil.copy(copy_file_name, os.path.join(file_dir, "config"))
+            logging.info(f"Backup finished successfully. The backup file is located at {copy_file_name}")
+        else:
+            logging.info("No config file was found")
+            pass
+
     def select_components_menu():
         """ Prompt the user to select one or more components from a list """
         config = Config()
-        fn.delete_file(f"{config.get_config_dir()}/config.ini")
         prompt = [
               inquirer.Checkbox('components',
                     message="Select integrations to configure?",
@@ -56,6 +76,8 @@ class Config:
                     ),
         ]
         selected_options = inquirer.prompt(prompt)
+        Config.config_backup()
+        fn.delete_file(f"{config.get_config_dir()}/config.ini")
         return selected_options['components']
 
     def validate_config_section(self, component):
@@ -112,4 +134,5 @@ class Config:
                     if config.start_configuration(component=component, key_list=config.tf_key_list):
                         pass
                 else:
-                    print('Configuration failed.')
+                    logging.error('Configuration failed.')
+                    exit()

@@ -105,12 +105,6 @@ class OciValidator:
         logging.debug(f"Found missing keys - {new_list}")
         return new_list
 
-    def add_key_to_config(key_name, key_value):
-        """ Append key to OCI config file """
-        config_path = fn.find_config_file()
-        with open(config_path, 'a') as f:
-            f.write(f"\n{key_name}={key_value}")
-
     def modify_config_file(missing_key=None):
         """ Modify OCI Config file """
         config = Config()
@@ -119,7 +113,6 @@ class OciValidator:
         if missing_key not in config_keys:
             if missing_key.startswith("service_endpoint"):
                 func = getattr(OciValidator, f"retrieve_oci_service_accounts")
-                print(f"This is func - {func()[0]}")
                 if missing_key.endswith("mgmt"):
                     config.create_option("OCI", missing_key, func()[0])
                 else:
