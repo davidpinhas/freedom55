@@ -22,6 +22,9 @@ class Config:
     def get(self, section, option):
         return self.config.get(section, option)
 
+    def get_section(self, section):
+        return self.config.options(section)
+
     def _get_config_dir(self):
         """ Get configuration directory """
         if platform.system() == 'Windows':

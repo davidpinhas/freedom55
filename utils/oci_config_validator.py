@@ -1,7 +1,7 @@
 import oci
 import logging
 from cli.functions import Functions as fn
-
+from utils.fd55_config import Config
 logger = logging.getLogger()
 
 class OciValidator:
@@ -92,12 +92,17 @@ class OciValidator:
     def oci_find_missing_keys():
         """ Find missing keys from OCI config file """
         logging.debug("Searching for missing keys")
-        config = OciValidator.validate_config_exist()
-        key_list = OciValidator.oci_key_list()
+        config = Config()
+        key_list = ["user", "fingerprint", "tenancy", "region",
+                     "key_file", "key_id", "key_version_id", "service_endpoint", "service_endpoint_mgmt"]
+        config_key_list = config.get_section("OCI")
+        logging.debug(f'This is section - {config.get_section("OCI")}')
         new_list = []
         for i in key_list:
-            if i not in config:
+            if i not in config_key_list:
+                logging.debug(f"Missing key - {i}")
                 new_list.append(i)
+        logging.debug(f"Found missing keys - {new_list}")
         return new_list
 
     def add_key_to_config(key_name, key_value):
