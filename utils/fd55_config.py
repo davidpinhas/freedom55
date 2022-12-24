@@ -14,7 +14,7 @@ class Config:
     tf_key_list = []
 
     def __init__(self):
-        self.config_dir = self._get_config_dir()
+        self.config_dir = self.get_config_dir()
         self.config_path = os.path.join(self.config_dir, 'config.ini')
         self.config = configparser.ConfigParser()
         self.config.read(self.config_path)
@@ -25,7 +25,15 @@ class Config:
     def get_section(self, section):
         return self.config.options(section)
 
-    def _get_config_dir(self):
+    def create_option(self, section, option, value):
+        self.config.read(self.config_path)
+        if not self.config.has_section(section):
+            self.config.add_section(section)
+        self.config.set(section, option, value)
+        with open(self.config_path, 'w') as config_file:
+            self.config.write(config_file)
+
+    def get_config_dir(self):
         """ Get configuration directory """
         if platform.system() == 'Windows':
             config_dir = os.path.join(os.environ['USERPROFILE'], '.fd55')
@@ -40,7 +48,7 @@ class Config:
     def select_components_menu():
         """ Prompt the user to select one or more components from a list """
         config = Config()
-        fn.delete_file(f"{config._get_config_dir()}/config.ini")
+        fn.delete_file(f"{config.get_config_dir()}/config.ini")
         prompt = [
               inquirer.Checkbox('components',
                     message="Select integrations to configure?",
@@ -59,7 +67,7 @@ class Config:
     def validate_config_option(self, component, key_list):
         """ Validate the configuration file """
         logging.debug("Validating fd55 config file")
-        logging.debug(f"fd55 config file is located under {self._get_config_dir()}/config.ini")
+        logging.debug(f"fd55 config file is located under {self.get_config_dir()}/config.ini")
         if not self.validate_config_section(component):
             return False
         else:

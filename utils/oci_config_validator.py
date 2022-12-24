@@ -8,9 +8,9 @@ class OciValidator:
     """ OCI config validator """
     def validate_config_exist():
         """ Validate OCI config file exists """
-        oci_conf_path = fn.find_config_file()
+        oci_conf_path = Config().config_path
         try:
-            config = oci.config.from_file(f"{oci_conf_path}", "DEFAULT")
+            config = oci.config.from_file(f"{oci_conf_path}", "OCI")
         except:
             logging.error(
                 "There was an issue with the OCI config, verify the file exists")
@@ -113,17 +113,20 @@ class OciValidator:
 
     def modify_config_file(missing_key=None):
         """ Modify OCI Config file """
-        config = OciValidator.validate_config_exist()
-        if missing_key not in config:
+        config = Config()
+        config_keys = config.get_section("OCI")
+        config.start_configuration(component="OCI", key_list=OciValidator.oci_find_missing_keys())
+        if missing_key not in config_keys:
             if missing_key.startswith("service_endpoint"):
                 func = getattr(OciValidator, f"retrieve_oci_service_accounts")
+                print(f"This is func - {func()[0]}")
                 if missing_key.endswith("mgmt"):
-                    OciValidator.add_key_to_config(missing_key, func()[0])
+                    config.create_option("OCI", missing_key, func()[0])
                 else:
-                    OciValidator.add_key_to_config(missing_key, func()[1])
+                    config.create_option("OCI", missing_key, func()[1])
             else:
                 func = getattr(OciValidator, f"retrieve_oci_{missing_key}")
-                OciValidator.add_key_to_config(missing_key, func())
+                config.create_option("OCI", missing_key, func())
         else:
             logging.info(f"Key {missing_key} was added")
 
