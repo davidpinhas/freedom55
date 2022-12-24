@@ -12,14 +12,16 @@ jobs:
     - uses: actions/checkout@v3
     - name: Update setup.py
       run: |
-        # Get the current version from setup.py
+        # Update version setup.py
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
-
-        # Increment the patch version (e.g., 1.0.1 -> 1.0.2)
         NEW_VERSION=$(awk -F. '{$NF = sprintf("%0*d", length($NF), ($NF+1)%9); print}' <<< "$CURRENT_VERSION" | tr ' ' '.')
-
-        # Update the version in setup.py using sed
         sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
+        
+        # Update version in cli/fd55.py
+        CURRENT_VERSION=$(grep "version=" cli/fd55.py | cut -d "'" -f2)
+        NEW_VERSION=$(awk -F. '{$NF = sprintf("%0*d", length($NF), ($NF+1)%9); print}' <<< "$CURRENT_VERSION" | tr ' ' '.')
+        sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" cli/fd55.py
+        
         git config --local user.email "${{ secrets.USERNAME }}"
         git config --local user.name "${{ secrets.USERNAME }}"
         git add setup.py
