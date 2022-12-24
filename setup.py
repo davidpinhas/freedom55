@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="fd55",
-    version="2.1.4",
+    version="2.1.5",
     description="Freedom 55 CLI is a operational tool to maintain a personal homelab",
     long_description="Null",
     long_description_content_type="text/markdown",
