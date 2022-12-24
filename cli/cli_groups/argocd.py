@@ -1,7 +1,8 @@
 import click
 from cli.argocd_client.argocd_cli import ArgoCD
+from utils.fd55_config import Config
 
-
+config = Config()
 @click.group()
 @click.pass_context
 def argo(ctx):
@@ -13,8 +14,8 @@ def argo(ctx):
 @click.pass_context
 def get_apps(ctx):
     """ Get ArgoCD applications """
-    argo_url = ArgoCD(api_endpoint="https://example.com", api_token=None)
-    argo_url.get_applications()
+    argo = ArgoCD(api_endpoint=f"{config.get('ARGOCD', 'url')}", api_token=f"{config.get('ARGOCD', 'api_token')}")
+    argo.get_applications()
 
 @argo.command()
 @click.option('--app-name', help='Set the application name', required=True)

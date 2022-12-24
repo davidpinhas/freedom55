@@ -9,7 +9,7 @@ component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM"]
 
 class Config:
     oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file"]
-    argo_key_list = ["url", "user", "password"]
+    argo_key_list = ["url", "api_token"]
     sops_key_list = []
     tf_key_list = []
 
@@ -18,6 +18,9 @@ class Config:
         self.config_path = os.path.join(self.config_dir, 'config.ini')
         self.config = configparser.ConfigParser()
         self.config.read(self.config_path)
+
+    def get(self, section, option):
+        return self.config.get(section, option)
 
     def _get_config_dir(self):
         """ Get configuration directory """

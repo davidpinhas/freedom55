@@ -1,4 +1,7 @@
 import requests
+from utils.fd55_config import Config
+
+config = Config()
 
 
 class ArgoCD:
@@ -6,18 +9,19 @@ class ArgoCD:
         self.api_endpoint = api_endpoint
         self.api_token = api_token
 
-    def request(uri=None, method="GET", data=None):
+
+    def request(self, uri=None, method="GET", data=None):
         if uri is not None:
-            url = f"{ArgoCD.api_endpoint}/api/v1/applications/{uri}"
+            url = f"{self.api_endpoint}/api/v1/applications/{uri}"
         else:
-            url = f"{ArgoCD.api_endpoint}/api/v1/applications"
-        headers = {"Authorization": f"Bearer {ArgoCD.api_token}"}
+            url = f"{self.api_endpoint}/api/v1/applications"
+        headers = {"Authorization": f"Bearer {self.api_token}"}
         if data is not None:
             data = data
             response = requests.request(
                 url, method=method, headers=headers, json=data)
         else:
-            response = requests.request(url, method=method, headers=headers)
+            response = requests.request(url=url, method=method, headers=headers)
         print(response)
         if response.status_code != 200:
             raise Exception(f"Failed to execute: {response.json()['message']}")
@@ -25,7 +29,8 @@ class ArgoCD:
 
     def get_applications(self):
         """ Get all ArgoCD applications """
-        ArgoCD.request()
+        argo = ArgoCD(api_endpoint=f"{config.get('ARGOCD', 'url')}", api_token=f"test")
+        argo.request()
 
     def create_application(self, application_name, repository_url):
         """ Create an application """
