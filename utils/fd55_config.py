@@ -12,7 +12,7 @@ component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM"]
 class Config:
     oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file"]
     argo_key_list = ["url", "api_token"]
-    sops_key_list = []
+    sops_key_list = ["key_path"]
     tf_key_list = []
 
     def __init__(self):

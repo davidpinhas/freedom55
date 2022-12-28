@@ -5,7 +5,8 @@ import logging
 import platform
 import os.path
 from os import path
-
+from utils.fd55_config import Config
+config = Config()
 logger = logging.getLogger()
 
 
@@ -15,22 +16,6 @@ class Sops:
     def __init__(self, config, user):
         self.config = config
         self.user = user
-
-    def find_age_key_file():
-        """ Find Age encryption key file location """
-        logging.debug("Locating Age key.txt file")
-        operating_system = platform.system()
-        if operating_system == "Windows":
-            key_file = os.environ["APPDATA"] + "\key.txt"
-        elif operating_system == "Linux":
-            key_file = os.path.expanduser("~/.sops/key.txt")
-        elif operating_system == "Darwin":
-            key_file = os.path.expanduser("~/.sops/key.txt")
-        else:
-            key_file = None
-            logging.error("The age key.txt is not present")
-            exit()
-        return key_file
 
     def find_age_key(key_file):
         """ Locate the public key value """
@@ -57,7 +42,7 @@ class Sops:
     def encrypt(input_file, output_file, encrypted_regex=None):
         """ Encrypt file with SOPS using Age """
         logging.info("Encrypting file with SOPS")
-        key_id = Sops.find_age_key(Sops.find_age_key_file())
+        key_id = Sops.find_age_key(f"{config.get('SOPS', 'key_path')}")
         if not encrypted_regex:
             cmd = ['sops', '--encrypt', '--age', key_id,
                    '--output', output_file, input_file]
