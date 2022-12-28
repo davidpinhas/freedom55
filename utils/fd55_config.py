@@ -22,6 +22,13 @@ class Config:
         self.config.read(self.config_path)
 
     def get(self, section, option):
+        if not Config().validate_config_option(component=section, key_list=option):
+            if not self.config.has_section(section=section):
+                self.config.add_section(section=section)
+        if not self.config.has_option(section=section, option=option):
+            fn.modify_config_approval(f"Would you like to set the option '{option}' in '{section}'? Y/N: ")
+            value = input(f'Enter the value for {option}: ')
+            self.config.set(section, option, value)
         return self.config.get(section, option)
 
     def get_section(self, section):
@@ -42,8 +49,6 @@ class Config:
         else:
             config_dir = os.path.join(os.path.expanduser('~'), '.fd55')
         if not os.path.exists(config_dir):
-            logging.warn("Configuration directory doesn't exist")
-            logging.info(f"Creating configuration directory under {config_dir}")
             os.makedirs(config_dir)
         return config_dir
 
@@ -52,7 +57,7 @@ class Config:
         file_dir = Config().config_path.strip('config.ini')
         backup_dir = f"{file_dir}config_backup"
         if not os.path.exists(backup_dir):
-            logging.warn(f"conf_backup directory doesn't exist, created the dir under {backup_dir}")
+            logging.warn(f"'conf_backup' directory doesn't exist, created the dir under {backup_dir}")
             os.makedirs(backup_dir)
         if os.path.exists(Config().config_path):
             logging.info("Backing up OCI config file")

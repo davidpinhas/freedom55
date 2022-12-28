@@ -15,7 +15,6 @@ class Functions:
     
     def modify_config_approval(string: str):
         """ Request user approval to modify file """
-        logging.warn(f"config file already exists")
         user_approval = input(
             f"{string}")
         if user_approval:
