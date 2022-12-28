@@ -68,7 +68,7 @@ class ArgoCD:
         """ Send a Delete request to delete an application """
         try:
             self.request(method=method, uri=application_name)
-            logging.info("Successfully updated application")
+            logging.info("Successfully deleted application")
         except:
             logging.error("Failed to delete application")
             exit()

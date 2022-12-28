@@ -51,8 +51,12 @@ class Functions:
         return json_output
 
     def open_json_file(json_file):
-        with open(json_file, 'r') as f:
-            return json.load(f)
+        try:
+            with open(json_file, 'r') as f:
+                return json.load(f)
+        except:
+            logging.error("JSON file might be corrupted or doesn't exist")
+            exit()
 
     def base64_encode(sample_string):
         """ Base64 encode """
