@@ -13,7 +13,7 @@ class ArgoCD:
         self.api_endpoint = api_endpoint
         self.api_token = api_token
 
-    def request(self, uri=None, method=None, data=None, headers=None):
+    def request(self, uri=None, method="GET", data=None, headers=None):
         if uri is not None:
             url = f"{self.api_endpoint}/api/v1/applications/{uri}"
         else:
