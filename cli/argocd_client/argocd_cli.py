@@ -1,5 +1,6 @@
 import requests
 from utils.fd55_config import Config
+from cli.functions import Functions as fn
 import json
 import logging
 logger = logging.getLogger()
@@ -12,21 +13,24 @@ class ArgoCD:
         self.api_endpoint = api_endpoint
         self.api_token = api_token
 
-
-    def request(self, uri=None, method="GET", data=None):
+    def request(self, uri=None, method=None, data=None, headers=None):
         if uri is not None:
             url = f"{self.api_endpoint}/api/v1/applications/{uri}"
         else:
             url = f"{self.api_endpoint}/api/v1/applications"
         headers = {"Authorization": f"Bearer {self.api_token}"}
         if data is not None:
-            data = data
-            response = requests.request(
-                url, method=method, headers=headers, json=data)
+            headers = {
+            "Authorization": f"Bearer {self.api_token}",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+            }
+            response = requests.request(url=url, method=method, headers=headers, json=data)
         else:
             response = requests.request(url=url, method=method, headers=headers)
         if response.status_code != 200:
-            raise Exception(f"Failed to execute: {response.json()['message']}")
+            raise Exception(f"Failed to execute: {logging.error(response.text)}")
+        logging.debug(response.text)
         json_output = response.json()
         return json.dumps(json_output, indent=4)
 
@@ -39,16 +43,32 @@ class ArgoCD:
         for i in range(len(json_output['items'])):
             print(json.dumps(json_output['items'][i]['metadata']['name'], indent=4).strip('"'))
 
-    def create_application(self, application_name, repository_url):
+    def create_application(self, json_file: str):
         """ Create an application """
-        ArgoCD.request(method="post", data={"metadata": {
-                       "name": application_name}, "spec": {"repoURL": repository_url}})
+        data = fn.open_json_file(json_file)
+        try:
+            self.request(method="POST", data=data)
+            logging.info(f"Successfully created application {data['metadata']['name']}")
+        except:
+            logging.error("Failed to create application")
+            exit()
 
-    def update_application(self, application_name, repository_url):
+    def update_application(self, json_file: str):
         """ Send an Update request to update the applciation configuration """
-        ArgoCD.request(method="put", uri={application_name}, data={
-                       "spec": {"repoURL": repository_url}})
+        with open(json_file, 'r') as f:
+            data = fn.open_json_file(json_file)
+        try:
+            self.request(method="PUT", data=data, uri=f"{data['metadata']['name']}")
+            logging.info(f"Successfully updated application {data['metadata']['name']}")
+        except:
+            logging.error("Failed to update application")
+            exit()
 
-    def delete_application(self, application_name):
+    def delete_application(self, method="DELETE", application_name=None):
         """ Send a Delete request to delete an application """
-        ArgoCD.request(method="delete", uri={application_name})
+        try:
+            self.request(method=method, uri=application_name)
+            logging.info("Successfully updated application")
+        except:
+            logging.error("Failed to delete application")
+            exit()

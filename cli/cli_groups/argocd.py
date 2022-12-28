@@ -18,9 +18,25 @@ def get_apps(ctx):
     argo.get_applications()
 
 @argo.command()
-@click.option('--app-name', help='Set the application name', required=True)
-@click.option('--repo', help='Set the repository URL', required=True)
+@click.option('-f', '--file', help='application yaml file', required=True)
 @click.pass_context
-def create_app(ctx, application_name, repository_url):
+def create_app(ctx, file):
     """ Create an ArgoCD application """
-    ArgoCD.create_application(application_name, repository_url)
+    argo = ArgoCD(api_endpoint=f"{config.get('ARGOCD', 'url')}", api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
+    argo.create_application(json_file=file)
+
+@argo.command()
+@click.option('-f', '--file', help='application yaml file', required=True)
+@click.pass_context
+def update_app(ctx, file):
+    """ Create an ArgoCD application """
+    argo = ArgoCD(api_endpoint=f"{config.get('ARGOCD', 'url')}", api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
+    argo.update_application(json_file=file)
+
+@argo.command()
+@click.option('-n', '--name', help='application name', required=True)
+@click.pass_context
+def delete_app(ctx, name):
+    """ Create an ArgoCD application """
+    argo = ArgoCD(api_endpoint=f"{config.get('ARGOCD', 'url')}", api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
+    argo.delete_application(application_name=name)

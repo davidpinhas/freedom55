@@ -50,6 +50,10 @@ class Functions:
         logging.debug("Parser done")
         return json_output
 
+    def open_json_file(json_file):
+        with open(json_file, 'r') as f:
+            return json.load(f)
+
     def base64_encode(sample_string):
         """ Base64 encode """
         sample_string_bytes = sample_string.encode("ascii")
