@@ -53,8 +53,9 @@ class Sops:
         proc = subprocess.run(cmd, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE)
         if proc.returncode != 0:
-            raise Exception(
+            logging.error(
                 f'Error encrypting file with sops: {proc.stderr.decode()}')
+            exit()
         logging.info(f"Finished encrypting {output_file} file")
 
     def decrypt(input_file, output_file):
@@ -64,6 +65,7 @@ class Sops:
         proc = subprocess.run(cmd, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE)
         if proc.returncode != 0:
-            raise Exception(
-                f'Error decrypting file with sops: {proc.stderr.decode()}')
+            logging.error(
+                f'Error encrypting file "{input_file}" with sops: {proc.stderr.decode()}')
+            exit()
         logging.info(f"Finished encrypting {output_file} file")
