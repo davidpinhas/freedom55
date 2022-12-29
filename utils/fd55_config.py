@@ -69,7 +69,7 @@ class Config:
             shutil.copy(copy_file_name, os.path.join(file_dir, "config"))
             logging.info(f"Backup finished successfully. The backup file is located at {copy_file_name}")
         else:
-            logging.info("No config file was found")
+            logging.info("No config file was found, creating new one")
             pass
 
     def select_components_menu():
@@ -109,6 +109,7 @@ class Config:
         logging.debug(f"Modifying config file in {self.config_path}")
         if not self.config.has_section(component):
             self.config.add_section(component)
+            print(f"* Provide required keys for {component} integration")
             for key in key_list:
                 value = input(f'Enter the value for {key}: ')
                 self.config.set(component, key, value)
@@ -119,6 +120,7 @@ class Config:
         return True
                         
     def run_config_validation(config):
+        logging.info("Running config validation")
         selected_items = Config.select_components_menu()
         config = Config()
         for component in selected_items:
@@ -142,3 +144,4 @@ class Config:
                 else:
                     logging.error('Configuration failed.')
                     exit()
+        logging.info(f"Configuration was successfully saved at {Config().config_path}")

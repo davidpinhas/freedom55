@@ -12,8 +12,8 @@ class OciValidator:
         try:
             config = oci.config.from_file(f"{oci_conf_path}", "OCI")
         except:
-            logging.error(
-                "There was an issue with the OCI config, verify the file exists")
+            logging.error("An error occurred while attempting to read the OCI configuration file")
+            logging.warn("Verify that the file exists and contains the correct keys")
             exit()
         return config
 
@@ -128,9 +128,11 @@ class OciValidator:
         OciValidator.validate_config_exist()
         missing_keys_list = OciValidator.oci_find_missing_keys()
         if missing_keys_list:
+            logging.warn(f"The OCI configuration is missing the following keys: \n{missing_keys_list}")
             fn.modify_config_approval("Would you like to generate the missing keys? Y/N: ")
             for i in missing_keys_list[::-1]:
                 missing_keys_list = OciValidator.oci_find_missing_keys()
                 OciValidator.modify_config_file(missing_key=i)
+                logging.info(f"Retrieved the key '{i}'")
         else:
             return True
