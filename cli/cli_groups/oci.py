@@ -11,7 +11,7 @@ def oci(ctx):
 
 
 @oci.command()
-@click.option('--string', help='plaintext string to encrypt', required=True)
+@click.option('-s', '--string', help='plaintext string to encrypt', required=True)
 @click.pass_context
 def encrypt(ctx, string):
     """ Encrypt plaintext string with OCI KMS """
@@ -19,7 +19,7 @@ def encrypt(ctx, string):
 
 
 @oci.command()
-@click.option('--string', help='plaintext string to encrypt', required=True)
+@click.option('-s', '--string', help='plaintext string to encrypt', required=True)
 @click.pass_context
 def decrypt(ctx, string):
     """ Decrypt KMS encrypted string """

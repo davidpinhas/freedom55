@@ -47,6 +47,7 @@ class Sops:
             cmd = ['sops', '--encrypt', '--age', key_id,
                    '--output', output_file, input_file]
         else:
+            logging.info(f"Using regex: {encrypted_regex}")
             cmd = ['sops', '--encrypt', '--age', key_id, '--encrypted-regex',
                    f'{encrypted_regex}', '--output', output_file, input_file]
         logging.debug(f"Running the command - {cmd}")
@@ -67,6 +68,6 @@ class Sops:
                               stderr=subprocess.PIPE)
         if proc.returncode != 0:
             logging.error(
-                f'Error encrypting file "{input_file}" with sops: {proc.stderr.decode()}')
+                f'Error decrypting file "{input_file}" with sops: {proc.stderr.decode()}')
             exit()
         logging.info(f"Finished decrypting {output_file} file")
