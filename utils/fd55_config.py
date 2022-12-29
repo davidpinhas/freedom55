@@ -28,6 +28,7 @@ class Config:
         if not self.config.has_option(section=section, option=option):
             fn.modify_config_approval(f"Would you like to set the option '{option}' in '{section}'? Y/N: ")
             value = input(f'Enter the value for {option}: ')
+            Config().create_option(section, option, value)
             self.config.set(section, option, value)
         return self.config.get(section, option)
 

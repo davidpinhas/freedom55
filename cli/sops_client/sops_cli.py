@@ -61,11 +61,12 @@ class Sops:
     def decrypt(input_file, output_file):
         """ Decrypt file with SOPS using Age """
         logging.info("Decrypting file with SOPS")
-        cmd = ['sops', '-d', '--output', output_file, input_file]
+        key_id = Sops.find_age_key(f"{config.get('SOPS', 'key_path')}")
+        cmd = ['sops', '-d', '--age', key_id, '--output', output_file, input_file]
         proc = subprocess.run(cmd, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE)
         if proc.returncode != 0:
             logging.error(
                 f'Error encrypting file "{input_file}" with sops: {proc.stderr.decode()}')
             exit()
-        logging.info(f"Finished encrypting {output_file} file")
+        logging.info(f"Finished decrypting {output_file} file")
