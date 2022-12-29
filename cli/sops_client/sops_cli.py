@@ -54,7 +54,7 @@ class Sops:
                               stderr=subprocess.PIPE)
         if proc.returncode != 0:
             logging.error(
-                f'Error encrypting file with sops: {proc.stderr.decode()}')
+                f'Error encrypting file {input_file}: {proc.stderr.decode()}')
             exit()
         logging.info(f"Finished encrypting {output_file} file")
 

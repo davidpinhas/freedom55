@@ -39,9 +39,12 @@ class ArgoCD:
         logging.info("Getting ArgoCD applications")
         argo = ArgoCD(api_endpoint=self.api_endpoint, api_token=self.api_token)
         json_output = json.loads(argo.request())
-        print("\nArgoCD applications:")
-        for i in range(len(json_output['items'])):
-            print(json.dumps(json_output['items'][i]['metadata']['name'], indent=4).strip('"'))
+        if json_output['items'] is not None:
+            print("\nArgoCD applications:")
+            for i in range(len(json_output['items'])):
+                print("* %s" % json.dumps(json_output['items'][i]['metadata']['name'], indent=4).strip('"'))
+        else:
+            logging.info("No applications found")
 
     def create_application(self, json_file: str):
         """ Create an application """
