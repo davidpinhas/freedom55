@@ -14,13 +14,33 @@ jobs:
       run: |
         # Update version setup.py
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
-        NEW_VERSION=$(awk -F. '{$NF = sprintf("%0*d", length($NF), ($NF+1)%10); print}' <<< "$CURRENT_VERSION" | tr ' ' '.')
-        sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
+
+        # Split the version number into its components
+        MAJOR=$(echo $CURRENT_VERSION | cut -d '.' -f1)
+        MINOR=$(echo $CURRENT_VERSION | cut -d '.' -f2)
+        PATCH=$(echo $CURRENT_VERSION | cut -d '.' -f3)
+
+        # Increment the patch number
+        PATCH=$((PATCH+1))
+
+        # If the patch number is 10 or greater, reset it to 0 and increment the minor number
+        if [ $PATCH -ge 10 ]; then
+        PATCH=0
+        MINOR=$((MINOR+1))
+        fi
+
+        # If the minor number is 10 or greater, reset it to 0 and increment the major number
+        if [ $MINOR -ge 10 ]; then
+        MINOR=0
+        MAJOR=$((MAJOR+1))
+        fi
+
+        # Build the new version number
+        NEW_VERSION="$MAJOR.$MINOR.$PATCH"
         
-        # Update version in cli/fd55.py
-        CLI_CURRENT_VERSION=$(grep "version=" cli/fd55.py | cut -d "'" -f2)
-        CLI_NEW_VERSION=$(awk -F. '{$NF = sprintf("%0*d", length($NF), ($NF+1)%10); print}' <<< "$CLI_CURRENT_VERSION" | tr ' ' '.')
-        sed -i "s/$CLI_CURRENT_VERSION/$CLI_NEW_VERSION/g" cli/fd55.py
+        # Update versions
+        sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
+        sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" cli/fd55.py
         
         git config --local user.email "${{ secrets.USERNAME }}"
         git config --local user.name "${{ secrets.USERNAME }}"
