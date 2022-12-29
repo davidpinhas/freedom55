@@ -7,7 +7,7 @@ echo "
 if [ -d "venv" ]; then
   # Virtualenv Exists
   echo "INFO: Activating virtualenv..."
-  source $PWD/venv/bin/activate
+  source $PWD/freedom55-venv/bin/activate
   echo "INFO: Installing requirements..."
   pip install -r requirements.txt &> /dev/null
   echo "INFO: Developing setup.py..."
@@ -15,10 +15,10 @@ if [ -d "venv" ]; then
 else
   # Virtualenv created
   echo "INFO: Creating virtualenv..."
-  python3 -m venv venv &> /dev/null
+  python3 -m venv freedom55-venv &> /dev/null
   sleep 1
   echo "INFO: Activating virtualenv..."
-  source $PWD/venv/bin/activate
+  source $PWD/freedom55-venv/bin/activate
   echo "INFO: Installing requirements..."
   pip install -r requirements.txt &> /dev/null
   echo "INFO: Developing setup.py..."
