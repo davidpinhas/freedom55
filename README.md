@@ -4,6 +4,8 @@ ____
 Freedom 55 CLI - the operational client for maintaining, modifying, and operating your homelab.
 Written in Python by David Pinhas, this multi-tool is constantly expanding to support more integrations. Make your homelab management a ***breeze*** with Freedom 55 CLI.
 
+The goal of this project is to give you the freedom to work efficiently and effectively with one unified tool.
+
 ![](images/menu.gif)
 
 ## Requirements
@@ -24,6 +26,15 @@ source startup.sh
 
 The script will create a virtual environment and provide steps to configure the alias for sourcing the venv.
 
+#### Installing Pip Binary
+To install the Freedom 55 CLI as a binary, you'll need to build the binary and install it using Pip3:
+```bash
+python3 -m build
+pip3 install dist/fd55-$VERSION.tar.gz
+```
+
+Installing Freedom 55 as a binary is the recommended approach, as it provides improved performance when using the CLI, leading to faster execution times and a more efficient workflow.
+
 ## Usage
 To use the Freedom 55 CLI, we'll first call fd55, than the integration and it's sub-command:
 ```bash
@@ -40,7 +51,7 @@ $ fd55 oci encrypt --string "Random text"
 - `--help`: (Optional) Show the help message and exit.
 
 ### Configuration
-For configuring the Freedom 55 CLI with your desired integrations, run the `fd55 config` command:
+To configure Freedom 55 CLI with your desired integrations, run the `fd55 config` command:
 ```bash
 fd55 config
 [?] Select integrations to configure?:
@@ -53,8 +64,7 @@ fd55 config
 The `config` command will guide you through the configuration process and request the required parameters for the selected integrations.
 
 ## Integrations
-Freedom 55 lets you integrate a variaty of tools and utilize them through one multi-tool.
-The vision is to provide you the freedom to work with one unified multi-tool insead of multiple CLIs, which cause a mess in your environment and your head.
+Freedom 55 is a powerful multi-tool that simplifies your workflow by integrating a variety of tools into a single interface. With Freedom 55, you can use a single tool instead of juggling multiple CLIs, which can clutter your environment and can be pretty overwhelming.
 
 Here's a list of currently supported tools (limited support):
 * [ArgoCD](#Argocd)
@@ -64,14 +74,13 @@ Here's a list of currently supported tools (limited support):
 
 ### ArgoCD
 ---
-The ArgoCD integration will allow you to retrieve application info, along with managing the ArgoCD server and its applications.
+The ArgoCD integration allows you to retrieve application information and manage the ArgoCD server and its applications.
 
 This integration requires the following keys:
 * `url` - ArgoCD endpoint, for example: https://argo.mydomain.com
 * `api_token` - The API token with the required permission for managing applications. For generating a token [ArgoCD Docs](https://argo-cd.readthedocs.io/en/latest/user-guide/commands/argocd_account_generate-token/).
 
-To modify ArgoCD application, you will need to provide a [JSON](https://www.json.org/json-en.html) file with a spec of your application.
-
+To modify an ArgoCD application, you will need to provide a [JSON](https://www.json.org/json-en.html) file with the desired application specifications.
 Here's an example of a simple JSON file application spec:
 ```json
 {
@@ -104,7 +113,8 @@ Here's an example of a simple JSON file application spec:
 }
 ```
 
-For full details on json payload you may utilize the ArgoCD API swagger imbeded in the ArgoCD web-ui, by navigating to your ArgoCD https://argo.mydomain.com/swagger-ui.
+For full details on the JSON payload, you can refer to the ArgoCD API Swagger documentation in the ArgoCD web interface. To access it, navigate to your ArgoCD server in your web browser:
+https://argo.mydomain.com/swagger-ui.
 
 #### Get Applications
 Get all ArgoCD applications:
@@ -243,7 +253,7 @@ Expected output:
 #### Encrypt Multiple Values With Regex
 To encrypt multiple values, use the ``|`` sign:
 ```bash
-fd55 sops encrypt -i test.yaml -o test.yaml2 -r "ingress|domain|spec"
+fd55 sops encrypt -i values.yaml -o encrypted-values.yaml -r "ingress|domain|spec"
 ```
 
 Expected output:
@@ -272,33 +282,33 @@ To run the [Terraform](https://www.terraform.io) integration, you will need to p
 #### Get Output From Terraform Plan
 For example, run the command below to get the output of the Terraform plan:
 ```bash
-fd55 tf output -p /Users/davidpinhas/workspace/cloud/k3s-oci-cluster/example
+fd55 tf output -p /path/to/tf/plan
 ```
 
 #### Initialize Terraform Plan
 ```bash
-fd55 tf init -p /Users/davidpinhas/workspace/cloud/k3s-oci-cluster/example
+fd55 tf init -p /path/to/tf/plan
 ```
 
 #### Plan The Terraform Plan
 ```bash
-fd55 tf plan -p /Users/davidpinhas/workspace/cloud/k3s-oci-cluster/example
+fd55 tf plan -p /path/to/tf/plan
 ```
 
 #### Apply Terraform Plan
 ```bash
-fd55 tf apply -p /Users/davidpinhas/workspace/cloud/k3s-oci-cluster/example
+fd55 tf apply -p /path/to/tf/plan
 ```
 
 #### Destroy Terraform Plan
 ```bash
-fd55 tf destroy -p /Users/davidpinhas/workspace/cloud/k3s-oci-cluster/example
+fd55 tf destroy -p /path/to/tf/plan
 ```
 
 ## Contribution
 - Give a star :star:
 - Feel free to Fork and Clone :beers:
-- Check my [issues](https://github.com/davidpinhas/cryptoview/issues) or create a [new issue](https://github.com/davidpinhas/cryptoview/issues/new) and give me a PR with your bugfix or improvement after. I appreciate any help! ❤️
+- Check my [issues](https://github.com/davidpinhas/freedom55/issues) or create a [new issue](https://github.com/davidpinhas/freedom55/issues/new) and give me a PR with your bugfix or improvement after. I appreciate any help! ❤️
 
 ## License
 This project is licensed under the MIT License. See [LICENSE](/LICENSE.md) for more details.
