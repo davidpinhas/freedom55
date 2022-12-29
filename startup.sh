@@ -1,63 +1,51 @@
 # Check the operating system
-if [ "$(uname)" == "Darwin" ]; then
-  # MacOS
-  if command -v figlet > /dev/null; then
-    brew install figlet
-  else
-    echo "Info: Figlet already installed"
-  fi
-elif [ "$(uname)" == "Linux" ]; then
-  # Linux
-  if command -v apt-get > /dev/null; then
-    # Debian-based systems (e.g. Ubuntu, Linux Mint)
-    apt-get update
-    apt-get install figlet
-  elif command -v yum > /dev/null; then
-    # Red Hat-based systems (e.g. CentOS, Fedora)
-    yum install figlet
-  elif command -v pacman > /dev/null; then
-    # Arch-based systems (e.g. Manjaro)
-    pacman -S figlet
-  else
-    echo "Error: unsupported Linux distribution"
-    exit 1
-  fi
-elif [ "$(uname)" == "FreeBSD" ]; then
-  # FreeBSD
-  pkg install figlet
-elif [ "$(uname)" == "MINGW64_NT-10.0" ] || [ "$(uname)" == "MINGW32_NT-10.0" ]; then
-  # Windows (using Chocolatey)
-  choco install figlet
-else
-  echo "Error: unsupported operating system"
-  exit 1
-fi
-
-echo "figlet installed successfully"
-
-figlet -f epic "Freedom 55"
-
+echo "
+############################
+##### Freedom 55 Setup #####
+############################
+"
 if [ -d "venv" ]; then
   # Virtualenv Exists
-  source venv/bin/activate
-  pip install -r requirements.txt
-  python3 setup.py develop
+  echo "INFO: Activating virtualenv..."
+  source $PWD/venv/bin/activate
+  echo "INFO: Installing requirements..."
+  pip install -r requirements.txt &> /dev/null
+  echo "INFO: Developing setup.py..."
+  python3 setup.py develop &> /dev/null
 else
   # Virtualenv created
-  virtualenv --python=python3 venv
+  echo "INFO: Creating virtualenv..."
+  python3 -m venv venv &> /dev/null
   sleep 1
-  source venv/bin/activate
-  pip install -r requirements.txt
-  python3 setup.py develop
+  echo "INFO: Activating virtualenv..."
+  source $PWD/venv/bin/activate
+  echo "INFO: Installing requirements..."
+  pip install -r requirements.txt &> /dev/null
+  echo "INFO: Developing setup.py..."
+  python3 setup.py develop &> /dev/null
 fi
 
-current_dir=$PWD
-alias_name=$(printf "alias fd55CLI='cd %s/fd55 && source venv/bin/activate'" "$current_dir")
-
-echo "Freedom 55 was initialized successfully.
-To configure the CLI on the local machine, Run the following commands:
-"
-printf 'echo "%s" >> %s' "$alias_name" "~/.bashrc"
+# Print the ASCII art and a message to the console
 echo "
-source ~/.bashrc
-fd55CLI"
+################
+##### Done #####
+################
+"
+echo "INFO: Freedom 55 was initialized successfully."
+
+# Set up the alias command
+alias_name=$(printf "alias fd55CLI='cd %s && source venv/bin/activate'" "$PWD")
+  
+# Print the instructions to configure the CLI on the local machine
+echo "To configure the CLI on the local machine, run these three commands:"
+echo "
+# set alias to access the current directory and activate venv"
+printf '$ if ! grep -q "%s" ~/.bashrc; then echo "%s" >> %s' "$alias_name" "$alias_name" "~/.bashrc; fi
+"
+echo "
+# Source the bashrc file"
+echo "$ source ~/.bashrc
+"
+echo "# Run the alias"
+echo "$ fd55CLI
+"
