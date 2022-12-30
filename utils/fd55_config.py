@@ -2,7 +2,7 @@ import logging
 import configparser
 import os
 import platform
-import inquirer
+from InquirerPy import prompt
 import shutil
 import datetime
 from cli.functions import Functions as fn
@@ -75,16 +75,16 @@ class Config:
     def select_components_menu():
         """ Prompt the user to select one or more components from a list """
         config = Config()
-        prompt = [
-              inquirer.Checkbox('components',
-                    message="Select integrations to configure?",
-                    choices=component_list,
-                    ),
-        ]
-        selected_options = inquirer.prompt(prompt)
+        integrations = [{'type': 'checkbox',
+        'message': 'Select integrations to configure',
+        'name': 'integrations',
+        'choices': component_list,
+        'validate': lambda answer: 'You must at least one integration to proceed.' \
+            if len(answer) == 0 else True}]
+        selected_options = prompt(integrations)
         Config.config_backup()
         fn.delete_file(f"{config.get_config_dir()}/config.ini")
-        return selected_options['components']
+        return selected_options['integrations']
 
     def validate_config_section(self, component):
         """ Validate the configuration file """
