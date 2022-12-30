@@ -8,6 +8,23 @@ The goal of this project is to give you the freedom to work efficiently and effe
 
 ![](images/menu.gif)
 
+## Menu
+
+-   [Requirements](#Requirements)
+-   [Installation](#Installation)
+    -   [Installing Pip Binary](#Installing-Pip-Binary)
+    -   [Windows Install](#Windows-Install)
+-   [Usage](#Usage)
+    -   [Options](#Options)
+    -   [Configuration](#Configuration)
+-   [Integrations](#Integrations)
+    -   [ArgoCD](#ArgoCD)
+    -   [OCI](#OCI)
+    -   [SOPS](#SOPS)
+    -   [Terraform](#Terraform)
+-   [Contribution](#Contribution)
+-   [License](#License)
+
 ## Requirements
 - Python 3.10 or higher - Ensure `Python3.10`, `Pip3` and `Virtualenv` are installed
 - Click - can be installed using `$ pip install click`
