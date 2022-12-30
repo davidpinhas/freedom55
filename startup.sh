@@ -1,4 +1,5 @@
 #!/bin/bash
+deactivate &> /dev/null
 echo "
 ############################
 ##### Freedom 55 Setup #####
@@ -22,12 +23,16 @@ Run the installer and follow the prompts to install Python 3.
   return 0
 # Check Python 3 version
 else
-  minor_version=$(python3 -c 'import sys; print(sys.version_info)' | awk '{print $2}' | grep -o '[0-9]\+')
+  if [ "$OSTYPE" == "win32" ] || [ "$OSTYPE" == "msys" ]; then  
+    minor_version=$(python -c 'import sys; print(sys.version_info)' | awk '{print $2}' | grep -o '[0-9]\+')
+  else
+    minor_version=$(python3 -c 'import sys; print(sys.version_info)' | awk '{print $2}' | grep -o '[0-9]\+')
+  fi
   if [[ $minor_version -ge 10 ]]; then
     echo "INFO: Valid Python version"
   else
     echo "ERROR: Python3 version is lower than 3.10, please install Python3.10 or above before proceeding."
-    echo "INFO: For more details go to - https://www.python.org/downloads."    
+    echo "INFO: For more details go to - https://www.python.org/downloads."
   fi
 fi
 # Check if pip3 is installed
@@ -46,31 +51,43 @@ Run the installer and follow the prompts to install Python 3.
   return 0
 fi
 # Check if virtualenv is installed
-if ! command -v virtualenv &> /dev/null; then
-  echo "Error: Virtualenv not installed"
+if [ "$OSTYPE" == "win32" ] || [ "$OSTYPE" == "msys" ]; then
+  echo "INFO: Running on Windows, virtualenv not required"
+elif ! command -v virtualenv &> /dev/null; then
+  echo "ERROR: Virtualenv not installed"
   return 0
 fi
 
+if [ "$OSTYPE" == "win32" ] || [ "$OSTYPE" == "msys" ]; then
+  python_bin="python"
+  venv="python -m virtualenv freedom55-venv > /dev/null"
+  venv_activate="source $PWD/freedom55-venv/Scripts/activate"
+  pip install virtualenv &> /dev/null
+else
+  python_bin="python3"
+  venv="virtualenv --python=python3 freedom55-venv"
+  venv_activate="source $PWD/freedom55-venv/bin/activate"
+fi
 # Setting up source code
 if [ -d "freedom55-venv" ]; then
   # Virtualenv exists
   echo "INFO: Activating virtualenv"
-  source $PWD/freedom55-venv/bin/activate
+  $venv_activate
   echo "INFO: Installing requirements"
   pip install -r requirements.txt &> /dev/null
   echo "INFO: Developing setup.py"
-  python3 setup.py develop &> /dev/null
+  $python_bin setup.py develop
 else
   # Virtualenv created
   echo "INFO: Creating virtualenv"
-  virtualenv --python=python3 freedom55-venv &> /dev/null
-  sleep 5
+  eval $venv
+  sleep 1
   echo "INFO: Activating virtualenv"
-  source $PWD/freedom55-venv/bin/activate
+  eval $venv_activate
   echo "INFO: Installing requirements"
   pip install -r requirements.txt &> /dev/null
   echo "INFO: Developing setup.py"
-  python3 setup.py develop &> /dev/null
+  $python_bin setup.py develop &> /dev/null
 fi
 
 # Output message
