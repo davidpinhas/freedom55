@@ -11,7 +11,7 @@ from cli.functions import Functions as fn
 @click.option('-v', '--verbosity', default='info',
               help='Logging level (info, warn, error, debug)',
               required=False)
-@click.version_option(version='2.4.7')
+@click.version_option(version='2.4.8')
 @click.pass_context
 def main(ctx, verbosity):
     """Freedom 55 CLI tools.
