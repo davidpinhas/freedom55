@@ -58,6 +58,18 @@ Press the Windows Key > Search and press Git Bash > Follow the steps mentioned [
 
 For more details, read more on [What is Git Bash](https://www.gitkraken.com/blog/what-is-git-bash).
 
+On Windows systems, the command "`fd55 config`" might result with the following error:
+```bash
+prompt_toolkit.output.win32.NoConsoleScreenBufferError: Found xterm, while expecting a Windows console. Maybe try to run this program using "winpty" or run it in cmd.exe instead. Or otherwise, in case of Cygwin, use the Python executable that is compiled for Cygwin.
+```
+
+To fix this issue, you'll need to use the **winpty** command to run the `fd55 config` command on Windows systems. This is because winpty is a compatibility layer that allows you to run console programs that are not natively supported on Windows.
+
+By using winpty, you can run the `fd55 config` command without encountering any errors. Simply run the following command in your terminal:
+```bash
+winpty fd55 config
+```
+
 ## Usage
 To use the Freedom 55 CLI, we'll first call fd55, than the integration and it's sub-command:
 ```bash
