@@ -1,11 +1,10 @@
 import click
-import logging
 from cli.cli_groups.oci import oci
 from cli.cli_groups.sops import sops
 from cli.cli_groups.tf import tf
 from cli.cli_groups.argocd import argo
 from cli.cli_groups.cli_config import config
-from cli.functions import Functions as fn
+
 
 @click.group()
 @click.option('-v', '--verbosity', default='info',
@@ -14,6 +13,8 @@ from cli.functions import Functions as fn
 @click.version_option(version='2.5.1')
 @click.pass_context
 def main(ctx, verbosity):
+    import logging
+    from cli.functions import Functions as fn
     """Freedom 55 CLI.
 
         Freedom 55 - The operational client crafted by David Pinhas

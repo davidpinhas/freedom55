@@ -1,5 +1,4 @@
 import click
-from cli.tf_client.tf_cli import TerraformCli
 
 
 @click.group()
@@ -14,6 +13,7 @@ def tf(ctx):
 @click.pass_context
 def init(ctx, path):
     """ Init your working directory """
+    from cli.tf_client.tf_cli import TerraformCli
     TerraformCli.tf_init(path)
 
 
@@ -22,6 +22,7 @@ def init(ctx, path):
 @click.pass_context
 def plan(ctx, path):
     """ Run Terraform plan on the selected path """
+    from cli.tf_client.tf_cli import TerraformCli
     TerraformCli.tf_plan(path)
 
 
@@ -30,6 +31,7 @@ def plan(ctx, path):
 @click.pass_context
 def apply(ctx, path):
     """ Apply the changes """
+    from cli.tf_client.tf_cli import TerraformCli
     TerraformCli.tf_apply(path)
 
 
@@ -38,6 +40,7 @@ def apply(ctx, path):
 @click.pass_context
 def output(ctx, path):
     """ Get output of Terraform project """
+    from cli.tf_client.tf_cli import TerraformCli
     TerraformCli.tf_output(path)
 
 
@@ -46,4 +49,5 @@ def output(ctx, path):
 @click.pass_context
 def destroy(ctx, path):
     """ Destroy infrastructure """
+    from cli.tf_client.tf_cli import TerraformCli
     TerraformCli.tf_destroy(path)

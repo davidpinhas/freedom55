@@ -1,5 +1,4 @@
 import click
-from cli.sops_client.sops_cli import Sops
 
 
 @click.group()
@@ -16,6 +15,7 @@ def sops(ctx):
 @click.pass_context
 def encrypt(ctx, input_file, output_file, encrypted_regex):
     """ Encrypt file using SOPS with Age encryption """
+    from cli.sops_client.sops_cli import Sops
     Sops.encrypt(input_file=input_file, output_file=output_file, encrypted_regex=encrypted_regex)
 
 
@@ -25,4 +25,5 @@ def encrypt(ctx, input_file, output_file, encrypted_regex):
 @click.pass_context
 def decrypt(ctx, input_file, output_file):
     """ Decrypt file using SOPS with Age encryption """
+    from cli.sops_client.sops_cli import Sops
     Sops.decrypt(input_file=input_file, output_file=output_file)

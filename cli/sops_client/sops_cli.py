@@ -1,9 +1,5 @@
 import subprocess
-from cli.functions import Functions as fn
-import os
 import logging
-import platform
-import os.path
 from os import path
 from utils.fd55_config import Config
 config = Config()

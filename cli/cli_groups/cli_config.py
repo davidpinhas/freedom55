@@ -1,6 +1,4 @@
 import click
-from utils.fd55_config import Config
-
 
 @click.group()
 @click.pass_context
@@ -13,5 +11,6 @@ def config(ctx):
 @click.pass_context
 def config(ctx):
     """ Configure CLI """
+    from utils.fd55_config import Config
     config = Config()
     config.run_config_validation()

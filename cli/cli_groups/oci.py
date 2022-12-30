@@ -1,6 +1,4 @@
 import click
-import oci
-from cli.oci_client.oci_cli import Oci
 
 
 @click.group()
@@ -15,6 +13,7 @@ def oci(ctx):
 @click.pass_context
 def encrypt(ctx, string):
     """ Encrypt plaintext string with OCI KMS """
+    from cli.oci_client.oci_cli import Oci
     Oci.encrypt(plaintext=string)
 
 
@@ -23,4 +22,5 @@ def encrypt(ctx, string):
 @click.pass_context
 def decrypt(ctx, string):
     """ Decrypt KMS encrypted string """
+    from cli.oci_client.oci_cli import Oci
     Oci.decrypt(plaintext=string)
