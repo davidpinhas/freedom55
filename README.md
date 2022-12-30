@@ -1,7 +1,7 @@
 ![](images/Freedom55.png)
 ____
 
-Freedom 55 CLI - the operational client for maintaining, modifying, and operating your homelab.
+Freedom 55 CLI - The operational client for maintaining, modifying, and operating your homelab.
 Written in Python by David Pinhas, this multi-tool is constantly expanding to support more integrations. Make your homelab management a ***breeze*** with Freedom 55 CLI.
 
 The goal of this project is to give you the freedom to work efficiently and effectively with one unified tool.

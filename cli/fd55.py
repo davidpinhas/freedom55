@@ -14,10 +14,10 @@ from cli.functions import Functions as fn
 @click.version_option(version='2.5.0')
 @click.pass_context
 def main(ctx, verbosity):
-    """Freedom 55 CLI tools.
+    """Freedom 55 CLI.
 
-        The freedom 55 CLI is an operational tool crafted by David Pinhas
-        To maintain, modify and operate a homelab."""
+        Freedom 55 - The operational client crafted by David Pinhas
+        for maintaining, modifying, and operating your homelab."""
     ctx.ensure_object(dict)
     if verbosity == 'debug':
         log_level = logging.DEBUG
