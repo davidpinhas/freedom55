@@ -9,18 +9,18 @@ The goal of this project is to give you the freedom to work efficiently and effe
 ![](images/menu.gif)
 
 ## Requirements
-- Python 3.10 or higher
+- Python 3.10 or higher - Ensure `Python3.10`, `Pip3` and `Virtualenv` are installed
 - Click - can be installed using `$ pip install click`
 - OCI - can be installed using `$ pip install oci oci-cli`
 - SOPS client  - can be installed using `$ pip install sops`
 - OCI keys and OCIDs - In order to [configure Freedom 55](#configuration) the OCI integration, you will need the [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs)
-- [OCI KMS Vault](https://www.oracle.com/il-en/security/cloud-security/key-management/) pre-configured
+- [OCI KMS Vault](https://www.oracle.com/il-en/security/cloud-security/key-management/) pre-configured - [**Required**] for the OCI encryption/decryption operations
 
 ## Installation
 In order to install the CLI on your local machine, you can clone the repository and utilize the startup.sh script:
 ```bash
-git clone https://github.com/davidpinhas/fd55.git
-cd fd55
+git clone https://github.com/davidpinhas/freedom55.git
+cd freedom55
 source startup.sh
 ```
 
@@ -34,6 +34,12 @@ pip3 install dist/fd55-$VERSION.tar.gz
 ```
 
 Installing Freedom 55 as a binary is the recommended approach, as it provides improved performance when using the CLI, leading to faster execution times and a more efficient workflow.
+
+#### Windows Install
+To source the startup.sh file, you can use [Git Bash](https://git-scm.com/downloads), which can simplify the installation process.
+Press the Windows Key > Search and press Git Bash > Follow the steps mentioned [above](#Installation).
+
+For more details, read more on [What is Git Bash](https://www.gitkraken.com/blog/what-is-git-bash).
 
 ## Usage
 To use the Freedom 55 CLI, we'll first call fd55, than the integration and it's sub-command:
@@ -74,7 +80,7 @@ Here's a list of currently supported tools (limited support):
 
 ### ArgoCD
 ---
-The ArgoCD integration allows you to retrieve application information and manage the ArgoCD server and its applications.
+The [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) integration allows you to retrieve application information and manage the ArgoCD server and its applications.
 
 This integration requires the following keys:
 * `url` - ArgoCD endpoint, for example: https://argo.mydomain.com
