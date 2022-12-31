@@ -88,12 +88,13 @@ $ fd55 oci encrypt --string "Random text"
 ### Configuration
 To configure Freedom 55 CLI with your desired integrations, run the `fd55 config` command:
 ```bash
-fd55 config
-[?] Select integrations to configure?:
-   [X] OCI
-   [X] SOPS
-   [ ] ARGOCD
- > [ ] TERRAFORM
+$ fd55 config
+2022-12-31 15:20:25,055|INFO|Running config validation
+? Select integrations to configure
+  ◉ OCI
+  ◉ SOPS
+  ○ ARGOCD
+❯ ○ TERRAFORM
 ```
 
 The `config` command will guide you through the configuration process and request the required parameters for the selected integrations.
