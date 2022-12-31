@@ -25,5 +25,5 @@ setup(
     ],
     include_package_data=True,
     entry_points={"console_scripts": ["fd55 = cli.fd55:main"]},
-    install_requires=["click", "oci", "requests", "python_terraform", "inquirer"],
+    install_requires=["click", "oci", "requests", "python_terraform", "InquirerPy"],
 )
