@@ -32,7 +32,7 @@ def create_app(ctx, file):
 @click.option('-f', '--file', help='application yaml file', required=True)
 @click.pass_context
 def update_app(ctx, file):
-    """ Create an ArgoCD application """
+    """ Update an ArgoCD application """
     from cli.argocd_client.argocd_cli import ArgoCD
     from utils.fd55_config import Config
     config = Config()
@@ -43,7 +43,7 @@ def update_app(ctx, file):
 @click.option('-n', '--name', help='application name', required=True)
 @click.pass_context
 def delete_app(ctx, name):
-    """ Create an ArgoCD application """
+    """ Delete an ArgoCD application """
     from cli.argocd_client.argocd_cli import ArgoCD
     from utils.fd55_config import Config
     config = Config()
