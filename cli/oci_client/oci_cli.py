@@ -60,7 +60,7 @@ class Oci:
         logging.info(f"Decrypted string - {data}")
 
     def list_kms_vaults():
-        """ KMS decrypt """
+        """ List vaults """
         logging.info("Retrieving vaults data")
         table = PrettyTable()
         table.field_names = ['Name', 'State', 'Time Created']
