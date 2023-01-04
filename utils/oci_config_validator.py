@@ -41,6 +41,10 @@ class OciValidator:
             OciValidator.set_config(), OciValidator.set_config_service_endpoint())
         return oci_key_client
 
+    def set_config_oci_kms_vault_client():
+        oci_kms_vault_client = oci.key_management.KmsVaultClient(OciValidator.set_config())
+        return oci_kms_vault_client
+
     def retrieve_oci_key_id():
         """ Retrieve OCI key id """
         key_management_client = oci.key_management.KmsManagementClient(

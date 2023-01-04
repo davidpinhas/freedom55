@@ -24,3 +24,10 @@ def decrypt(ctx, string):
     """ Decrypt KMS encrypted string """
     from cli.oci_client.oci_cli import Oci
     Oci.decrypt(plaintext=string)
+
+@oci.command()
+@click.pass_context
+def list_vaults(ctx):
+    """ List KMS vaults """
+    from cli.oci_client.oci_cli import Oci
+    Oci.list_kms_vaults()

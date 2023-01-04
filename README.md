@@ -216,6 +216,7 @@ This integration requires the following keys:
 * `key_file`
 
 For more details on retrieving the required keys, read more in Oracle's [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs) Docs.
+#TODO: Add support for encryption and decryption of binaries.
 
 #### Encrypt String
 To encrypt a secret:
@@ -242,7 +243,22 @@ Expected output:
 2022-12-29 04:56:08,184|INFO|Decrypted string - This is my secret
 ```
 
-#TODO: Add support for encryption and decryption of binaries.
+#### List vaults
+To get a list of all current vaults under the tenancy that was set in the [Freedom 55 config file](#Configuration), run the following command:
+```bash
+$ fd55 oci list-vaults
+```
+
+The resulting output should be a table that lists all vaults:
+```
+2023-01-04 03:10:53,303|INFO|Retrieving vaults data
++----------------------+---------+----------------------------------+
+|         Name         |  State  |           Time Created           |
++----------------------+---------+----------------------------------+
+|      test-vault      | DELETED | 2022-10-31T18:14:22.516000+00:00 |
+|      main-vault      |  ACTIVE | 2022-10-17T17:08:29.486000+00:00 |
++----------------------+---------+----------------------------------+
+```
 
 ### SOPS
 ---

@@ -1,4 +1,6 @@
 import oci
+import json
+from prettytable import PrettyTable
 import logging
 from utils.oci_config_validator import OciValidator
 from cli.functions import Functions as fn
@@ -18,6 +20,7 @@ class Oci:
         self.user = user
         self.key_id = key_id
         self.setup_logger()
+        Oci.run_init_oci()
 
     def run_init_oci():
         config = Config()
@@ -35,7 +38,6 @@ class Oci:
 
     def encrypt(plaintext):
         """ KMS encrypt """
-        Oci.run_init_oci()
         logging.info("Encrypting string with KMS")
         encoded_plaintext = fn.base64_encode(plaintext)
         encrypt_response = OciValidator.set_config_oci_key_client().encrypt(
@@ -48,7 +50,6 @@ class Oci:
 
     def decrypt(plaintext):
         """ KMS decrypt """
-        Oci.run_init_oci()
         logging.info("Decrypting string with KMS")
         decrypt_response = OciValidator.set_config_oci_key_client().decrypt(
             decrypt_data_details=oci.key_management.models.DecryptDataDetails(
@@ -58,6 +59,26 @@ class Oci:
         data = fn.base64_decode(decrypt_response)
         logging.info(f"Decrypted string - {data}")
 
+    def list_kms_vaults():
+        """ KMS decrypt """
+        logging.info("Retrieving vaults data")
+        table = PrettyTable()
+        table.field_names = ['Name', 'State', 'Time Created']
+        vaults = OciValidator.set_config_oci_kms_vault_client().list_vaults(
+            compartment_id=OciValidator.set_config()["tenancy"])
+        for obj in vaults.data:
+            data = json.loads(str(obj))
+            row = [data['display_name'], data['lifecycle_state'], data['time_created']]
+            table.add_row(row)
+        print(table)
+        return vaults
+    
+    def create_vault():
+        pass
+
+    def delete_vault():
+        pass
+        
     #### KMS SECRETS ####
 
     # def dict_to_secret(dictionary):
