@@ -215,31 +215,6 @@ This integration requires the following keys:
 For more details on retrieving the required keys, read more in Oracle's [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs) Docs.
 #TODO: Add support for encryption and decryption of binaries.
 
-#### Encrypt String
-To encrypt a secret:
-```bash
-$ fd55 oci encrypt -s "This is my secret"
-```
-
-Expected output:
-```
-2022-12-29 04:55:43,132|INFO|Encrypting string with KMS
-2022-12-29 04:55:43,309|INFO|Encrypted string value - Qf7eN7k3cJBlAFpAtSVaPqM....
-(KMS encrypted secret)
-```
-
-#### Decrypt With KMS
-For decrypting a secret, the KMS encrypted value needs to be provided as a string (decrpyting needs to be performed with the same key the value was encrypted to begin with):
-```bash
-$ fd55 oci decrypt -s "Qf7eN7k3cJBlAFpAtSVaPqM...."
-```
-
-Expected output:
-```
-2022-12-29 04:56:08,020|INFO|Decrypting string with KMS
-2022-12-29 04:56:08,184|INFO|Decrypted string - This is my secret
-```
-
 #### List vaults
 To get a list of all current vaults under the tenancy that was set in the [Freedom 55 config file](#Configuration), run the following command:
 ```bash
@@ -267,18 +242,44 @@ To create a new vault, use the command below and provide the `-n`/`--name` argum
 ```bash
 $ fd55 oci create-vault -n test-vault
 ```
-The vault type will be created as "*DEFAULT*".
+The vault will be created as "*DEFAULT*" vault type.
 
 #### Delete vault
-To schedule a vault deletion, you can use the following commnad:
+To schedule a vault deletion, you can use the following command:
 ```bash
 $ fd55 oci delete-vault --id $VAULT_ID
 ```
 
 The default time for deletion is set to **30** days from the time this command was triggered.
+
 To overwrite the days for deletion, you can use the `-d`/`--days` argument (the minimum value can be 7 days):
 ```bash
 fd55 oci delete-vault --id $VAULT_ID -d 7
+```
+
+#### Encrypt String
+To encrypt a secret:
+```bash
+$ fd55 oci encrypt -s "This is my secret"
+```
+
+Expected output:
+```
+2022-12-29 04:55:43,132|INFO|Encrypting string with KMS
+2022-12-29 04:55:43,309|INFO|Encrypted string value - Qf7eN7k3cJBlAFpAtSVaPqM....
+(KMS encrypted secret)
+```
+
+#### Decrypt With KMS
+For decrypting a secret, the KMS encrypted value needs to be provided as a string (decrpyting needs to be performed with the same key the value was encrypted to begin with):
+```bash
+$ fd55 oci decrypt -s "Qf7eN7k3cJBlAFpAtSVaPqM...."
+```
+
+Expected output:
+```
+2022-12-29 04:56:08,020|INFO|Decrypting string with KMS
+2022-12-29 04:56:08,184|INFO|Decrypted string - This is my secret
 ```
 
 ### SOPS
