@@ -1,5 +1,6 @@
 import oci
 import logging
+from datetime import datetime, timedelta
 from cli.functions import Functions as fn
 from utils.fd55_config import Config
 logger = logging.getLogger()
@@ -42,8 +43,27 @@ class OciValidator:
         return oci_key_client
 
     def set_config_oci_kms_vault_client():
+        """ Set the OCI KMS vault client """
         oci_kms_vault_client = oci.key_management.KmsVaultClient(OciValidator.set_config())
         return oci_kms_vault_client
+
+    def set_vault_details(name=None):
+        """ Set details for vault creation """
+        vault_details = oci.key_management.models.CreateVaultDetails(compartment_id=OciValidator.set_config()["tenancy"], display_name=name, vault_type="DEFAULT")
+        return vault_details
+
+    def set_schedule_vault_deletion(days=None):
+        """ Set deletion details for vault deletion """
+        if not days:
+            logging.warn(f"No argument was provided for days")
+            logging.info(f"Scheduling deletion to the default setting of 30 days from today")
+            schedule_vault_deletion = oci.key_management.models.ScheduleVaultDeletionDetails()
+        else:
+            current_date = datetime.now()
+            new_date = current_date + timedelta(days=int(days))
+            logging.info(f"Vault scheduled for deletion: {new_date}")
+            schedule_vault_deletion = oci.key_management.models.ScheduleVaultDeletionDetails(time_of_deletion=new_date)
+        return schedule_vault_deletion
 
     def retrieve_oci_key_id():
         """ Retrieve OCI key id """

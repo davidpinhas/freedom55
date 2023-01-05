@@ -59,26 +59,46 @@ class Oci:
         data = fn.base64_decode(decrypt_response)
         logging.info(f"Decrypted string - {data}")
 
-    def list_kms_vaults():
+    def list_kms_vaults(id=None):
         """ List vaults """
         logging.info("Retrieving vaults data")
         table = PrettyTable()
-        table.field_names = ['Name', 'State', 'Time Created']
         vaults = OciValidator.set_config_oci_kms_vault_client().list_vaults(
             compartment_id=OciValidator.set_config()["tenancy"])
         for obj in vaults.data:
             data = json.loads(str(obj))
-            row = [data['display_name'], data['lifecycle_state'], data['time_created']]
+            if id:
+                table.field_names = ['Name', 'State', 'ID', 'Time Created']
+                row = [data['display_name'], data['lifecycle_state'], data['id'], data['time_created']]
+            else:
+                table.field_names = ['Name', 'State', 'Time Created']
+                row = [data['display_name'], data['lifecycle_state'], data['time_created']]
             table.add_row(row)
         print(table)
         return vaults
     
-    def create_vault():
-        pass
+    def create_vault(name):
+        """ Create vault """
+        vault_details = OciValidator.set_vault_details(name=name)
+        try:
+            new_vault = OciValidator.set_config_oci_kms_vault_client().create_vault(create_vault_details=vault_details)
+            data = json.loads(str(new_vault.data))
+            logging.info(f"Created vault '{data['display_name']}'")
+        except oci.exceptions.ServiceError as e:
+            logging.error(f"Failed to create vault with error:\n{e}")
 
-    def delete_vault():
-        pass
-        
+    def delete_vault(vault_id, days=None):
+        """ Delete vault """
+        try:
+            if days:
+                delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(vault_id=vault_id, schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion(days=days))
+            else:
+                delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(vault_id=vault_id, schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion())
+            data = json.loads(str(delete_vault.data))
+            logging.info(f"Deleted vault '{data['display_name']}' with ID - {data['id']}")
+        except oci.exceptions.ServiceError as e:
+            logging.error(f"Failed with message:\n{e}")
+            
     #### KMS SECRETS ####
 
     # def dict_to_secret(dictionary):

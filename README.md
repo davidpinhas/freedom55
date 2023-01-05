@@ -260,6 +260,30 @@ The resulting output should be a table that lists all vaults:
 +----------------------+---------+----------------------------------+
 ```
 
+To print the ID of the vaults, you can add the `--id` argument:
+```bash
+$ fd55 oci list-vaults --id
+```
+
+#### Create vault
+To create a new vault, use the command below and provide the `-n`/`--name` argument to name the vault:
+```bash
+$ fd55 oci create-vault -n test-vault
+```
+The vault type will be created as "*DEFAULT*".
+
+#### Delete vault
+To schedule a vault deletion, you can use the following commnad:
+```bash
+$ fd55 oci delete-vault --id $VAULT_ID
+```
+
+The default time for deletion is set to **30** days from the time this command was triggered.
+To overwrite the days for deletion, you can use the `-d`/`--days` argument (the minimum value can be 7 days):
+```bash
+fd55 oci delete-vault --id $VAULT_ID -d 7
+```
+
 ### SOPS
 ---
 The SOPS integration encrypts and decrypts files using [Age encryption](https://github.com/FiloSottile/age).

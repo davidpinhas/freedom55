@@ -26,8 +26,32 @@ def decrypt(ctx, string):
     Oci.decrypt(plaintext=string)
 
 @oci.command()
+@click.option('--id' ,help="Display vaults IDs" , is_flag=True)
 @click.pass_context
-def list_vaults(ctx):
+def list_vaults(ctx, id):
     """ List KMS vaults """
     from cli.oci_client.oci_cli import Oci
-    Oci.list_kms_vaults()
+    if id:
+        Oci.list_kms_vaults(id=True)
+    else:
+        Oci.list_kms_vaults()
+
+@oci.command()
+@click.option('-n', '--name', help='Vault name', required=True)
+@click.pass_context
+def create_vault(ctx, name):
+    """ Create vault """
+    from cli.oci_client.oci_cli import Oci
+    Oci.create_vault(name=name)
+
+@oci.command()
+@click.option('--id', help='Vault ID', required=True)
+@click.option('-d', '--days', help='Number of days from today to schedule the vault deletion', required=False)
+@click.pass_context
+def delete_vault(ctx, id, days):
+    """ Schedule vault deletion """
+    from cli.oci_client.oci_cli import Oci
+    if days:
+        Oci.delete_vault(vault_id=id, days=days)
+    else:
+        Oci.delete_vault(vault_id=id)
