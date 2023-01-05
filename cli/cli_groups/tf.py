@@ -1,14 +1,15 @@
 import click
+from utils.cli_help_order import CliHelpOrder
 
 
-@click.group()
+@click.group(cls=CliHelpOrder)
 @click.pass_context
 def tf(ctx):
     """ Terraform commands """
     ctx.ensure_object(dict)
 
 
-@tf.command()
+@tf.command(help_priority=1)
 @click.option('-p', '--path', help='path of Terraform project', required=True)
 @click.pass_context
 def init(ctx, path):
@@ -17,7 +18,7 @@ def init(ctx, path):
     TerraformCli.tf_init(path)
 
 
-@tf.command()
+@tf.command(help_priority=2)
 @click.option('-p', '--path', help='path of Terraform project', required=True)
 @click.pass_context
 def plan(ctx, path):
@@ -26,7 +27,7 @@ def plan(ctx, path):
     TerraformCli.tf_plan(path)
 
 
-@tf.command()
+@tf.command(help_priority=3)
 @click.option('-p', '--path', help='path of Terraform project', required=True)
 @click.pass_context
 def apply(ctx, path):
@@ -35,7 +36,7 @@ def apply(ctx, path):
     TerraformCli.tf_apply(path)
 
 
-@tf.command()
+@tf.command(help_priority=4)
 @click.option('-p', '--path', help='path of Terraform project', required=True)
 @click.pass_context
 def output(ctx, path):
@@ -44,7 +45,7 @@ def output(ctx, path):
     TerraformCli.tf_output(path)
 
 
-@tf.command()
+@tf.command(help_priority=5)
 @click.option('-p', '--path', help='path of Terraform project', required=True)
 @click.pass_context
 def destroy(ctx, path):
