@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Python lint
+      uses: peter-evans/autopep8@v1
+      with:
+        args: --in-place --aggressive --aggressive --recursive .
     - name: Update setup.py
       run: |
         # Update version setup.py
