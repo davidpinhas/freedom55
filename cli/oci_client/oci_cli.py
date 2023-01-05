@@ -91,7 +91,12 @@ class Oci:
         """ Delete vault """
         try:
             if days:
-                delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(vault_id=vault_id, schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion(days=days))
+                if int(days) < 7:
+                    logging.error("Not acceptable value for days")
+                    logging.error("Can only accept 7 and above")
+                    exit()
+                else:
+                    delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(vault_id=vault_id, schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion(days=days))
             else:
                 delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(vault_id=vault_id, schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion())
             data = json.loads(str(delete_vault.data))

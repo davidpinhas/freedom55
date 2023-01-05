@@ -61,7 +61,7 @@ class OciValidator:
         else:
             current_date = datetime.now()
             new_date = current_date + timedelta(days=int(days))
-            logging.info(f"Vault scheduled for deletion: {new_date}")
+            logging.info(f"Scheduling vault deletion to date: {new_date}")
             schedule_vault_deletion = oci.key_management.models.ScheduleVaultDeletionDetails(time_of_deletion=new_date)
         return schedule_vault_deletion
 
