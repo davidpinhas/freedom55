@@ -1,5 +1,6 @@
 import click
 
+
 class CliHelpOrder(click.Group):
 
     def __init__(self, *args, **kwargs):

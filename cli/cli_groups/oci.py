@@ -10,23 +10,31 @@ def oci(ctx):
 
 
 @oci.command(help_priority=1)
-@click.option('-s', '--string', help='plaintext string to encrypt', required=True)
+@click.option('-s',
+              '--string',
+              help='plaintext string to encrypt',
+              required=True)
 @click.pass_context
 def decrypt(ctx, string):
     """ Decrypt KMS encrypted string """
     from cli.oci_client.oci_cli import Oci
     Oci.decrypt(plaintext=string)
 
+
 @oci.command(help_priority=2)
-@click.option('-s', '--string', help='plaintext string to encrypt', required=True)
+@click.option('-s',
+              '--string',
+              help='plaintext string to encrypt',
+              required=True)
 @click.pass_context
 def encrypt(ctx, string):
     """ Encrypt plaintext string with OCI KMS """
     from cli.oci_client.oci_cli import Oci
     Oci.encrypt(plaintext=string)
 
+
 @oci.command(help_priority=3)
-@click.option('--id' ,help="Display vaults IDs" , is_flag=True)
+@click.option('--id', help="Display vaults IDs", is_flag=True)
 @click.pass_context
 def list_vaults(ctx, id):
     """ List KMS vaults """
@@ -36,6 +44,7 @@ def list_vaults(ctx, id):
     else:
         Oci.list_kms_vaults()
 
+
 @oci.command(help_priority=4)
 @click.option('-n', '--name', help='Vault name', required=True)
 @click.pass_context
@@ -43,6 +52,7 @@ def create_vault(ctx, name):
     """ Create vault """
     from cli.oci_client.oci_cli import Oci
     Oci.create_vault(name=name)
+
 
 @oci.command(help_priority=5)
 @click.option('--id', help='Vault ID', required=True)

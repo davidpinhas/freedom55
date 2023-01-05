@@ -21,6 +21,7 @@ def get_apps(ctx):
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.get_applications()
 
+
 @argo.command(help_priority=2)
 @click.option('-f', '--file', help='application yaml file', required=True)
 @click.pass_context
@@ -34,6 +35,7 @@ def create_app(ctx, file):
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.create_application(json_file=file)
 
+
 @argo.command(help_priority=3)
 @click.option('-f', '--file', help='application yaml file', required=True)
 @click.pass_context
@@ -46,6 +48,7 @@ def update_app(ctx, file):
         api_endpoint=f"{config.get('ARGOCD', 'url')}",
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.update_application(json_file=file)
+
 
 @argo.command(help_priority=4)
 @click.option('-n', '--name', help='application name', required=True)
