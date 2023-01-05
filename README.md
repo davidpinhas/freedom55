@@ -27,11 +27,8 @@ The goal of this project is to give you the freedom to work efficiently and effe
 
 ## Requirements
 - Python 3.10 or higher - Ensure `Python3.10`, `Pip3` and `Virtualenv` are installed
-- Click - can be installed using `$ pip install click`
-- OCI - can be installed using `$ pip install oci oci-cli`
-- SOPS client  - can be installed using `$ pip install sops`
+- Install Python dependencies `$ pip3 install -r requirements.txt`
 - OCI keys and OCIDs - In order to [configure Freedom 55](#configuration) the OCI integration, you will need the [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs)
-- [OCI KMS Vault](https://www.oracle.com/il-en/security/cloud-security/key-management/) pre-configured - [**Required**] for the OCI encryption/decryption operations
 
 ## Installation
 In order to install the CLI on your local machine, you can clone the repository and utilize the startup.sh script:
