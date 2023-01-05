@@ -1,11 +1,11 @@
 from setuptools import setup
 with open("README.md", "r", encoding="utf8") as f:
-     readme = f.read()
+    readme = f.read()
 
 
 setup(
     name="fd55",
-    version="2.6.3",
+    version="2.6.4",
     description="Freedom 55 CLI is a operational tool to maintain a personal homelab",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -24,6 +24,12 @@ setup(
         "utils",
     ],
     include_package_data=True,
-    entry_points={"console_scripts": ["fd55 = cli.fd55:main"]},
-    install_requires=["click", "oci", "requests", "python_terraform", "InquirerPy"],
+    entry_points={
+        "console_scripts": ["fd55 = cli.fd55:main"]},
+    install_requires=[
+        "click",
+        "oci",
+        "requests",
+        "python_terraform",
+        "InquirerPy"],
 )

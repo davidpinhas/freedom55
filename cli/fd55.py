@@ -10,7 +10,7 @@ from cli.cli_groups.cli_config import config
 @click.option('-v', '--verbosity', default='info',
               help='Logging level (info, warn, error, debug)',
               required=False)
-@click.version_option(version='2.6.3')
+@click.version_option(version='2.6.4')
 @click.pass_context
 def main(ctx, verbosity):
     import logging
@@ -30,9 +30,11 @@ def main(ctx, verbosity):
         log_level = logging.ERROR
     else:
         logging.error("Wrong verbosity type")
-        logging.error("Pick one of the available options: info, warn, error, debug")
+        logging.error(
+            "Pick one of the available options: info, warn, error, debug")
         exit()
     fn.set_logger(log_level)
+
 
 main.add_command(oci)
 main.add_command(sops)
