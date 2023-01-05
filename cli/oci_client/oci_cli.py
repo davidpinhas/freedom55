@@ -7,6 +7,7 @@ from cli.functions import Functions as fn
 from utils.fd55_config import Config
 logger = logging.getLogger()
 
+
 class Oci:
     """ OCI tools """
     logger = None
@@ -24,14 +25,17 @@ class Oci:
 
     def run_init_oci():
         config = Config()
-        config.start_configuration(component="OCI", key_list=config.oci_key_list)
+        config.start_configuration(
+            component="OCI",
+            key_list=config.oci_key_list)
         """ Verify OCI init state is ready """
         if not OciValidator.init_oci():
             config = OciValidator.validate_config_exist()
         elif OciValidator.init_oci():
             config = OciValidator.validate_config_exist()
         else:
-            logging.warn(f"Something went wrong! This is the config - {config}")
+            logging.warn(
+                f"Something went wrong! This is the config - {config}")
             logging.error(f"Failed to load config, exiting...")
             exit()
         return config
@@ -69,19 +73,27 @@ class Oci:
             data = json.loads(str(obj))
             if id:
                 table.field_names = ['Name', 'State', 'ID', 'Time Created']
-                row = [data['display_name'], data['lifecycle_state'], data['id'], data['time_created']]
+                row = [
+                    data['display_name'],
+                    data['lifecycle_state'],
+                    data['id'],
+                    data['time_created']]
             else:
                 table.field_names = ['Name', 'State', 'Time Created']
-                row = [data['display_name'], data['lifecycle_state'], data['time_created']]
+                row = [
+                    data['display_name'],
+                    data['lifecycle_state'],
+                    data['time_created']]
             table.add_row(row)
         print(table)
         return vaults
-    
+
     def create_vault(name):
         """ Create vault """
         vault_details = OciValidator.set_vault_details(name=name)
         try:
-            new_vault = OciValidator.set_config_oci_kms_vault_client().create_vault(create_vault_details=vault_details)
+            new_vault = OciValidator.set_config_oci_kms_vault_client(
+            ).create_vault(create_vault_details=vault_details)
             data = json.loads(str(new_vault.data))
             logging.info(f"Created vault '{data['display_name']}'")
         except oci.exceptions.ServiceError as e:
@@ -96,21 +108,28 @@ class Oci:
                     logging.error("Can only accept 7 and above")
                     exit()
                 else:
-                    delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(vault_id=vault_id, schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion(days=days))
+                    delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(
+                        vault_id=vault_id,
+                        schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion(
+                            days=days))
             else:
-                delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(vault_id=vault_id, schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion())
+                delete_vault = OciValidator.set_config_oci_kms_vault_client().schedule_vault_deletion(
+                    vault_id=vault_id, schedule_vault_deletion_details=OciValidator.set_schedule_vault_deletion())
             data = json.loads(str(delete_vault.data))
-            logging.info(f"Deleted vault '{data['display_name']}' with ID - {data['id']}")
+            logging.info(
+                f"Deleted vault '{data['display_name']}' with ID - {data['id']}")
         except oci.exceptions.ServiceError as e:
             logging.error(f"Failed with message:\n{e}")
-            
+
     #### KMS SECRETS ####
 
     # def dict_to_secret(dictionary):
-    #     return base64.b64encode(json.dumps(dictionary).encode('ascii')).decode("ascii")
+    # return
+    # base64.b64encode(json.dumps(dictionary).encode('ascii')).decode("ascii")
 
     # def secret_to_dict(wallet):
-    #     return json.loads(base64.b64decode(wallet.encode('ascii')).decode('ascii'))
+    # return
+    # json.loads(base64.b64decode(wallet.encode('ascii')).decode('ascii'))
 
     # # Encode the secret.
     # secret_content_details = Base64SecretContentDetails(

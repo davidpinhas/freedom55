@@ -3,6 +3,7 @@ import logging
 
 logger = logging.getLogger()
 
+
 class TerraformCli:
 
     def tf_path(path):
@@ -10,10 +11,18 @@ class TerraformCli:
         return tf
 
     def tf_init(path):
-        logging.info(TerraformCli.tf_path(path).init(no_color=IsFlagged, refresh=False, capture_output=True)[1])
+        logging.info(
+            TerraformCli.tf_path(path).init(
+                no_color=IsFlagged,
+                refresh=False,
+                capture_output=True)[1])
 
     def tf_plan(path):
-        logging.info(TerraformCli.tf_path(path).plan(no_color=IsFlagged, refresh=False, capture_output=True)[1])
+        logging.info(
+            TerraformCli.tf_path(path).plan(
+                no_color=IsFlagged,
+                refresh=False,
+                capture_output=True)[1])
 
     def tf_apply(path):
         approve = {"auto-approve": True}

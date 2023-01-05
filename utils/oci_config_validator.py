@@ -5,6 +5,7 @@ from cli.functions import Functions as fn
 from utils.fd55_config import Config
 logger = logging.getLogger()
 
+
 class OciValidator:
     """ OCI config validator """
     def validate_config_exist():
@@ -12,9 +13,11 @@ class OciValidator:
         oci_conf_path = Config().config_path
         try:
             config = oci.config.from_file(f"{oci_conf_path}", "OCI")
-        except:
-            logging.error("An error occurred while attempting to read the OCI configuration file")
-            logging.warn("Verify that the file exists and contains the correct keys")
+        except BaseException:
+            logging.error(
+                "An error occurred while attempting to read the OCI configuration file")
+            logging.warn(
+                "Verify that the file exists and contains the correct keys")
             exit()
         return config
 
@@ -32,8 +35,16 @@ class OciValidator:
         return service_endpoint_mgmt
 
     def oci_key_list():
-        keys_list = ["user", "fingerprint", "tenancy", "region",
-                     "key_file", "key_id", "key_version_id", "service_endpoint", "service_endpoint_mgmt"]
+        keys_list = [
+            "user",
+            "fingerprint",
+            "tenancy",
+            "region",
+            "key_file",
+            "key_id",
+            "key_version_id",
+            "service_endpoint",
+            "service_endpoint_mgmt"]
         return keys_list
 
     def set_config_oci_key_client():
@@ -44,25 +55,31 @@ class OciValidator:
 
     def set_config_oci_kms_vault_client():
         """ Set the OCI KMS vault client """
-        oci_kms_vault_client = oci.key_management.KmsVaultClient(OciValidator.set_config())
+        oci_kms_vault_client = oci.key_management.KmsVaultClient(
+            OciValidator.set_config())
         return oci_kms_vault_client
 
     def set_vault_details(name=None):
         """ Set details for vault creation """
-        vault_details = oci.key_management.models.CreateVaultDetails(compartment_id=OciValidator.set_config()["tenancy"], display_name=name, vault_type="DEFAULT")
+        vault_details = oci.key_management.models.CreateVaultDetails(
+            compartment_id=OciValidator.set_config()["tenancy"],
+            display_name=name,
+            vault_type="DEFAULT")
         return vault_details
 
     def set_schedule_vault_deletion(days=None):
         """ Set deletion details for vault deletion """
         if not days:
             logging.warn(f"No argument was provided for days")
-            logging.info(f"Scheduling deletion to the default setting of 30 days from today")
+            logging.info(
+                f"Scheduling deletion to the default setting of 30 days from today")
             schedule_vault_deletion = oci.key_management.models.ScheduleVaultDeletionDetails()
         else:
             current_date = datetime.now()
             new_date = current_date + timedelta(days=int(days))
             logging.info(f"Scheduling vault deletion to date: {new_date}")
-            schedule_vault_deletion = oci.key_management.models.ScheduleVaultDeletionDetails(time_of_deletion=new_date)
+            schedule_vault_deletion = oci.key_management.models.ScheduleVaultDeletionDetails(
+                time_of_deletion=new_date)
         return schedule_vault_deletion
 
     def retrieve_oci_key_id():
@@ -92,7 +109,10 @@ class OciValidator:
         fn.json_parse(data)
         for i in range(len(data)):
             keys_json = data[int(i)]
-            if str(fn.json_parse(keys_json, key='lifecycle_state')) == "DELETED":
+            if str(
+                fn.json_parse(
+                    keys_json,
+                    key='lifecycle_state')) == "DELETED":
                 logging.debug(f"Deleted asset {data[i]}. Skipping")
                 continue
             else:
@@ -102,7 +122,10 @@ class OciValidator:
                 if fn.json_parse(keys_json, key='crypto_endpoint'):
                     logging.debug(
                         f"this is crypto_endpoint - {fn.json_parse(keys_json, key='crypto_endpoint')}")
-                return [fn.json_parse(keys_json, key='management_endpoint'), fn.json_parse(keys_json, key='crypto_endpoint')]
+                return [
+                    fn.json_parse(
+                        keys_json, key='management_endpoint'), fn.json_parse(
+                        keys_json, key='crypto_endpoint')]
 
     def oci_retrieve_service_accounts_keys():
         """ Retrieve a list of all vaults """
@@ -117,8 +140,16 @@ class OciValidator:
         """ Find missing keys from OCI config file """
         logging.debug("Searching for missing keys")
         config = Config()
-        key_list = ["user", "fingerprint", "tenancy", "region",
-                     "key_file", "key_id", "key_version_id", "service_endpoint", "service_endpoint_mgmt"]
+        key_list = [
+            "user",
+            "fingerprint",
+            "tenancy",
+            "region",
+            "key_file",
+            "key_id",
+            "key_version_id",
+            "service_endpoint",
+            "service_endpoint_mgmt"]
         config_key_list = config.get_section("OCI")
         logging.debug(f'This is section - {config.get_section("OCI")}')
         new_list = []
@@ -133,7 +164,9 @@ class OciValidator:
         """ Modify OCI Config file """
         config = Config()
         config_keys = config.get_section("OCI")
-        config.start_configuration(component="OCI", key_list=OciValidator.oci_find_missing_keys())
+        config.start_configuration(
+            component="OCI",
+            key_list=OciValidator.oci_find_missing_keys())
         if missing_key not in config_keys:
             if missing_key.startswith("service_endpoint"):
                 func = getattr(OciValidator, f"retrieve_oci_service_accounts")
@@ -152,8 +185,10 @@ class OciValidator:
         OciValidator.validate_config_exist()
         missing_keys_list = OciValidator.oci_find_missing_keys()
         if missing_keys_list:
-            logging.warn(f"The OCI configuration is missing the following keys: \n{missing_keys_list}")
-            fn.modify_config_approval("Would you like to generate the missing keys? Y/N: ")
+            logging.warn(
+                f"The OCI configuration is missing the following keys: \n{missing_keys_list}")
+            fn.modify_config_approval(
+                "Would you like to generate the missing keys? Y/N: ")
             for i in missing_keys_list[::-1]:
                 missing_keys_list = OciValidator.oci_find_missing_keys()
                 OciValidator.modify_config_file(missing_key=i)

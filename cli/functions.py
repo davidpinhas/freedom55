@@ -4,15 +4,18 @@ import logging
 import os
 logger = logging.getLogger()
 
+
 class Functions:
     """ CLI functions """
     def set_logger(verbosity):
-        logger = logging.basicConfig(level=verbosity, format='%(asctime)s|%(levelname)s|%(message)s')
+        logger = logging.basicConfig(
+            level=verbosity,
+            format='%(asctime)s|%(levelname)s|%(message)s')
         return logger
-    
+
     def file_exists(filename):
         return os.path.exists(filename)
-    
+
     def modify_config_approval(string: str):
         """ Request user approval to modify file """
         user_approval = input(
@@ -24,7 +27,8 @@ class Functions:
 
     def delete_file(file_path):
         if Functions.file_exists(f"{str(file_path)}"):
-            user_input = Functions.modify_config_approval("Config file already exists, would you like to replace it? Y/N: ")
+            user_input = Functions.modify_config_approval(
+                "Config file already exists, would you like to replace it? Y/N: ")
             if user_input:
                 os.remove(f"{str(file_path)}")
                 logging.info(f"Deleted config file {file_path}")
@@ -43,7 +47,7 @@ class Functions:
                 json_output = jsonData
             else:
                 json_output = json_data
-        if key!=None:
+        if key is not None:
             logging.debug(f"Parsing with key {key}")
             json_output = json_data[key]
         logging.debug("Parser done")
@@ -53,7 +57,7 @@ class Functions:
         try:
             with open(json_file, 'r') as f:
                 return json.load(f)
-        except:
+        except BaseException:
             logging.error("JSON file might be corrupted or doesn't exist")
             exit()
 

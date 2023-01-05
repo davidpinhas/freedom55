@@ -29,10 +29,12 @@ class Sops:
                 elif not line.startswith("# public key:"):
                     pass
                 else:
-                    logging.error("public key is not present inside key.txt file")
+                    logging.error(
+                        "public key is not present inside key.txt file")
                     exit()
         else:
-            logging.error(f"There seems to be an issue with the key.txt file, please check if it exists under {key_file}")
+            logging.error(
+                f"There seems to be an issue with the key.txt file, please check if it exists under {key_file}")
             exit()
 
     def encrypt(input_file, output_file, encrypted_regex=None):
@@ -59,7 +61,14 @@ class Sops:
         """ Decrypt file with SOPS using Age """
         logging.info("Decrypting file with SOPS")
         key_id = Sops.find_age_key(f"{config.get('SOPS', 'key_path')}")
-        cmd = ['sops', '-d', '--age', key_id, '--output', output_file, input_file]
+        cmd = [
+            'sops',
+            '-d',
+            '--age',
+            key_id,
+            '--output',
+            output_file,
+            input_file]
         proc = subprocess.run(cmd, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE)
         if proc.returncode != 0:
