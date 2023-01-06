@@ -3,6 +3,7 @@ import json
 import logging
 logger = logging.getLogger()
 
+
 class Cloudflare:
     def __init__(self, api_key, email, domain_name):
         self.api_key = api_key
@@ -43,11 +44,17 @@ class Cloudflare:
         except Exception as e:
             logging.error(f"Failed to update DNS record with error '{e}'")
 
-    def update_dns_record(self, dns_zone_name, type=None, ttl=None, proxied=None):
+    def update_dns_record(
+            self,
+            dns_zone_name,
+            type=None,
+            ttl=None,
+            proxied=None):
         """ Update DNS record """
         logging.info(f"Updating DNS record '{dns_zone_name}'")
         zone_id = self.get_zone_id()
-        dns_record_id, dns_record_ip = self.get_dns_record_id(name=dns_zone_name)
+        dns_record_id, dns_record_ip = self.get_dns_record_id(
+            name=dns_zone_name)
         url = f"{self.base_url}/zones/{zone_id}/dns_records/{dns_record_id}"
         payload = {
             "type": type or "A",
@@ -57,7 +64,8 @@ class Cloudflare:
             "proxied": proxied or False
         }
         try:
-            response = requests.put(url, headers=self.headers, data=json.dumps(payload))
+            response = requests.put(
+                url, headers=self.headers, data=json.dumps(payload))
             data = json.loads(response.text)
             return data
         except Exception as e:
