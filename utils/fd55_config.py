@@ -118,7 +118,7 @@ class Config:
         logging.debug(f"Modifying config file in {self.config_path}")
         if not self.config.has_section(component):
             self.config.add_section(component)
-            print(f"* Provide required keys for {component} integration")
+            print(f"\n* Provide required keys for {component} integration")
             for key in key_list:
                 value = input(f'Enter the value for {key}: ')
                 self.config.set(component, key, value)

@@ -34,6 +34,7 @@ class Cloudflare:
             "ttl": ttl or 60,
             "proxied": proxied or False
         }
+        logging.debug(f"Payload: {payload}")
         return payload
 
     def get_zone_id(self):

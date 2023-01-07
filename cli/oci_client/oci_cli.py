@@ -34,7 +34,7 @@ class Oci:
             config = OciValidator.validate_config_exist()
         else:
             logging.warn(
-                f"Something went wrong! This is the config - {config}")
+                f"Something went wrong! Check the config file is valid {config}")
             logging.error(f"Failed to load config, exiting...")
             exit()
         return config

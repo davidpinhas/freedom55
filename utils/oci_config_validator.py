@@ -116,15 +116,16 @@ class OciValidator:
                 fn.json_parse(
                     keys_json,
                     key='lifecycle_state')).upper():
-                logging.debug(f"Deleted asset {data[i]}. Skipping")
+                logging.debug(f"Deleted asset:\n{data[i]}.")
+                logging.debug("Skipping")
                 continue
             else:
                 if fn.json_parse(keys_json, key='management_endpoint'):
                     logging.debug(
-                        f"this is management_endpoint - {fn.json_parse(keys_json, key='management_endpoint')}")
+                        f"located management_endpoint key - {fn.json_parse(keys_json, key='management_endpoint')}")
                 if fn.json_parse(keys_json, key='crypto_endpoint'):
                     logging.debug(
-                        f"this is crypto_endpoint - {fn.json_parse(keys_json, key='crypto_endpoint')}")
+                        f"located crypto_endpoint key - {fn.json_parse(keys_json, key='crypto_endpoint')}")
                 return [
                     fn.json_parse(
                         keys_json, key='management_endpoint'), fn.json_parse(
@@ -154,7 +155,7 @@ class OciValidator:
             "service_endpoint",
             "service_endpoint_mgmt"]
         config_key_list = config.get_section("OCI")
-        logging.debug(f'This is section - {config.get_section("OCI")}')
+        logging.debug(f'Keys configured in OCI config section - {config.get_section("OCI")}')
         new_list = []
         for i in key_list:
             if i not in config_key_list:
