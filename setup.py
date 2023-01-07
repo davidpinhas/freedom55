@@ -20,6 +20,7 @@ setup(
         "cli/argocd_client",
         "cli/sops_client",
         "cli/tf_client",
+        "cli/cloudflare_client",
         "cli",
         "utils",
     ],
