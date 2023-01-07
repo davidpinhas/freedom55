@@ -19,6 +19,17 @@ class Cloudflare:
         }
         self.base_url = "https://api.cloudflare.com/client/v4"
 
+    def set_payload(comment=None, type=None, name=None, content=None, ttl=None, proxied=None):
+        payload = {
+            "comment": comment or "DNS record updated with Freedom 55",
+            "type": type or "A",
+            "name": name,
+            "content": content,
+            "ttl": ttl or 60,
+            "proxied": proxied or False
+        }
+        return payload
+
     def get_zone_id(self):
         """ Get zone ID """
         logging.debug(f"Retrieving zone ID")
@@ -89,6 +100,33 @@ class Cloudflare:
                 f"Failed to retrieve DNS records list with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
+    def create_dns_record(
+            self,
+            dns_zone_name,
+            content,
+            comment=None,
+            type=None,
+            ttl=None,
+            proxied=None):
+        """ Create DNS record """
+        logging.info(f"Creating DNS record '{dns_zone_name}'")
+        zone_id = self.get_zone_id()
+        url = f"{self.base_url}/zones/{zone_id}/dns_records"
+        payload = Cloudflare.set_payload(comment=comment, type=type,
+                                         name=dns_zone_name, content=content, ttl=ttl, proxied=proxied)
+        try:
+            response = requests.request("POST",
+                                        url, headers=self.headers, data=json.dumps(payload))
+            records = json.loads(response.text)
+            logging.info(f"New metadata for '{dns_zone_name}' record:")
+            for key, value in records['result'].items():
+                logging.info(f" * {key}: {value}")
+        except Exception as e:
+            logging.error(f"Failed to create DNS record with error: {e}")
+            logging.error(f"Request failed with error: {records['errors']}")
+            exit()
+        logging.info(f"Finished modifying DNS record")
+
     def update_dns_record(
             self,
             dns_zone_name,
@@ -103,14 +141,8 @@ class Cloudflare:
         dns_record_id, dns_record_ip = self.get_dns_record_id(
             name=dns_zone_name)
         url = f"{self.base_url}/zones/{zone_id}/dns_records/{dns_record_id}"
-        payload = {
-            "comment": comment or "DNS record updated with Freedom 55",
-            "type": type or "A",
-            "name": dns_zone_name,
-            "content": content,
-            "ttl": ttl or 60,
-            "proxied": proxied or False
-        }
+        payload = Cloudflare.set_payload(comment=comment, type=type,
+                                         name=dns_zone_name, content=content, ttl=ttl, proxied=proxied)
         try:
             response = requests.put(
                 url, headers=self.headers, data=json.dumps(payload))
@@ -123,3 +155,22 @@ class Cloudflare:
             logging.error(f"Request failed with error: {records['errors']}")
             exit()
         logging.info(f"Finished modifying DNS record")
+
+    def delete_dns_record(
+            self,
+            dns_zone_name):
+        """ Delete DNS record """
+        logging.info(f"Deleting DNS record '{dns_zone_name}'")
+        zone_id = self.get_zone_id()
+        dns_record_id, dns_record_ip = self.get_dns_record_id(
+            name=dns_zone_name)
+        url = f"{self.base_url}/zones/{zone_id}/dns_records/{dns_record_id}"
+        try:
+            response = requests.request("DELETE",
+                                        url, headers=self.headers)
+            records = json.loads(response.text)
+            logging.info(f"Finished deleting DNS record '{dns_zone_name}'")
+        except Exception as e:
+            logging.error(f"Failed to delete DNS record with error: {e}")
+            logging.error(f"Request failed with error: {records['errors']}")
+            exit()

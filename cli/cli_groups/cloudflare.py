@@ -23,14 +23,51 @@ def list_dns(ctx, id):
         Cloudflare().list_dns_records()
 
 
-@cf.command(help_priority=1)
+@cf.command(help_priority=2)
 @click.option('-n',
               '--name',
               help='DNS name. Ex: sub.domain.com',
               required=True)
 @click.option('-c',
               '--content',
-              help='target address content, can set IP or domain name. Ex: 123.123.123.123 or domain.com',
+              help='Target address content, can set IP or domain name. Ex: 123.123.123.123 or domain.com',
+              required=True)
+@click.option('-t',
+              '--type',
+              help='DNS record type, if not set, "A" record will be used',
+              default="A",
+              required=False)
+@click.option('--ttl',
+              help='Time to live.',
+              default=60,
+              required=False)
+@click.option('--comment',
+              help='Record comment',
+              required=False)
+@click.option('-p',
+              '--proxied',
+              help='Set proxy to TRUE',
+              is_flag=True)
+@click.pass_context
+def create_dns(ctx, name, content, type, ttl, comment, proxied):
+    """ Create DNS record """
+    Cloudflare().create_dns_record(
+        dns_zone_name=name,
+        content=content,
+        type=type,
+        ttl=ttl,
+        comment=comment,
+        proxied=proxied)
+
+
+@cf.command(help_priority=3)
+@click.option('-n',
+              '--name',
+              help='DNS name. Ex: sub.domain.com',
+              required=True)
+@click.option('-c',
+              '--content',
+              help='Target address content, can set IP or domain name. Ex: 123.123.123.123 or domain.com',
               required=True)
 @click.option('-t',
               '--type',
@@ -58,3 +95,14 @@ def update_dns(ctx, name, content, type, ttl, comment, proxied):
         ttl=ttl,
         comment=comment,
         proxied=proxied)
+
+
+@cf.command(help_priority=4)
+@click.option('-n',
+              '--name',
+              help='DNS name. Ex: sub.domain.com',
+              required=True)
+@click.pass_context
+def delete_dns(ctx, name):
+    """ Update DNS record """
+    Cloudflare().delete_dns_record(dns_zone_name=name)
