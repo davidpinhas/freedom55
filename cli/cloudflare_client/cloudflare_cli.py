@@ -6,6 +6,7 @@ from utils.fd55_config import Config
 logger = logging.getLogger()
 config = Config()
 
+
 class Cloudflare:
     def __init__(self):
         self.api_key = config.get('CLOUDFLARE', 'api_key')
@@ -51,39 +52,42 @@ class Cloudflare:
             logging.error(f"Request failed with error: {records['errors']}")
 
     def list_dns_records(self, id=None):
-            """ List DNS records """
-            logging.info(f"Retrieving DNS records for domain '{self.domain_name}'")
-            table = PrettyTable()
-            zone_id = self.get_zone_id()
-            url = f"{self.base_url}/zones/{zone_id}/dns_records"
-            try:
-                response = requests.get(url, headers=self.headers)
-                records = json.loads(response.text)
-                for obj in range(len(records["result"])):
-                    dns_record = records['result'][obj]
-                    if id is not None:
-                        table.field_names = ['Name', 'Type', 'Content', 'TTL', 'Proxied', 'ID']
-                        row = [
-                            dns_record['name'],
-                            dns_record['type'],
-                            dns_record['content'],
-                            dns_record['ttl'],
-                            dns_record['proxied'],
-                            dns_record['id']]
-                    else:
-                        table.field_names = ['Name', 'Type', 'Content', 'TTL', 'Proxied']
-                        row = [
-                            dns_record['name'],
-                            dns_record['type'],
-                            dns_record['content'],
-                            dns_record['ttl'],
-                            dns_record['proxied']
-                            ]
-                    table.add_row(row)
-                print(table)
-            except Exception as e:
-                logging.error(f"Failed to retrieve DNS records list with error: {e}")
-                logging.error(f"Request failed with error: {records['errors']}")
+        """ List DNS records """
+        logging.info(f"Retrieving DNS records for domain '{self.domain_name}'")
+        table = PrettyTable()
+        zone_id = self.get_zone_id()
+        url = f"{self.base_url}/zones/{zone_id}/dns_records"
+        try:
+            response = requests.get(url, headers=self.headers)
+            records = json.loads(response.text)
+            for obj in range(len(records["result"])):
+                dns_record = records['result'][obj]
+                if id is not None:
+                    table.field_names = [
+                        'Name', 'Type', 'Content', 'TTL', 'Proxied', 'ID']
+                    row = [
+                        dns_record['name'],
+                        dns_record['type'],
+                        dns_record['content'],
+                        dns_record['ttl'],
+                        dns_record['proxied'],
+                        dns_record['id']]
+                else:
+                    table.field_names = [
+                        'Name', 'Type', 'Content', 'TTL', 'Proxied']
+                    row = [
+                        dns_record['name'],
+                        dns_record['type'],
+                        dns_record['content'],
+                        dns_record['ttl'],
+                        dns_record['proxied']
+                    ]
+                table.add_row(row)
+            print(table)
+        except Exception as e:
+            logging.error(
+                f"Failed to retrieve DNS records list with error: {e}")
+            logging.error(f"Request failed with error: {records['errors']}")
 
     def update_dns_record(
             self,
@@ -108,7 +112,8 @@ class Cloudflare:
             "proxied": proxied or False
         }
         try:
-            response = requests.put(url, headers=self.headers, data=json.dumps(payload))
+            response = requests.put(
+                url, headers=self.headers, data=json.dumps(payload))
             records = json.loads(response.text)
             logging.info(f"New metadata for '{dns_zone_name}' record:")
             for key, value in records['result'].items():

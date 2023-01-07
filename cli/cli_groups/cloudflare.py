@@ -51,5 +51,10 @@ def list_dns(ctx, id):
 @click.pass_context
 def update_dns(ctx, name, content, type, ttl, comment, proxied):
     """ Update DNS record """
-    Cloudflare().update_dns_record(dns_zone_name=name, content=content,
-                                   type=type, ttl=ttl, comment=comment, proxied=proxied)
+    Cloudflare().update_dns_record(
+        dns_zone_name=name,
+        content=content,
+        type=type,
+        ttl=ttl,
+        comment=comment,
+        proxied=proxied)
