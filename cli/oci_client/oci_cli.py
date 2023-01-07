@@ -21,7 +21,6 @@ class Oci:
         self.user = user
         self.key_id = key_id
         self.setup_logger()
-        Oci.run_init_oci()
 
     def run_init_oci():
         config = Config()
@@ -42,6 +41,7 @@ class Oci:
 
     def encrypt(plaintext):
         """ KMS encrypt """
+        Oci.run_init_oci()
         logging.info("Encrypting string with KMS")
         encoded_plaintext = fn.base64_encode(plaintext)
         encrypt_response = OciValidator.set_config_oci_key_client().encrypt(
@@ -54,6 +54,7 @@ class Oci:
 
     def decrypt(plaintext):
         """ KMS decrypt """
+        Oci.run_init_oci()
         logging.info("Decrypting string with KMS")
         decrypt_response = OciValidator.set_config_oci_key_client().decrypt(
             decrypt_data_details=oci.key_management.models.DecryptDataDetails(
