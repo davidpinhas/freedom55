@@ -112,7 +112,10 @@ class OciValidator:
         fn.json_parse(data)
         for i in range(len(data)):
             keys_json = data[int(i)]
-            if "DEL" in str(fn.json_parse(keys_json, key='lifecycle_state')).upper():
+            if "DEL" in str(
+                fn.json_parse(
+                    keys_json,
+                    key='lifecycle_state')).upper():
                 logging.debug(f"Deleted asset {data[i]}. Skipping")
                 continue
             else:
