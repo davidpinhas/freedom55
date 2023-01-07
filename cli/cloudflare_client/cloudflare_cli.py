@@ -19,7 +19,13 @@ class Cloudflare:
         }
         self.base_url = "https://api.cloudflare.com/client/v4"
 
-    def set_payload(comment=None, type=None, name=None, content=None, ttl=None, proxied=None):
+    def set_payload(
+            comment=None,
+            type=None,
+            name=None,
+            content=None,
+            ttl=None,
+            proxied=None):
         payload = {
             "comment": comment or "DNS record updated with Freedom 55",
             "type": type or "A",
@@ -112,11 +118,16 @@ class Cloudflare:
         logging.info(f"Creating DNS record '{dns_zone_name}'")
         zone_id = self.get_zone_id()
         url = f"{self.base_url}/zones/{zone_id}/dns_records"
-        payload = Cloudflare.set_payload(comment=comment, type=type,
-                                         name=dns_zone_name, content=content, ttl=ttl, proxied=proxied)
+        payload = Cloudflare.set_payload(
+            comment=comment,
+            type=type,
+            name=dns_zone_name,
+            content=content,
+            ttl=ttl,
+            proxied=proxied)
         try:
-            response = requests.request("POST",
-                                        url, headers=self.headers, data=json.dumps(payload))
+            response = requests.request(
+                "POST", url, headers=self.headers, data=json.dumps(payload))
             records = json.loads(response.text)
             logging.info(f"New metadata for '{dns_zone_name}' record:")
             for key, value in records['result'].items():
@@ -141,8 +152,13 @@ class Cloudflare:
         dns_record_id, dns_record_ip = self.get_dns_record_id(
             name=dns_zone_name)
         url = f"{self.base_url}/zones/{zone_id}/dns_records/{dns_record_id}"
-        payload = Cloudflare.set_payload(comment=comment, type=type,
-                                         name=dns_zone_name, content=content, ttl=ttl, proxied=proxied)
+        payload = Cloudflare.set_payload(
+            comment=comment,
+            type=type,
+            name=dns_zone_name,
+            content=content,
+            ttl=ttl,
+            proxied=proxied)
         try:
             response = requests.put(
                 url, headers=self.headers, data=json.dumps(payload))
