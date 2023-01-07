@@ -383,15 +383,15 @@ fd55 tf destroy -p /path/to/tf/plan
 
 ### Cloudfront
 ---
-The [Cloudfront](https://www.cloudflare.com/en-gb/) integration is utilizing the official [Cloudflare API](https://developers.cloudflare.com/api/) to perform its actions to modify the configured domain DNS records.
+The [Cloudfront](https://www.cloudflare.com/en-gb/) integration utilizes the official [Cloudflare API](https://developers.cloudflare.com/api/) to perform its actions in the background to modify the configured domain DNS records.
 
-This integration requires the following key:
+This integration requires the following keys:
 * `email` - Email address used to authenticate with Cloudfront.
 * `api_key` - API key with Read permissions for DNS Zone.
 * *`domain_name` - Domain name.
 
 #### List DNS records
-In order to decrypt a file, use the following:
+In order to list all DNS records, run the following command:
 ```bash
 fd55 cf list-dns
 ```
@@ -408,9 +408,9 @@ Expected output:
 ```
 
 #### DNS Records
-Freedom 55 allows the used to modify his domain's by creating, updating and deleting records for the domain that was configured with the CLI.
+Freedom 55 allows the user to modify his domain DNS records by creating, updating and deleting records.
 
-The **Ureate** and **Update** commands require the following arguments:
+The **Create** and **Update** commands require the following arguments:
 Option | Alias | Default| Description | Example | Required
 --- | --- | --- | --- | --- | ---
 `--name` | `-n` | NA | DNS name | *sub.domain.com* | **Yes**
@@ -451,7 +451,7 @@ The DNS will be created with the provided arguments and set default ones for the
 The output will be similar to the update command.
 
 ##### Update DNS record
-Update DNS record:
+In order to update the DNS record, use the following command:
 ```bash
 fd55 cf update-dns -n test.domain.com -c @ -t CNAME -p
 ```
@@ -459,7 +459,7 @@ fd55 cf update-dns -n test.domain.com -c @ -t CNAME -p
 In the above output we used the `@` sign to set the root address (the domain name) and configured the DNS record to be a *CNAME*.
 
 ##### Delete DNS record
-Delete DNS record:
+To delete a DNS record, you can use the below command and specify the full DNS name:
 ```bash
 fd55 cf delete-dns -n test.domain.com
 ```
@@ -478,3 +478,4 @@ Expected output:
 
 ## License
 This project is licensed under the MIT License. See [LICENSE](/LICENSE.md) for more details.
+
