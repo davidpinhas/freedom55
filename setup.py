@@ -32,5 +32,6 @@ setup(
         "oci",
         "requests",
         "python_terraform",
-        "InquirerPy"],
+        "InquirerPy",
+        "prettytable"],
 )
