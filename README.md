@@ -22,6 +22,7 @@ The goal of this project is to give you the freedom to work efficiently and effe
     -   [OCI](#OCI)
     -   [SOPS](#SOPS)
     -   [Terraform](#Terraform)
+    -   [Cloudfront](#Cloudfront)
 -   [Contribution](#Contribution)
 -   [License](#License)
 
@@ -104,6 +105,7 @@ Here's a list of currently supported tools (limited support):
 * [OCI](#OCI)
 * [SOPS](#SOPS)
 * [Terraform](#Terraform)
+* [Cloudfront](#Cloudfront)
 
 ### ArgoCD
 ---
@@ -377,6 +379,96 @@ fd55 tf apply -p /path/to/tf/plan
 #### Destroy Terraform Plan
 ```bash
 fd55 tf destroy -p /path/to/tf/plan
+```
+
+### Cloudfront
+---
+The [Cloudfront](https://www.cloudflare.com/en-gb/) integration is utilizing the official [Cloudflare API](https://developers.cloudflare.com/api/) to perform its actions to modify the configured domain DNS records.
+
+This integration requires the following key:
+* `email` - Email address used to authenticate with Cloudfront.
+* `api_key` - API key with Read permissions for DNS Zone.
+* *`domain_name` - Domain name.
+
+#### List DNS records
+In order to decrypt a file, use the following:
+```bash
+fd55 cf list-dns
+```
+
+Expected output:
+```
+2023-01-08 00:49:15,483|INFO|Retrieving DNS records for domain 'domain.com'
++----------------------------+-------+-------------------------+------+---------+
+|            Name            |  Type |         Content         | TTL  | Proxied |
++----------------------------+-------+--------------------------+-----+---------+
+|       domain.com           |   A   |     123.123.123.123     |  60  |  False  |
+|    blog.domain.com         | CNAME |      domain.com         |  1   |   True  |
++----------------------------+-------+-------------------------+------+---------+
+```
+
+#### DNS Records
+Freedom 55 allows the used to modify his domain's by creating, updating and deleting records for the domain that was configured with the CLI.
+
+The **Ureate** and **Update** commands require the following arguments:
+Option | Alias | Default| Description | Example | Required
+--- | --- | --- | --- | --- | ---
+`--name` | `-n` | NA | DNS name | *sub.domain.com* | **Yes**
+`--content` | `-c` | NA | Target address content, can set IP or domain name | *127.0.0.1* | **Yes**
+`--type` | `-t` | A | DNS record type | *CNAME* | **Yes**
+`--ttl` | NA | 60 | Time to live | *300* | **No**
+`--comment` | NA | "`DNS record updated with Freedom 55`" | Add comment to DNS record | "*New CNAME*" | **No**
+`--proxied` | `-p` | `False` | Flag: Set proxy to TRUE | NA | **No**
+
+##### Create DNS record
+To create a DNS record, we can run the following command:
+```bash
+fd55 cf create-dns -n test.domain.com -c 123.123.123.123 -t A
+```
+
+The DNS will be created with the provided arguments and set default ones for the arguments that weren't provided, as we can see in the output:
+```
+2023-01-08 00:53:39,254|INFO|Creating DNS record 'test.domain.com'
+2023-01-08 00:53:41,422|INFO|New metadata for 'test.domain.com' record:
+2023-01-08 00:53:41,422|INFO| * id: $ID
+2023-01-08 00:53:41,422|INFO| * zone_id: $ZONE_ID
+2023-01-08 00:53:41,422|INFO| * zone_name: domain.com
+2023-01-08 00:53:41,423|INFO| * name: test.domain.com
+2023-01-08 00:53:41,423|INFO| * type: A
+2023-01-08 00:53:41,430|INFO| * content: 123.123.123.123
+2023-01-08 00:53:41,431|INFO| * proxiable: True
+2023-01-08 00:53:41,431|INFO| * proxied: False
+2023-01-08 00:53:41,431|INFO| * ttl: 60
+2023-01-08 00:53:41,431|INFO| * locked: False
+2023-01-08 00:53:41,431|INFO| * meta: {'auto_added': False, 'managed_by_apps': False, 'managed_by_argo_tunnel': False, 'source': 'primary'}
+2023-01-08 00:53:41,431|INFO| * comment: DNS record updated with Freedom 55
+2023-01-08 00:53:41,431|INFO| * tags: []
+2023-01-08 00:53:41,431|INFO| * created_on: 2023-01-07T22:53:41.319273Z
+2023-01-08 00:53:41,431|INFO| * modified_on: 2023-01-07T22:53:41.319273Z
+2023-01-08 00:53:41,431|INFO|Finished modifying DNS record
+```
+
+The output will be similar to the update command.
+
+##### Update DNS record
+Update DNS record:
+```bash
+fd55 cf update-dns -n test.domain.com -c @ -t CNAME -p
+```
+
+In the above output we used the `@` sign to set the root address (the domain name) and configured the DNS record to be a *CNAME*.
+
+##### Delete DNS record
+Delete DNS record:
+```bash
+fd55 cf delete-dns -n test.domain.com
+```
+
+Expected output:
+```
+2023-01-08 01:28:54,257|INFO|Deleting DNS record 'test.domain.com'
+2023-01-08 01:28:55,169|INFO|Retrieving DNS record ID for test.domain.com
+2023-01-08 01:28:58,198|INFO|Finished deleting DNS record 'test.domain.com'
 ```
 
 ## Contribution
