@@ -7,7 +7,7 @@ import shutil
 import datetime
 from cli.functions import Functions as fn
 logger = logging.getLogger()
-component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM"]
+component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM", "CLOUDFLARE"]
 
 
 class Config:
@@ -15,6 +15,7 @@ class Config:
     argo_key_list = ["url", "api_token"]
     sops_key_list = ["key_path"]
     tf_key_list = []
+    cf_key_list = ['email', 'api_key', 'domain_name']
 
     def __init__(self):
         self.config_dir = self.get_config_dir()
@@ -156,6 +157,12 @@ class Config:
                         component, key_list=config.tf_key_list):
                     if config.start_configuration(
                             component=component, key_list=config.tf_key_list):
+                        pass
+            if component == "CLOUDFLARE":
+                if not config.validate_config_option(
+                        component, key_list=config.cf_key_list):
+                    if config.start_configuration(
+                            component=component, key_list=config.cf_key_list):
                         pass
                 else:
                     logging.error('Configuration failed.')
