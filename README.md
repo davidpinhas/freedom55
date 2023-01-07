@@ -407,6 +407,8 @@ Expected output:
 +----------------------------+-------+-------------------------+------+---------+
 ```
 
+To list the IDs of the DNS records, use the `--id` flag.
+
 #### DNS Records
 Freedom 55 allows the user to modify his domain DNS records by creating, updating and deleting records.
 
