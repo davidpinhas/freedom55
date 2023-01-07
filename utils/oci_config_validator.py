@@ -155,7 +155,8 @@ class OciValidator:
             "service_endpoint",
             "service_endpoint_mgmt"]
         config_key_list = config.get_section("OCI")
-        logging.debug(f'Keys configured in OCI config section - {config.get_section("OCI")}')
+        logging.debug(
+            f'Keys configured in OCI config section - {config.get_section("OCI")}')
         new_list = []
         for i in key_list:
             if i not in config_key_list:
