@@ -88,6 +88,9 @@ class OciValidator:
             OciValidator.set_config(), OciValidator.set_config_service_endpoint_mgmt())
         keys = key_management_client.list_keys(
             OciValidator.set_config()["tenancy"])
+        if not keys.data:
+            logging.error("No keys found. Check KMS vault is up and running.")
+            exit()
         keys_json = keys.data[0]
         logging.debug(f"Key ID - {fn.json_parse(keys_json, key='id')}")
         return str(fn.json_parse(keys_json, key='id'))
@@ -109,10 +112,7 @@ class OciValidator:
         fn.json_parse(data)
         for i in range(len(data)):
             keys_json = data[int(i)]
-            if str(
-                fn.json_parse(
-                    keys_json,
-                    key='lifecycle_state')) == "DELETED":
+            if "DEL" in str(fn.json_parse(keys_json, key='lifecycle_state')).upper():
                 logging.debug(f"Deleted asset {data[i]}. Skipping")
                 continue
             else:
