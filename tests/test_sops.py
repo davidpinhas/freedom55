@@ -3,20 +3,25 @@ from click.testing import CliRunner
 from cli.cli_groups import sops
 unittest.TestLoader.sortTestMethodsUsing = None
 
+
 class TestSops(unittest.TestCase):
 
     def test1_sops_encrypt(self):
         """ Test the SOPS encrypt function """
         runner = CliRunner()
         result = runner.invoke(
-            sops.encrypt, ['--input_file', 'test-values.yaml', '--output_file', 'enc-values.yaml'])
+            sops.encrypt, [
+                '--input_file', 'test-values.yaml', '--output_file', 'enc-values.yaml'])
         assert result.exit_code == 0
 
     def test2_sops_decrypt(self):
         """ Test the SOPS decrypt function """
         runner = CliRunner()
-        result = runner.invoke(sops.decrypt, ['--input_file', 'enc-values.yaml', '--output_file', 'test-values.yaml'])
+        result = runner.invoke(
+            sops.decrypt, [
+                '--input_file', 'enc-values.yaml', '--output_file', 'test-values.yaml'])
         assert result.exit_code == 0
+
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestSops)
