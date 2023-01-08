@@ -19,10 +19,14 @@ class Cloudflare:
             "Content-Type": "application/json"
         }
         self.base_url = "https://api.cloudflare.com/client/v4"
-        if any(self.domain_name.endswith(option) for option in blocked_domains):
-            logging.error("Cloudflare not supporting domains ending with '.cf, .ga, .gq, .ml, or .tk'")
-            logging.warn("This was a design desicion by Cloudflare to block free domains")
-            logging.warn("Read more here - https://community.cloudflare.com/t/unable-to-update-ddns-using-api-for-some-tlds/167228/11")
+        if any(self.domain_name.endswith(option)
+               for option in blocked_domains):
+            logging.error(
+                "Cloudflare not supporting domains ending with '.cf, .ga, .gq, .ml, or .tk'")
+            logging.warn(
+                "This was a design desicion by Cloudflare to block free domains")
+            logging.warn(
+                "Read more here - https://community.cloudflare.com/t/unable-to-update-ddns-using-api-for-some-tlds/167228/11")
             exit()
 
     def set_payload(
