@@ -6,6 +6,17 @@ on:
       - master
 
 jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Python Unittest
+        run: |
+          bash tests/run_tests.sh
+      - name: Verify tests
+        if: env.TEST_RESULTS != 'true'
+        run: exit 1
+
   update-version:
     runs-on: ubuntu-latest
     steps:

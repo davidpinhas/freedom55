@@ -8,33 +8,33 @@ class TestOci(unittest.TestCase):
     kms_encrypted_value = Oci.encrypt(plaintext='test')
 
     def test_decrypt(self):
-        # Test the decrypt function
+        """ Test the decrypt function """
         runner = CliRunner()
         result = runner.invoke(
             oci.decrypt, [
-                '-s', f'{TestOci.kms_encrypted_value}'])
+                '--string', f'{TestOci.kms_encrypted_value}'])
         assert result.exit_code == 0
 
     def test_encrypt(self):
-        # Test the encrypt function
+        """ Test the encrypt function """
         runner = CliRunner()
-        result = runner.invoke(oci.encrypt, ['-s', 'test'])
+        result = runner.invoke(oci.encrypt, ['--string', 'test'])
         assert result.exit_code == 0
 
     def test_list_vaults(self):
-        # Test the list_vaults function
+        """ Test the list_vaults function """
         runner = CliRunner()
         result = runner.invoke(oci.list_vaults, ['--id'])
         assert result.exit_code == 0
 
     def test_create_vault(self):
-        # Test the create_vault function
+        """ Test the create_vault function """
         runner = CliRunner()
-        result = runner.invoke(oci.create_vault, ['-n', 'test'])
+        result = runner.invoke(oci.create_vault, ['--name', 'test'])
         assert result.exit_code == 0
 
     def test_delete_vault(self):
-        # Test the delete_vault function
+        """ Test the delete_vault function """
         runner = CliRunner()
         result = runner.invoke(
             oci.delete_vault, [
