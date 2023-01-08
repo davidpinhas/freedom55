@@ -410,7 +410,7 @@ Expected output:
 To list the IDs of the DNS records, use the `--id` flag.
 
 #### DNS Records
-Freedom 55 allows the user to modify his domain DNS records by creating, updating and deleting records.
+Freedom 55 allows the user to modify domain DNS records by creating, updating and deleting records.
 
 The **Create** and **Update** commands require the following arguments:
 Option | Alias | Default| Description | Example | Required
@@ -474,9 +474,10 @@ Expected output:
 ```
 
 ## Contribution
-- Give a star :star:
-- Feel free to Fork and Clone :beers:
+- Give a star. :star:
+- Feel free to Fork and Clone. :beers:
 - Check my [issues](https://github.com/davidpinhas/freedom55/issues) or create a [new issue](https://github.com/davidpinhas/freedom55/issues/new) and give me a PR with your bugfix or improvement after. I appreciate any help! ❤️
+- Big thanks to the devs and contributors mentioned in the [CREDITS](/CREDITS.md) list.
 
 ## License
 This project is licensed under the MIT License. See [LICENSE](/LICENSE.md) for more details.
