@@ -10,8 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.10
       - name: Python Unittest
         run: |
+          pip install --upgrade pip
+          pip3 install -r requirements.txt
+          python3.10 -m venv freedom55-venv
+          source freedom55-venv/bin/activate
           bash tests/run_tests.sh
       - name: Verify tests
         if: env.TEST_RESULTS != 'true'
