@@ -51,6 +51,7 @@ class Oci:
                 key_version_id=OciValidator.set_config()["key_version_id"]))
         logging.info(
             f"Encrypted string value - {fn.json_parse(encrypt_response.data)}")
+        return fn.json_parse(encrypt_response.data)
 
     def decrypt(plaintext):
         """ KMS decrypt """
