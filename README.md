@@ -22,7 +22,7 @@ The goal of this project is to give you the freedom to work efficiently and effe
     -   [OCI](#OCI)
     -   [SOPS](#SOPS)
     -   [Terraform](#Terraform)
-    -   [Cloudfront](#Cloudfront)
+    -   [Cloudflare](#Cloudflare)
 -   [Contribution](#Contribution)
 -   [License](#License)
 
@@ -105,7 +105,7 @@ Here's a list of currently supported tools (limited support):
 * [OCI](#OCI)
 * [SOPS](#SOPS)
 * [Terraform](#Terraform)
-* [Cloudfront](#Cloudfront)
+* [Cloudflare](#Cloudflare)
 
 ### ArgoCD
 ---
@@ -381,12 +381,12 @@ fd55 tf apply -p /path/to/tf/plan
 fd55 tf destroy -p /path/to/tf/plan
 ```
 
-### Cloudfront
+### Cloudflare
 ---
-The [Cloudfront](https://www.cloudflare.com/en-gb/) integration utilizes the official [Cloudflare API](https://developers.cloudflare.com/api/) to perform its actions in the background to modify the configured domain DNS records.
+The [Cloudflare](https://www.cloudflare.com/en-gb/) integration utilizes the official [Cloudflare API](https://developers.cloudflare.com/api/) to perform its actions in the background to modify the configured domain DNS records.
 
 This integration requires the following keys:
-* `email` - Email address used to authenticate with Cloudfront.
+* `email` - Email address used to authenticate with Cloudflare.
 * `api_key` - API key with Read permissions for DNS Zone.
 * *`domain_name` - Domain name.
 
