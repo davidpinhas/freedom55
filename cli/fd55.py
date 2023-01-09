@@ -11,7 +11,7 @@ from cli.cli_groups.cloudflare import cf
 @click.option('-v', '--verbosity', default='info',
               help='Logging level (info, warn, error, debug)',
               required=False)
-@click.version_option(version='2.8.4')
+@click.version_option(version='2.8.5')
 @click.pass_context
 def main(ctx, verbosity):
     import logging

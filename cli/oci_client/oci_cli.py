@@ -9,6 +9,7 @@ from utils.fd55_config import Config
 logger = logging.getLogger()
 config = Config()
 
+
 class Oci:
     """ OCI tools """
     logger = None
@@ -100,10 +101,13 @@ class Oci:
             data = json.loads(str(vault))
             if str(data['lifecycle_state']) != 'ACTIVE':
                 logging.debug(f"Vault '{data['display_name']}', is not active")
-                logging.debug(f"Vault '{data['display_name']}' state is '{data['lifecycle_state']}'")
+                logging.debug(
+                    f"Vault '{data['display_name']}' state is '{data['lifecycle_state']}'")
                 continue
             vault_list.append(data['display_name'])
-        result = inquirer.select(message="Pick a KMS vault:", choices=vault_list).execute()
+        result = inquirer.select(
+            message="Pick a KMS vault:",
+            choices=vault_list).execute()
         logging.info(f"Setting up vault '{result}' in config file")
         config.create_option(section='OCI', option='kms_vault', value=result)
 

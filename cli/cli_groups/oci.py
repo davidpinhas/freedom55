@@ -69,6 +69,7 @@ def delete_vault(ctx, id, days):
     else:
         Oci.delete_vault(vault_id=id)
 
+
 @oci.command(help_priority=6)
 @click.pass_context
 def select_vault(ctx):
