@@ -28,7 +28,7 @@ The goal of this project is to give you the freedom to work efficiently and effe
 
 ## Requirements
 - Python 3.10 or higher - Ensure `Python3.10`, `Pip3` and `Virtualenv` are installed
-- Install Python dependencies `$ pip3 install -r requirements.txt`
+- Install Python dependencies - `$ pip3 install -r requirements.txt` [required for running tests locally]
 - OCI keys and OCIDs - In order to [configure Freedom 55](#configuration) the OCI integration, you will need the [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs)
 
 ## Installation
@@ -71,12 +71,12 @@ winpty fd55 config
 ## Usage
 To use the Freedom 55 CLI, we'll first call fd55, than the integration and it's sub-command:
 ```bash
-$ fd55 [INTEGRATION] [COMMAND] [OPTIONS]
+fd55 [INTEGRATION] [COMMAND] [OPTIONS]
 ```
 
 For example:
 ```bash
-$ fd55 oci encrypt --string "Random text"
+fd55 oci encrypt --string "Random text"
 ```
 
 ### Options
@@ -86,7 +86,7 @@ $ fd55 oci encrypt --string "Random text"
 ### Configuration
 To configure Freedom 55 CLI with your desired integrations, run the `fd55 config` command:
 ```bash
-$ fd55 config
+fd55 config
 2022-12-31 15:20:25,055|INFO|Running config validation
 ? Select integrations to configure
   ◉ OCI
@@ -154,7 +154,7 @@ https://argo.mydomain.com/swagger-ui.
 #### Get Applications
 Get all ArgoCD applications:
 ```bash
-$ fd55 argo get-apps
+fd55 argo get-apps
 ```
 
 Expected output:
@@ -171,7 +171,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/ApplicationService_
 
 To create an application, use the `-f` option to provide the json file application spec:
 ```bash
-$ fd55 argo create-app -f create-app.json
+fd55 argo create-app -f create-app.json
 ```
 
 Expected output:
@@ -184,7 +184,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/ApplicationService_
 
 To update an application:
 ```bash
-$ fd55 argo update-app -f create-app.json
+fd55 argo update-app -f create-app.json
 ```
 
 Expected output:
@@ -195,7 +195,7 @@ Expected output:
 #### Delete Application
 To delete an application, use the `-n` option to provide the name of the application you wish to delete:
 ```bash
-$ fd55 argo delete-app -n my_app
+fd55 argo delete-app -n my_app
 ```
 
 Expected output:
@@ -208,11 +208,11 @@ Expected output:
 [OCI (Oracle Cloud Infrastructure)](https://www.oracle.com/il-en/cloud/) integration utilizes the [KMS feature](https://www.oracle.com/il-en/security/cloud-security/key-management/) and lets you encrypt and decrypt a string.
 
 This integration requires the following keys:
-* `user`
-* `fingerprint`
-* `tenancy`
-* `region`
-* `key_file`
+* `user` - The OCID of the user for whom the key pair is being added
+* `fingerprint` - The fingerprint of the key that was just added.
+* `tenancy` - Your tenancy's OCID.
+* `region` - The currently selected region in the Console.
+* `key_file` - The path to your downloaded private key file. You must update this value to the path on your file system where you saved the private key file.
 
 For more details on retrieving the required keys, read more in Oracle's [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs) Docs.
 #TODO: Add support for encryption and decryption of binaries.
@@ -220,7 +220,7 @@ For more details on retrieving the required keys, read more in Oracle's [minimum
 #### List vaults
 To get a list of all current vaults under the tenancy that was set in the [Freedom 55 config file](#Configuration), run the following command:
 ```bash
-$ fd55 oci list-vaults
+fd55 oci list-vaults
 ```
 
 The resulting output should be a table that lists all vaults:
@@ -236,20 +236,20 @@ The resulting output should be a table that lists all vaults:
 
 To print the ID of the vaults, you can add the `--id` argument:
 ```bash
-$ fd55 oci list-vaults --id
+fd55 oci list-vaults --id
 ```
 
 #### Create vault
 To create a new vault, use the command below and provide the `-n`/`--name` argument to name the vault:
 ```bash
-$ fd55 oci create-vault -n test-vault
+fd55 oci create-vault -n test-vault
 ```
 The vault will be created as "*DEFAULT*" vault type.
 
 #### Delete vault
 To schedule a vault deletion, you can use the following command:
 ```bash
-$ fd55 oci delete-vault --id $VAULT_ID
+fd55 oci delete-vault --id $VAULT_ID
 ```
 
 The default time for deletion is set to **30** days from the time this command was triggered.
@@ -262,7 +262,7 @@ fd55 oci delete-vault --id $VAULT_ID -d 7
 #### Encrypt String
 To encrypt a secret:
 ```bash
-$ fd55 oci encrypt -s "This is my secret"
+fd55 oci encrypt -s "This is my secret"
 ```
 
 Expected output:
@@ -275,7 +275,7 @@ Expected output:
 #### Decrypt With KMS
 For decrypting a secret, the KMS encrypted value needs to be provided as a string (decrpyting needs to be performed with the same key the value was encrypted to begin with):
 ```bash
-$ fd55 oci decrypt -s "Qf7eN7k3cJBlAFpAtSVaPqM...."
+fd55 oci decrypt -s "Qf7eN7k3cJBlAFpAtSVaPqM...."
 ```
 
 Expected output:
@@ -388,7 +388,7 @@ The [Cloudflare](https://www.cloudflare.com/en-gb/) integration utilizes the off
 This integration requires the following keys:
 * `email` - Email address used to authenticate with Cloudflare.
 * `api_key` - API key with Read permissions for DNS Zone.
-* *`domain_name` - Domain name.
+* `domain_name` - Domain name.
 
 #### List DNS records
 In order to list all DNS records, run the following command:
@@ -401,9 +401,9 @@ Expected output:
 2023-01-08 00:49:15,483|INFO|Retrieving DNS records for domain 'domain.com'
 +----------------------------+-------+-------------------------+------+---------+
 |            Name            |  Type |         Content         | TTL  | Proxied |
-+----------------------------+-------+--------------------------+-----+---------+
-|       domain.com           |   A   |     123.123.123.123     |  60  |  False  |
-|    blog.domain.com         | CNAME |      domain.com         |  1   |   True  |
++----------------------------+-------+-------------------------+------+---------+
+|         domain.com         |   A   |     123.123.123.123     |  60  |  False  |
+|      blog.domain.com       | CNAME |      domain.com         |  1   |   True  |
 +----------------------------+-------+-------------------------+------+---------+
 ```
 
@@ -415,10 +415,10 @@ Freedom 55 allows the user to modify domain DNS records by creating, updating an
 The **Create** and **Update** commands require the following arguments:
 Option | Alias | Default| Description | Example | Required
 --- | --- | --- | --- | --- | ---
-`--name` | `-n` | NA | DNS name | *sub.domain.com* | **Yes**
-`--content` | `-c` | NA | Target address content, can set IP or domain name | *127.0.0.1* | **Yes**
-`--type` | `-t` | A | DNS record type | *CNAME* | **Yes**
-`--ttl` | NA | 60 | Time to live | *300* | **No**
+`--name` | `-n` | NA | DNS name | "*sub.domain.com*" | **Yes**
+`--content` | `-c` | NA | Target address content, can set IP or domain name | "*127.0.0.1*" | **Yes**
+`--type` | `-t` | A | DNS record type | "*CNAME*" | **Yes**
+`--ttl` | NA | 60 | Time to live | "*300*" | **No**
 `--comment` | NA | "`DNS record updated with Freedom 55`" | Add comment to DNS record | "*New CNAME*" | **No**
 `--proxied` | `-p` | `False` | Flag: Set proxy to TRUE | NA | **No**
 
