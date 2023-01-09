@@ -68,3 +68,10 @@ def delete_vault(ctx, id, days):
         Oci.delete_vault(vault_id=id, days=days)
     else:
         Oci.delete_vault(vault_id=id)
+
+@oci.command(help_priority=6)
+@click.pass_context
+def select_vault(ctx):
+    """ select KMS vault """
+    from cli.oci_client.oci_cli import Oci
+    Oci.setup_kms_vault()
