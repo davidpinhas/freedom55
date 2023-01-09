@@ -17,9 +17,9 @@ jobs:
       - name: Python Unittest
         run: |
           pip install --upgrade pip
-          pip3 install -r requirements.txt
           python3.10 -m venv freedom55-venv
           source freedom55-venv/bin/activate
+          pip3 install -r requirements.txt
           bash tests/run_tests.sh
       - name: Verify tests
         if: env.TEST_RESULTS != 'true'
