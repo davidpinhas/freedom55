@@ -16,7 +16,12 @@ class Config:
     sops_key_list = ["key_path"]
     tf_key_list = []
     cf_key_list = ['email', 'api_key', 'domain_name']
-    all_lists = [oci_key_list, argo_key_list, sops_key_list, tf_key_list, cf_key_list]
+    all_lists = [
+        oci_key_list,
+        argo_key_list,
+        sops_key_list,
+        tf_key_list,
+        cf_key_list]
 
     def __init__(self):
         self.config_dir = self.get_config_dir()
@@ -28,7 +33,10 @@ class Config:
         if not Config().validate_config_option(component=section, key_list=option):
             if not self.config.has_section(section=section):
                 self.config.add_section(section=section)
-        if not any(option in key_list for key_list in Config().all_lists) and not self.config.has_option(section=section, option=option):
+        if not any(
+                option in key_list for key_list in Config().all_lists) and not self.config.has_option(
+                section=section,
+                option=option):
             return
         elif not self.config.has_option(section=section, option=option):
             logging.info(f"Didn't found the option '{option}' in config file")

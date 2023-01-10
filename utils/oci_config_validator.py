@@ -8,6 +8,7 @@ from utils.fd55_config import Config
 logger = logging.getLogger()
 cli_config = Config()
 
+
 class OciValidator:
     """ OCI config validator """
     def validate_config_exist():
@@ -136,8 +137,12 @@ class OciValidator:
     def setup_kms_vault(vault_name=None):
         """ Select KMS vgault """
         if vault_name:
-            cli_config.create_option(section='OCI', option='kms_vault', value=vault_name)
-            logging.info(f"Setting up '{vault_name}' as KMS vault in config file")
+            cli_config.create_option(
+                section='OCI',
+                option='kms_vault',
+                value=vault_name)
+            logging.info(
+                f"Setting up '{vault_name}' as KMS vault in config file")
             return
         vault_list = []
         logging.info("Retrieving active vaults")
@@ -155,13 +160,16 @@ class OciValidator:
             message="Press enter to choose a KMS vault:",
             choices=vault_list).execute()
         logging.info(f"Setting up vault '{result}' in config file")
-        cli_config.create_option(section='OCI', option='kms_vault', value=result)
+        cli_config.create_option(
+            section='OCI',
+            option='kms_vault',
+            value=result)
 
     def verify_kms_vault_key():
         if not cli_config.get(section="OCI", option="kms_vault"):
             logging.error("No KMS vault configured")
             fn.modify_config_approval(
-            f"Do you want to setup KMS vault? Y/n: ")
+                f"Do you want to setup KMS vault? Y/n: ")
             OciValidator.setup_kms_vault()
 
     def oci_find_missing_keys():
