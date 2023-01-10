@@ -91,26 +91,6 @@ class Oci:
             table.add_row(row)
         print(table)
 
-    def setup_kms_vault():
-        """ Select KMS vgault """
-        vault_list = []
-        logging.info("Retrieving active vaults")
-        vaults = OciValidator.set_config_oci_kms_vault_client().list_vaults(
-            compartment_id=OciValidator.set_config()["tenancy"])
-        for vault in vaults.data:
-            data = json.loads(str(vault))
-            if str(data['lifecycle_state']) != 'ACTIVE':
-                logging.debug(f"Vault '{data['display_name']}', is not active")
-                logging.debug(
-                    f"Vault '{data['display_name']}' state is '{data['lifecycle_state']}'")
-                continue
-            vault_list.append(data['display_name'])
-        result = inquirer.select(
-            message="Pick a KMS vault:",
-            choices=vault_list).execute()
-        logging.info(f"Setting up vault '{result}' in config file")
-        config.create_option(section='OCI', option='kms_vault', value=result)
-
     def create_vault(name):
         """ Create vault """
         vault_details = OciValidator.set_vault_details(name=name)

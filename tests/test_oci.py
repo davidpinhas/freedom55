@@ -27,6 +27,12 @@ class TestOci(unittest.TestCase):
         result = runner.invoke(oci.list_vaults, ['--id'])
         assert result.exit_code == 0
 
+    def test_set_vault(self):
+        """ Test the set_vault function """
+        runner = CliRunner()
+        result = runner.invoke(oci.set_vault, ['--name', 'test-vault'])
+        assert result.exit_code == 0
+
     def test_create_vault(self):
         """ Test the create_vault function """
         runner = CliRunner()

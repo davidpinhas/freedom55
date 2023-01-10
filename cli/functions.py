@@ -28,7 +28,7 @@ class Functions:
     def delete_file(file_path):
         if Functions.file_exists(f"{str(file_path)}"):
             user_input = Functions.modify_config_approval(
-                "Config file already exists, would you like to replace it? Y/N: ")
+                "Config file already exists, would you like to replace it? Y/n: ")
             if user_input:
                 os.remove(f"{str(file_path)}")
                 logging.info(f"Deleted config file {file_path}")

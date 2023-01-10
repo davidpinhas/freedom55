@@ -46,6 +46,15 @@ def list_vaults(ctx, id):
 
 
 @oci.command(help_priority=4)
+@click.option('-n', '--name', help="Vault name", required=False)
+@click.pass_context
+def set_vault(ctx, name):
+    """ set KMS vault """
+    from cli.oci_client.oci_cli import OciValidator
+    OciValidator.setup_kms_vault(vault_name=name)
+
+
+@oci.command(help_priority=5)
 @click.option('-n', '--name', help='Vault name', required=True)
 @click.pass_context
 def create_vault(ctx, name):
@@ -54,7 +63,7 @@ def create_vault(ctx, name):
     Oci.create_vault(name=name)
 
 
-@oci.command(help_priority=5)
+@oci.command(help_priority=6)
 @click.option('--id', help='Vault ID', required=True)
 @click.option('-d',
               '--days',
@@ -68,11 +77,3 @@ def delete_vault(ctx, id, days):
         Oci.delete_vault(vault_id=id, days=days)
     else:
         Oci.delete_vault(vault_id=id)
-
-
-@oci.command(help_priority=6)
-@click.pass_context
-def select_vault(ctx):
-    """ select KMS vault """
-    from cli.oci_client.oci_cli import Oci
-    Oci.setup_kms_vault()

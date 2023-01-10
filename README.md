@@ -224,7 +224,7 @@ fd55 oci list-vaults
 ```
 
 The resulting output should be a table that lists all vaults:
-```
+```bash
 2023-01-04 03:10:53,303|INFO|Retrieving vaults data
 +----------------------+---------+----------------------------------+
 |         Name         |  State  |           Time Created           |
@@ -238,6 +238,26 @@ To print the ID of the vaults, you can add the `--id` argument:
 ```bash
 fd55 oci list-vaults --id
 ```
+
+#### Set vault
+In order to setup a vault with the CLI to perform the KMS operations, you can use:
+```bash
+fd55 oci set-vault
+```
+
+Which will open an interactive menu for selecting the vault instance:
+```bash
+▶ fd55 oci set-vault
+2023-01-10 03:15:24,175|INFO|Retrieving active vaults
+? Press enter to choose a KMS vault:
+❯ test-vault
+❯ test-vault2
+❯ test-vault3
+```
+
+After selecting the desired KMS vault, the name of the vault will be added to the config.ini file under the OCI section.
+
+The `set-vault` command only iteriates over vaults with **ACTIVE** 'lifecycle_state', therefore, newly created vault will not appear in the menu until reaching that state.
 
 #### Create vault
 To create a new vault, use the command below and provide the `-n`/`--name` argument to name the vault:
