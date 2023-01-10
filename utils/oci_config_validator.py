@@ -135,7 +135,7 @@ class OciValidator:
         return data
 
     def setup_kms_vault(vault_name=None):
-        """ Select KMS vgault """
+        """ Select KMS vault """
         if vault_name:
             cli_config.create_option(
                 section='OCI',
