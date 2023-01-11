@@ -43,6 +43,7 @@ class TestArgo(unittest.TestCase):
         result = runner.invoke(argocd.list_repos)
         assert result.exit_code == 0
 
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestArgo)
     unittest.TestLoader.sort_test_methods_by_name(

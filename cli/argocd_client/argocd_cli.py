@@ -83,7 +83,9 @@ class ArgoCD:
     def delete_application(self, method="DELETE", application_name=None):
         """ Send a Delete request to delete an application """
         try:
-            self.request(method=method, uri=f"api/v1/applications/{application_name}")
+            self.request(
+                method=method,
+                uri=f"api/v1/applications/{application_name}")
             logging.info("Successfully deleted application")
         except BaseException:
             logging.error("Failed to delete application")
