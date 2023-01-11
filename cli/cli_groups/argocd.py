@@ -62,3 +62,16 @@ def delete_app(ctx, name):
         api_endpoint=f"{config.get('ARGOCD', 'url')}",
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.delete_application(application_name=name)
+
+
+@argo.command(help_priority=5)
+@click.pass_context
+def list_repos(ctx):
+    """ Lists ArgoCD repositories """
+    from cli.argocd_client.argocd_cli import ArgoCD
+    from utils.fd55_config import Config
+    config = Config()
+    argo = ArgoCD(
+        api_endpoint=f"{config.get('ARGOCD', 'url')}",
+        api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
+    argo.list_repositories()

@@ -1,4 +1,5 @@
 import requests
+from prettytable import PrettyTable
 from utils.fd55_config import Config
 from cli.functions import Functions as fn
 import json
@@ -15,7 +16,7 @@ class ArgoCD:
 
     def request(self, uri=None, method="GET", data=None, headers=None):
         if uri is not None:
-            url = f"{self.api_endpoint}/api/v1/applications/{uri}"
+            url = f"{self.api_endpoint}/{uri}"
         else:
             url = f"{self.api_endpoint}/api/v1/applications"
         headers = {"Authorization": f"Bearer {self.api_token}"}
@@ -82,8 +83,28 @@ class ArgoCD:
     def delete_application(self, method="DELETE", application_name=None):
         """ Send a Delete request to delete an application """
         try:
-            self.request(method=method, uri=application_name)
+            self.request(method=method, uri=f"api/v1/applications/{application_name}")
             logging.info("Successfully deleted application")
         except BaseException:
             logging.error("Failed to delete application")
             exit()
+
+    def list_repositories(self):
+        """ Lists all repositories """
+        table = PrettyTable()
+        try:
+            request = self.request(method="GET", uri="/api/v1/repositories")
+            logging.info(
+                f"Finished retrieving repositories")
+        except BaseException:
+            logging.error("Failed to retrieve repositories")
+            exit()
+        argo_repos = json.loads(str(request))
+        for obj in argo_repos['items']:
+            table.field_names = ['Repository', 'State', 'Type']
+            row = [
+                obj['repo'],
+                obj['connectionState']['status'],
+                obj['type']]
+            table.add_row(row)
+        print(table)

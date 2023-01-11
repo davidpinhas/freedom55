@@ -37,6 +37,11 @@ class TestArgo(unittest.TestCase):
                 '--name', 'freedom55_argo_test_app'])
         assert result.exit_code == 0
 
+    def test5_argo_list_repos(self):
+        """ Test the Argo list_repos function """
+        runner = CliRunner()
+        result = runner.invoke(argocd.list_repos)
+        assert result.exit_code == 0
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestArgo)
