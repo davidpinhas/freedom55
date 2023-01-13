@@ -1,10 +1,10 @@
 import click
-from cli.cli_groups.oci import oci
-from cli.cli_groups.sops import sops
-from cli.cli_groups.tf import tf
-from cli.cli_groups.argocd import argo
-from cli.cli_groups.cli_config import config
-from cli.cli_groups.cloudflare import cf
+from cli.cli_groups.integration_oci import oci
+from cli.cli_groups.integration_sops import sops
+from cli.cli_groups.integration_tf import tf
+from cli.cli_groups.integration_argocd import argo
+from cli.cli_groups.integration_cli_config import config
+from cli.cli_groups.integration_cloudflare import cf
 
 
 @click.group()

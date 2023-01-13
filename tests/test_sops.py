@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups import sops
+from cli.cli_groups import integration_sops
 unittest.TestLoader.sortTestMethodsUsing = None
 
 
@@ -9,7 +9,7 @@ class TestSops(unittest.TestCase):
     def test1_sops_encrypt(self):
         """ Test the SOPS encrypt function """
         runner = CliRunner()
-        result = runner.invoke(sops.encrypt,
+        result = runner.invoke(integration_sops.encrypt,
                                ['--input_file',
                                 'test-values.yaml',
                                 '--output_file',
@@ -21,7 +21,7 @@ class TestSops(unittest.TestCase):
     def test2_sops_decrypt(self):
         """ Test the SOPS decrypt function """
         runner = CliRunner()
-        result = runner.invoke(sops.decrypt,
+        result = runner.invoke(integration_sops.decrypt,
                                ['--input_file',
                                 'enc-values.yaml',
                                 '--output_file',

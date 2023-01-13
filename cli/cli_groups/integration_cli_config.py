@@ -10,7 +10,7 @@ def config(ctx):
 
 @config.command()
 @click.pass_context
-def config(ctx):
+def start(ctx):
     """ Configure CLI """
     from utils.fd55_config import Config
     config = Config()
