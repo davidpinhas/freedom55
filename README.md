@@ -104,7 +104,7 @@ fd55 config argo set [FLAGS]
 
 for example, to set the ArgoCD Base URL and API token, run this command:
 ```bash
-fd55 config argo set --url https://argo.domain.com --api_token $API_TOKEN
+fd55 config argo set --url https://argo.domain.com --api-token $API_TOKEN
 ```
 
 For more details, use the `fd55 config --help` or `fd55 config cf set --help` command to get a list of all available options.
@@ -190,7 +190,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_C
 
 To create an application, use the `-f` option to provide the json file application spec:
 ```bash
-fd55 argo repo create -r https://github.com/davidpinhas/mc-server.git -u $USER -p $PASSWORD
+fd55 argo repo create -r https://github.com/davidpinhas/mc-server.git --username $USER --password $PASSWORD
 ```
 
 Expected output:
@@ -203,7 +203,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_U
 
 To update an application:
 ```bash
-fd55 argo repo update -r https://github.com/davidpinhas/mc-server.git -u $USER -p $PASSWORD
+fd55 argo repo update --repo-url https://github.com/davidpinhas/mc-server.git --username $USER --password $PASSWORD
 ```
 
 Expected output:
@@ -216,7 +216,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_D
 
 To delete an application, use the `-n` option to provide the name of the application you wish to delete:
 ```bash
-fd55 argo repo delete -r https://github.com/davidpinhas/mc-server.git
+fd55 argo repo delete --repo-url https://github.com/davidpinhas/mc-server.git
 ```
 
 Expected output:
@@ -245,7 +245,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/ApplicationService_
 
 To create an application, use the `-f` option to provide the json file application spec:
 ```bash
-fd55 argo app create -f create-app.json
+fd55 argo app create --file create-app.json
 ```
 
 Expected output:
@@ -258,7 +258,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/ApplicationService_
 
 To update an application:
 ```bash
-fd55 argo app update -f create-app.json
+fd55 argo app update --file create-app.json
 ```
 
 Expected output:
@@ -269,7 +269,7 @@ Expected output:
 #### Delete Application
 To delete an application, use the `-n` option to provide the name of the application you wish to delete:
 ```bash
-fd55 argo app delete -n my_app
+fd55 argo app delete --name my_app
 ```
 
 Expected output:
@@ -341,7 +341,7 @@ The `set-vault` command only iteriates over vaults with **ACTIVE** 'lifecycle_st
 #### Create vault
 To create a new vault, use the command below and provide the `-n`/`--name` argument to name the vault:
 ```bash
-fd55 oci vault create -n test-vault
+fd55 oci vault create --name test-vault
 ```
 The vault will be created as "*DEFAULT*" vault type.
 
@@ -355,14 +355,14 @@ The default time for deletion is set to **30** days from the time this command w
 
 To overwrite the days for deletion, you can use the `-d`/`--days` argument (the minimum value can be 7 days):
 ```bash
-fd55 oci vault delete --id $VAULT_ID -d 7
+fd55 oci vault delete --id $VAULT_ID --days 7
 ```
 
 ### KMS
 #### Encrypt String
 To encrypt a secret:
 ```bash
-fd55 oci kms encrypt -s "This is my secret"
+fd55 oci kms encrypt --string "This is my secret"
 ```
 
 Expected output:
@@ -375,7 +375,7 @@ Expected output:
 #### Decrypt With KMS
 For decrypting a secret, the KMS encrypted value needs to be provided as a string (decrpyting needs to be performed with the same key the value was encrypted to begin with):
 ```bash
-fd55 oci kms decrypt -s "Qf7eN7k3cJBlAFpAtSVaPqM...."
+fd55 oci kms decrypt --string "Qf7eN7k3cJBlAFpAtSVaPqM...."
 ```
 
 Expected output:
@@ -401,10 +401,15 @@ age-keygen -o ~/.sops/key.txt
 
 The `key_file` parameter requires the full path of the key file location, for example `/Users/$USER/.sops/key.txt`.
 
+To run the command using a specific Age key, you may utilize the `-k`/`--key-file` option to set the path of the key:
+```bash
+fd55 sops encrypt --input-file values.yaml --output-file encrypted-values.yaml --key-file key.txt
+```
+
 #### Encrypt File
 Encrypt a file using SOPS with the following command, by providing the `-i`/`--input-file` and `-o`/`--output-file` files:
 ```bash
-fd55 sops encrypt -i values.yaml -o encrypted-values.yaml
+fd55 sops encrypt --input-file values.yaml --output-file encrypted-values.yaml
 ```
 
 Expected output:
@@ -416,7 +421,7 @@ Expected output:
 #### Encrypt Using Regex
 For encrypting specific values, you may use the ``--encrypted-regex`` or ``-r`` flags to set a regex condition to encrypt:
 ```bash
-fd55 sops encrypt -i values.yaml -o encrypted-values.yaml -r "ingress$"
+fd55 sops encrypt --input-file values.yaml --output-file encrypted-values.yaml --encrypted-regex "ingress$"
 ```
 
 Expected output:
@@ -429,7 +434,7 @@ Expected output:
 #### Encrypt Multiple Values With Regex
 To encrypt multiple values, use the ``|`` sign:
 ```bash
-fd55 sops encrypt -i values.yaml -o encrypted-values.yaml -r "ingress|domain|spec"
+fd55 sops encrypt --input-file values.yaml --output-file encrypted-values.yaml --encrypted-regex "ingress|domain|spec"
 ```
 
 Expected output:
@@ -442,7 +447,7 @@ Expected output:
 #### Decrypt File
 In order to decrypt a file, use the following:
 ```bash
-fd55 sops decrypt -i encrypted-values.yaml -o decrypted-values.yaml
+fd55 sops decrypt --input-file encrypted-values.yaml --output-file decrypted-values.yaml
 ```
 
 Expected output:
@@ -458,27 +463,27 @@ To run the [Terraform](https://www.terraform.io) integration, you will need to p
 #### Get Output From Terraform Plan
 For example, run the command below to get the output of the Terraform plan:
 ```bash
-fd55 tf output -p /path/to/tf/plan
+fd55 tf output --path /path/to/tf/plan
 ```
 
 #### Initialize Terraform Plan
 ```bash
-fd55 tf init -p /path/to/tf/plan
+fd55 tf init --path /path/to/tf/plan
 ```
 
 #### Plan The Terraform Plan
 ```bash
-fd55 tf plan -p /path/to/tf/plan
+fd55 tf plan --path /path/to/tf/plan
 ```
 
 #### Apply Terraform Plan
 ```bash
-fd55 tf apply -p /path/to/tf/plan
+fd55 tf apply --path /path/to/tf/plan
 ```
 
 #### Destroy Terraform Plan
 ```bash
-fd55 tf destroy -p /path/to/tf/plan
+fd55 tf destroy --path /path/to/tf/plan
 ```
 
 ### Cloudflare
@@ -529,7 +534,7 @@ Option | Alias | Default| Description | Example | Required
 ##### Create DNS record
 To create a DNS record, we can run the following command:
 ```bash
-fd55 cf dns create -n test.domain.com -c 123.123.123.123 -t A
+fd55 cf dns create --name test.domain.com --content 123.123.123.123 --type A
 ```
 
 The DNS will be created with the provided arguments and set default ones for the arguments that weren't provided, as we can see in the output:
@@ -559,7 +564,7 @@ The output will be similar to the update command.
 ##### Update DNS record
 In order to update the DNS record, use the following command:
 ```bash
-fd55 cf dns update -n test.domain.com -c @ -t CNAME -p
+fd55 cf dns update --name test.domain.com --content @ --type CNAME --proxied
 ```
 
 In the above output we used the `@` sign to set the root address (the domain name) and configured the DNS record to be a *CNAME*.
@@ -567,7 +572,7 @@ In the above output we used the `@` sign to set the root address (the domain nam
 ##### Delete DNS record
 To delete a DNS record, you can use the below command and specify the full DNS name:
 ```bash
-fd55 cf dns delete -n test.domain.com
+fd55 cf dns delete --name test.domain.com
 ```
 
 Expected output:
