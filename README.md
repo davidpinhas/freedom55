@@ -311,7 +311,7 @@ Both encrypt and decrypt operations require an `-i`/`--input_file` and `-o`/`--o
 **Limitation**: As the [SOPS SDK](https://github.com/mozilla/sops#12development-branch) only has support for Golang, the SOPS client is required to be installed, you can read more in the [Requirements section](#requirements).
 
 This integration requires the following key:
-* `key_path` - The path to the Age key.
+* `key_file` - The path to the Age key.
 
 To generate a secure key with Age for use with the SOPS integration, you can run the following command:
 ```bash
@@ -319,7 +319,7 @@ mkdir ~/.sops
 age-keygen -o ~/.sops/key.txt
 ```
 
-The `key_path` parameter requires the full path of the key file location, for example `/Users/$USER/.sops/key.txt`.
+The `key_file` parameter requires the full path of the key file location, for example `/Users/$USER/.sops/key.txt`.
 
 #### Encrypt File
 Encrypt a file using SOPS with the following command, by providing the `-i`/`--input_file` and `-o`/`--output_file` files:

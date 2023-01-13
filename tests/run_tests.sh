@@ -29,10 +29,14 @@ cat << EOF > test-values.yaml
 test:
     key1: value1
 EOF
-python -m unittest tests/test_sops.py || TEST_RESULTS=false
-rm test-values.yaml
-rm enc-values.yaml
-
+if command -v age >/dev/null 2>&1 ; then
+  age-keygen -o key.txt >/dev/null 2>&1
+  python -m unittest tests/test_sops.py || TEST_RESULTS=false
+  rm test-values.yaml enc-values.yaml key.txt 
+else
+  echo "WARN: Age command not found, install Age https://github.com/FiloSottile/age#installation"
+  TEST_RESULTS=false
+fi
 echo "
 ##### Running ArgoCD tests #####"
 cat << EOF > tmp_argo_app.json
@@ -67,6 +71,11 @@ cat << EOF > tmp_argo_app.json
 EOF
 python -m unittest tests/test_argo.py || TEST_RESULTS=false
 rm tmp_argo_app.json
+if [[ "$TEST_RESULTS" = "true" ]] ; then
+  echo "### INFO: All tests passed! ###"
+else
+  echo "### ERROR: Tests failed! ###"
+fi
 export TEST_RESULTS
 echo "
 ##########################

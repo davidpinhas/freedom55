@@ -13,7 +13,7 @@ component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM", "CLOUDFLARE"]
 class Config:
     oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file"]
     argo_key_list = ["url", "api_token"]
-    sops_key_list = ["key_path"]
+    sops_key_list = ["key_file"]
     tf_key_list = []
     cf_key_list = ['email', 'api_key', 'domain_name']
     all_lists = [
