@@ -71,7 +71,7 @@ winpty fd55 config start
 ## Usage
 To use the Freedom 55 CLI, we'll first call fd55, than the integration and it's sub-command:
 ```bash
-fd55 [INTEGRATION] [COMMAND] [OPTIONS]
+fd55 [INTEGRATION] [COMMAND] [OPTIONS] [FLAGS]
 ```
 
 For example:
@@ -80,11 +80,11 @@ fd55 oci kms encrypt --string "Random text"
 ```
 
 ### Options
-- `--log debug`: (Optional) Specify the log level. If not provided, the default level is 'info'.
+- `-v/--Verbose debug`: (Optional) Specify the log level. If not provided, the default level is 'info'.
 - `--help`: (Optional) Show the help message and exit.
 
 ### Configuration
-To configure Freedom 55 CLI with your desired integrations, run the `fd55 config` command:
+To configure Freedom 55 CLI with your desired integrations, run the `fd55 config start` command:
 ```bash
 fd55 config start
 2022-12-31 15:20:25,055|INFO|Running config validation
@@ -95,7 +95,7 @@ fd55 config start
 ❯ ○ TERRAFORM
 ```
 
-The `config` command will guide you through the configuration process and request the required parameters for the selected integrations.
+The `config start` command will guide you through the configuration process and request the required parameters for the selected integrations.
 
 ## Integrations
 Freedom 55 is a powerful multi-tool that simplifies your workflow by integrating a variety of tools into a single interface. With Freedom 55, you can use a single tool instead of juggling multiple CLIs, which can clutter your environment and can be pretty overwhelming.
@@ -110,6 +110,10 @@ Here's a list of currently supported tools (limited support):
 ### ArgoCD
 ---
 The [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) integration allows you to retrieve application information and manage the ArgoCD server and its applications.
+
+#### Commands
+- [Repo](#Repo)
+- [App](#App)
 
 This integration requires the following keys:
 * `url` - ArgoCD endpoint, for example: https://argo.mydomain.com
@@ -151,6 +155,7 @@ Here's an example of a simple JSON file application spec:
 For full details on the JSON payload, you can refer to the ArgoCD API Swagger documentation in the ArgoCD web interface. To access it, navigate to your ArgoCD server in your web browser:
 https://argo.mydomain.com/swagger-ui.
 
+### Repo
 #### Get Repositories
 Get all ArgoCD applications:
 ```bash
@@ -207,6 +212,7 @@ Expected output:
 2023-01-13 07:39:01,319|INFO|Deleted repository - https://github.com/davidpinhas/mc-server.git
 ```
 
+### App
 #### Get Applications
 Get all ArgoCD applications:
 ```bash
@@ -263,6 +269,10 @@ Expected output:
 ---
 [OCI (Oracle Cloud Infrastructure)](https://www.oracle.com/il-en/cloud/) integration utilizes the [KMS feature](https://www.oracle.com/il-en/security/cloud-security/key-management/) and lets you encrypt and decrypt a string.
 
+#### Commands
+- [Vault](#Vault)
+- [KMS](#KMS)
+
 This integration requires the following keys:
 * `user` - The OCID of the user for whom the key pair is being added
 * `fingerprint` - The fingerprint of the key that was just added.
@@ -273,6 +283,7 @@ This integration requires the following keys:
 For more details on retrieving the required keys, read more in Oracle's [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs) Docs.
 #TODO: Add support for encryption and decryption of binaries.
 
+### Vault
 #### List vaults
 To get a list of all current vaults under the tenancy that was set in the [Freedom 55 config file](#Configuration), run the following command:
 ```bash
@@ -335,6 +346,7 @@ To overwrite the days for deletion, you can use the `-d`/`--days` argument (the 
 fd55 oci vault delete --id $VAULT_ID -d 7
 ```
 
+### KMS
 #### Encrypt String
 To encrypt a secret:
 ```bash
@@ -461,11 +473,15 @@ fd55 tf destroy -p /path/to/tf/plan
 ---
 The [Cloudflare](https://www.cloudflare.com/en-gb/) integration utilizes the official [Cloudflare API](https://developers.cloudflare.com/api/) to perform its actions in the background to modify the configured domain DNS records.
 
+#### Commands
+- [DNS](#DNS)
+
 This integration requires the following keys:
 * `email` - Email address used to authenticate with Cloudflare.
 * `api_key` - API key with Read permissions for DNS Zone.
 * `domain_name` - Domain name.
 
+### DNS
 #### List DNS records
 In order to list all DNS records, run the following command:
 ```bash
