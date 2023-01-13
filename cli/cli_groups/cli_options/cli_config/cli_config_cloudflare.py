@@ -2,6 +2,7 @@ import click
 import logging
 from utils.fd55_config import Config
 
+
 @click.group()
 @click.pass_context
 def cf(ctx=None):
@@ -12,7 +13,10 @@ def cf(ctx=None):
 @cf.command()
 @click.option('-u', '--email', help='User email', required=False)
 @click.option('-p', '--api_key', help='Cloudflare API key', required=False)
-@click.option('-d', '--domain_name', help='Cloudflare domain name', required=False)
+@click.option('-d',
+              '--domain_name',
+              help='Cloudflare domain name',
+              required=False)
 @click.pass_context
 def set(ctx, email=None, api_key=None, domain_name=None):
     """ Set Cloudflare keys """

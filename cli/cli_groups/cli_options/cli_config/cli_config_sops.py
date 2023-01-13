@@ -2,6 +2,7 @@ import click
 import logging
 from utils.fd55_config import Config
 
+
 @click.group()
 @click.pass_context
 def sops(ctx):

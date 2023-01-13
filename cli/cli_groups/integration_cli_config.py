@@ -6,7 +6,6 @@ from cli.cli_groups.cli_options.cli_config import cli_config_sops
 from utils.cli_help_order import CliHelpOrder
 
 
-
 @click.group(cls=CliHelpOrder)
 @click.pass_context
 def config(ctx):

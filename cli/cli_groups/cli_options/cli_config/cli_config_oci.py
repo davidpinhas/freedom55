@@ -12,12 +12,21 @@ def oci(ctx=None):
 
 @oci.command()
 @click.option('-u', '--user', help='OCI user', required=False)
-@click.option('-f', '--fingerprint', help='OCI account fingerprint', required=False)
+@click.option('-f',
+              '--fingerprint',
+              help='OCI account fingerprint',
+              required=False)
 @click.option('-t', '--tenancy', help='OCI account tenancy', required=False)
 @click.option('-r', '--region', help='OCI account region', required=False)
 @click.option('-k', '--key_file', help='OCI key file', required=False)
 @click.pass_context
-def set(ctx, user=None, fingerprint=None, tenancy=None, region=None, key_file=None):
+def set(
+        ctx,
+        user=None,
+        fingerprint=None,
+        tenancy=None,
+        region=None,
+        key_file=None):
     """ Set OCI keys """
     config = Config()
     if user:
