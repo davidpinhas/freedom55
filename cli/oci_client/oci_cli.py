@@ -4,7 +4,7 @@ from prettytable import PrettyTable
 import logging
 from utils.oci_config_validator import OciValidator
 from InquirerPy import inquirer
-from cli.functions import Functions as fn
+from utils.functions import Functions as fn
 from utils.fd55_config import Config
 logger = logging.getLogger()
 config = Config()

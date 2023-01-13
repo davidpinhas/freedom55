@@ -15,7 +15,7 @@ from cli.cli_groups.integration_cloudflare import cf
 @click.pass_context
 def main(ctx, verbosity):
     import logging
-    from cli.functions import Functions as fn
+    from utils.functions import Functions as fn
     """Freedom 55 CLI.
 
         Freedom 55 - The operational client crafted by David Pinhas

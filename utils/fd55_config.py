@@ -5,7 +5,7 @@ import platform
 from InquirerPy import prompt
 import shutil
 import datetime
-from cli.functions import Functions as fn
+from utils.functions import Functions as fn
 logger = logging.getLogger()
 component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM", "CLOUDFLARE"]
 

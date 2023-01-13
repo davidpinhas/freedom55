@@ -1,7 +1,7 @@
 import requests
 from prettytable import PrettyTable
 from utils.fd55_config import Config
-from cli.functions import Functions as fn
+from utils.functions import Functions as fn
 import json
 import logging
 logger = logging.getLogger()

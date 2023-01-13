@@ -3,7 +3,7 @@ import logging
 import json
 from InquirerPy import inquirer
 from datetime import datetime, timedelta
-from cli.functions import Functions as fn
+from utils.functions import Functions as fn
 from utils.fd55_config import Config
 logger = logging.getLogger()
 cli_config = Config()
