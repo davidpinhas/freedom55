@@ -76,6 +76,7 @@ def list_repos(ctx):
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.list_repositories()
 
+
 @argo.command(help_priority=6)
 @click.option('-r', '--repo_url', help='Repository URL to add', required=True)
 @click.option('-u', '--username', help='Repository username', required=False)
@@ -91,6 +92,7 @@ def add_repo(ctx, repo_url, username=None, password=None):
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.add_repo(repo_url=repo_url, username=username, password=password)
 
+
 @argo.command(help_priority=7)
 @click.option('-r', '--repo_url', help='Repository URL to add', required=True)
 @click.option('-u', '--username', help='Repository username', required=False)
@@ -105,6 +107,7 @@ def update_repo(ctx, repo_url, username=None, password=None):
         api_endpoint=f"{config.get('ARGOCD', 'url')}",
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.update_repo(repo_url=repo_url, username=username, password=password)
+
 
 @argo.command(help_priority=8)
 @click.option('-r', '--repo_url', help='Repository URL', required=True)

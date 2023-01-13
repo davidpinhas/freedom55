@@ -74,7 +74,13 @@ class Functions:
         data = str(base64.b64decode(Functions.json_parse(sample_string.data)))
         return data.strip("b'").strip("'")
 
-    def send_request(self, method, base_url, endpoint, headers=None, data=None):
+    def send_request(
+            self,
+            method,
+            base_url,
+            endpoint,
+            headers=None,
+            data=None):
         """ Sends HTTP request """
         url = str(base_url).strip("{").strip("}").strip("'")
         url = str(url) + str(endpoint)
