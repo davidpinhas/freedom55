@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install age -y
-          echo ${{ secrets.OCI_TEST_KEY}} > oci.key
+          echo "${{ secrets.OCI_TEST_KEY}}" > oci.key
           pip install --upgrade pip
           python3.11 -m venv freedom55-venv
           source freedom55-venv/bin/activate
