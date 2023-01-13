@@ -1,7 +1,7 @@
 ![](images/Freedom55.png)
 ____
 
-Freedom 55 CLI - The operational client for maintaining, modifying, and operating your homelab.
+The operational client for maintaining, modifying, and operating your homelab.
 Written in Python by David Pinhas, this multi-tool is constantly expanding to support more integrations. Make your homelab management a ***breeze*** with Freedom 55 CLI.
 
 The goal of this project is to give you the freedom to work efficiently and effectively with one unified tool.
@@ -65,7 +65,7 @@ To fix this issue, you'll need to use the **winpty** command to run the `fd55 co
 
 By using winpty, you can run the `fd55 config` command without encountering any errors. Simply run the following command in your terminal:
 ```bash
-winpty fd55 config
+winpty fd55 config start
 ```
 
 ## Usage
@@ -76,7 +76,7 @@ fd55 [INTEGRATION] [COMMAND] [OPTIONS]
 
 For example:
 ```bash
-fd55 oci encrypt --string "Random text"
+fd55 oci kms encrypt --string "Random text"
 ```
 
 ### Options
@@ -86,7 +86,7 @@ fd55 oci encrypt --string "Random text"
 ### Configuration
 To configure Freedom 55 CLI with your desired integrations, run the `fd55 config` command:
 ```bash
-fd55 config
+fd55 config start
 2022-12-31 15:20:25,055|INFO|Running config validation
 ? Select integrations to configure
   ◉ OCI
@@ -151,10 +151,66 @@ Here's an example of a simple JSON file application spec:
 For full details on the JSON payload, you can refer to the ArgoCD API Swagger documentation in the ArgoCD web interface. To access it, navigate to your ArgoCD server in your web browser:
 https://argo.mydomain.com/swagger-ui.
 
+#### Get Repositories
+Get all ArgoCD applications:
+```bash
+fd55 argo repo list
+```
+
+Expected output:
+```
+2023-01-13 07:31:52,957|INFO|Finished retrieving repositories
++---------------------------------------------------------+------------+------+
+|                        Repository                       |   State    | Type |
++---------------------------------------------------------+------------+------+
+|     https://github.com/davidpinhas/private-repo.git     | Successful | git  |
+|      https://github.com/davidpinhas/public-repo.git     | Successful | git  |
++---------------------------------------------------------+------------+------+
+```
+
+#### Create Repository
+Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_CreateRepository
+
+To create an application, use the `-f` option to provide the json file application spec:
+```bash
+fd55 argo repo create -r https://github.com/davidpinhas/mc-server.git -u $USER -p $PASSWORD
+```
+
+Expected output:
+```
+2023-01-13 07:35:52,900|INFO|Created repository - https://github.com/davidpinhas/mc-server.git
+```
+
+#### Update Repository
+Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_UpdateRepository
+
+To update an application:
+```bash
+fd55 argo repo update -r https://github.com/davidpinhas/mc-server.git -u $USER -p $PASSWORD
+```
+
+Expected output:
+```
+2023-01-13 07:38:05,468|INFO|Updated repository - https://github.com/davidpinhas/mc-server.git
+```
+
+#### Delete Repository
+Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_DeleteRepository
+
+To delete an application, use the `-n` option to provide the name of the application you wish to delete:
+```bash
+fd55 argo repo delete -r https://github.com/davidpinhas/mc-server.git
+```
+
+Expected output:
+```
+2023-01-13 07:39:01,319|INFO|Deleted repository - https://github.com/davidpinhas/mc-server.git
+```
+
 #### Get Applications
 Get all ArgoCD applications:
 ```bash
-fd55 argo get-apps
+fd55 argo app list
 ```
 
 Expected output:
@@ -171,7 +227,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/ApplicationService_
 
 To create an application, use the `-f` option to provide the json file application spec:
 ```bash
-fd55 argo create-app -f create-app.json
+fd55 argo app create -f create-app.json
 ```
 
 Expected output:
@@ -184,7 +240,7 @@ Swagger ref - https://argo.mydomain.com/swagger-ui#operation/ApplicationService_
 
 To update an application:
 ```bash
-fd55 argo update-app -f create-app.json
+fd55 argo app update -f create-app.json
 ```
 
 Expected output:
@@ -195,7 +251,7 @@ Expected output:
 #### Delete Application
 To delete an application, use the `-n` option to provide the name of the application you wish to delete:
 ```bash
-fd55 argo delete-app -n my_app
+fd55 argo app delete -n my_app
 ```
 
 Expected output:
@@ -220,7 +276,7 @@ For more details on retrieving the required keys, read more in Oracle's [minimum
 #### List vaults
 To get a list of all current vaults under the tenancy that was set in the [Freedom 55 config file](#Configuration), run the following command:
 ```bash
-fd55 oci list-vaults
+fd55 oci vault list
 ```
 
 The resulting output should be a table that lists all vaults:
@@ -236,18 +292,18 @@ The resulting output should be a table that lists all vaults:
 
 To print the ID of the vaults, you can add the `--id` argument:
 ```bash
-fd55 oci list-vaults --id
+fd55 oci vault list --id
 ```
 
 #### Set vault
 In order to setup a vault with the CLI to perform the KMS operations, you can use:
 ```bash
-fd55 oci set-vault
+fd55 oci vault set
 ```
 
 Which will open an interactive menu for selecting the vault instance:
 ```bash
-▶ fd55 oci set-vault
+▶ fd55 oci vault set
 2023-01-10 03:15:24,175|INFO|Retrieving active vaults
 ? Press enter to choose a KMS vault:
 ❯ test-vault
@@ -262,27 +318,27 @@ The `set-vault` command only iteriates over vaults with **ACTIVE** 'lifecycle_st
 #### Create vault
 To create a new vault, use the command below and provide the `-n`/`--name` argument to name the vault:
 ```bash
-fd55 oci create-vault -n test-vault
+fd55 oci vault create -n test-vault
 ```
 The vault will be created as "*DEFAULT*" vault type.
 
 #### Delete vault
 To schedule a vault deletion, you can use the following command:
 ```bash
-fd55 oci delete-vault --id $VAULT_ID
+fd55 oci vault delete --id $VAULT_ID
 ```
 
 The default time for deletion is set to **30** days from the time this command was triggered.
 
 To overwrite the days for deletion, you can use the `-d`/`--days` argument (the minimum value can be 7 days):
 ```bash
-fd55 oci delete-vault --id $VAULT_ID -d 7
+fd55 oci vault delete --id $VAULT_ID -d 7
 ```
 
 #### Encrypt String
 To encrypt a secret:
 ```bash
-fd55 oci encrypt -s "This is my secret"
+fd55 oci kms encrypt -s "This is my secret"
 ```
 
 Expected output:
@@ -295,7 +351,7 @@ Expected output:
 #### Decrypt With KMS
 For decrypting a secret, the KMS encrypted value needs to be provided as a string (decrpyting needs to be performed with the same key the value was encrypted to begin with):
 ```bash
-fd55 oci decrypt -s "Qf7eN7k3cJBlAFpAtSVaPqM...."
+fd55 oci kms decrypt -s "Qf7eN7k3cJBlAFpAtSVaPqM...."
 ```
 
 Expected output:
@@ -413,7 +469,7 @@ This integration requires the following keys:
 #### List DNS records
 In order to list all DNS records, run the following command:
 ```bash
-fd55 cf list-dns
+fd55 cf dns list
 ```
 
 Expected output:
@@ -445,7 +501,7 @@ Option | Alias | Default| Description | Example | Required
 ##### Create DNS record
 To create a DNS record, we can run the following command:
 ```bash
-fd55 cf create-dns -n test.domain.com -c 123.123.123.123 -t A
+fd55 cf dns create -n test.domain.com -c 123.123.123.123 -t A
 ```
 
 The DNS will be created with the provided arguments and set default ones for the arguments that weren't provided, as we can see in the output:
@@ -475,7 +531,7 @@ The output will be similar to the update command.
 ##### Update DNS record
 In order to update the DNS record, use the following command:
 ```bash
-fd55 cf update-dns -n test.domain.com -c @ -t CNAME -p
+fd55 cf dns update -n test.domain.com -c @ -t CNAME -p
 ```
 
 In the above output we used the `@` sign to set the root address (the domain name) and configured the DNS record to be a *CNAME*.
@@ -483,7 +539,7 @@ In the above output we used the `@` sign to set the root address (the domain nam
 ##### Delete DNS record
 To delete a DNS record, you can use the below command and specify the full DNS name:
 ```bash
-fd55 cf delete-dns -n test.domain.com
+fd55 cf dns delete -n test.domain.com
 ```
 
 Expected output:

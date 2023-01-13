@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups import argocd
+from cli.cli_groups.integration_argocd import argocd_app, argocd_repo
 unittest.TestLoader.sortTestMethodsUsing = None
 
 
@@ -10,14 +10,14 @@ class TestArgo(unittest.TestCase):
         """ Test the Argo list_apps function """
         runner = CliRunner()
         result = runner.invoke(
-            argocd.get_apps)
+            argocd_app.list)
         assert result.exit_code == 0
 
     def test2_argo_create_app(self):
         """ Test the Argo create_app function """
         runner = CliRunner()
         result = runner.invoke(
-            argocd.create_app, [
+            argocd_app.create, [
                 '--file', 'tmp_argo_app.json'])
         assert result.exit_code == 0
 
@@ -25,7 +25,7 @@ class TestArgo(unittest.TestCase):
         """ Test the Argo update_app function """
         runner = CliRunner()
         result = runner.invoke(
-            argocd.update_app, [
+            argocd_app.update, [
                 '--file', 'tmp_argo_app.json'])
         assert result.exit_code == 0
 
@@ -33,27 +33,27 @@ class TestArgo(unittest.TestCase):
         """ Test the Argo delete_app function """
         runner = CliRunner()
         result = runner.invoke(
-            argocd.delete_app, [
+            argocd_app.delete, [
                 '--name', 'freedom55_argo_test_app'])
         assert result.exit_code == 0
 
     def test5_argo_list_repos(self):
         """ Test the Argo list_repos function """
         runner = CliRunner()
-        result = runner.invoke(argocd.list_repos)
+        result = runner.invoke(argocd_repo.list)
         assert result.exit_code == 0
 
     def test6_argo_add_repo(self):
         """ Test the Argo add_repo function """
         runner = CliRunner()
-        result = runner.invoke(argocd.add_repo, [
+        result = runner.invoke(argocd_repo.add, [
             '--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
         assert result.exit_code == 0
 
     def test7_argo_update_repo(self):
         """ Test the Argo update_repo function """
         runner = CliRunner()
-        result = runner.invoke(argocd.update_repo, [
+        result = runner.invoke(argocd_repo.update, [
             '--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
         assert result.exit_code == 0
 
@@ -61,7 +61,7 @@ class TestArgo(unittest.TestCase):
         """ Test the Argo delete_repo function """
         runner = CliRunner()
         result = runner.invoke(
-            argocd.delete_repo, [
+            argocd_repo.delete, [
                 '--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
         assert result.exit_code == 0
 

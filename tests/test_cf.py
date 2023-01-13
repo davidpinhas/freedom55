@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups import cloudflare
+from cli.cli_groups.integration_cloudflare import cloudflare_dns
 from utils.fd55_config import Config
 unittest.TestLoader.sortTestMethodsUsing = None
 config = Config()
@@ -10,13 +10,13 @@ class TestCloudflare(unittest.TestCase):
     def test1_list_dns(self):
         """ Test the list_dns function """
         runner = CliRunner()
-        result = runner.invoke(cloudflare.list_dns, ['--id'])
+        result = runner.invoke(cloudflare_dns.list, ['--id'])
         assert result.exit_code == 0
 
     def test2_create_dns(self):
         """ Test the create_dns function """
         runner = CliRunner()
-        result = runner.invoke(cloudflare.create_dns,
+        result = runner.invoke(cloudflare_dns.create,
                                ['--name',
                                 f'freedom55.test.{config.get("CLOUDFLARE", "domain_name")}',
                                 '--content',
@@ -31,7 +31,7 @@ class TestCloudflare(unittest.TestCase):
     def test3_update_dns(self):
         """ Test the update_dns function """
         runner = CliRunner()
-        result = runner.invoke(cloudflare.update_dns,
+        result = runner.invoke(cloudflare_dns.update,
                                ['--name',
                                 f'freedom55.test.{config.get("CLOUDFLARE", "domain_name")}',
                                 '--content',
@@ -44,7 +44,7 @@ class TestCloudflare(unittest.TestCase):
         """ Test the delete_dns function """
         runner = CliRunner()
         result = runner.invoke(
-            cloudflare.delete_dns, [
+            cloudflare_dns.delete, [
                 '--name', f'freedom55.test.{config.get("CLOUDFLARE", "domain_name")}'])
         assert result.exit_code == 0
 
