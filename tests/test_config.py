@@ -10,21 +10,32 @@ class TestConfig(unittest.TestCase):
         """ Test the Config argo set function """
         runner = CliRunner()
         result = runner.invoke(
-            cli_config_argocd.set, ['--url', 'https://argo.domain.com', '--api-token', 'Token'])
+            cli_config_argocd.set, [
+                '--url', 'https://argo.domain.com', '--api-token', 'Token'])
         assert result.exit_code == 0
 
     def test2_config_set_cloudflare(self):
         """ Test the Config cloudflare set function """
         runner = CliRunner()
         result = runner.invoke(
-            cli_config_cloudflare.set, ['--email', 'test@gmail.com', '--api-key', 'Key', '--domain-name', 'domain.com'])
+            cli_config_cloudflare.set, [
+                '--email', 'test@gmail.com', '--api-key', 'Key', '--domain-name', 'domain.com'])
         assert result.exit_code == 0
 
     def test3_config_set_oci(self):
         """ Test the Config oci set function """
         runner = CliRunner()
-        result = runner.invoke(
-            cli_config_oci.set, ['--user', 'test1', '--fingerprint', 'test2', '--tenancy', 'test3', '--region', 'test4', '--key-file', 'test5'])
+        result = runner.invoke(cli_config_oci.set,
+                               ['--user',
+                                'test1',
+                                '--fingerprint',
+                                'test2',
+                                '--tenancy',
+                                'test3',
+                                '--region',
+                                'test4',
+                                '--key-file',
+                                'test5'])
         assert result.exit_code == 0
 
     def test4_config_set_sops(self):
