@@ -9,17 +9,25 @@ class TestSops(unittest.TestCase):
     def test1_sops_encrypt(self):
         """ Test the SOPS encrypt function """
         runner = CliRunner()
-        result = runner.invoke(
-            sops.encrypt, [
-                '--input_file', 'test-values.yaml', '--output_file', 'enc-values.yaml', '--key_file', 'key.txt'])
+        result = runner.invoke(sops.encrypt,
+                               ['--input_file',
+                                'test-values.yaml',
+                                '--output_file',
+                                'enc-values.yaml',
+                                '--key_file',
+                                'key.txt'])
         assert result.exit_code == 0
 
     def test2_sops_decrypt(self):
         """ Test the SOPS decrypt function """
         runner = CliRunner()
-        result = runner.invoke(
-            sops.decrypt, [
-                '--input_file', 'enc-values.yaml', '--output_file', 'test-values.yaml', '--key_file', 'key.txt'])
+        result = runner.invoke(sops.decrypt,
+                               ['--input_file',
+                                'enc-values.yaml',
+                                '--output_file',
+                                'test-values.yaml',
+                                '--key_file',
+                                'key.txt'])
         assert result.exit_code == 0
 
 

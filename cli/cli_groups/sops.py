@@ -40,4 +40,7 @@ def encrypt(ctx, input_file, output_file, encrypted_regex, key_file):
 def decrypt(ctx, input_file, output_file, key_file=None):
     """ Decrypt file using SOPS with Age encryption """
     from cli.sops_client.sops_cli import Sops
-    Sops.decrypt(input_file=input_file, output_file=output_file, key_file=key_file)
+    Sops.decrypt(
+        input_file=input_file,
+        output_file=output_file,
+        key_file=key_file)
