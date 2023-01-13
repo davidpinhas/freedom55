@@ -54,9 +54,11 @@ class Config:
         self.config.read(self.config_path)
         if not self.config.has_section(section):
             self.config.add_section(section)
+            logging.info(f"Created section '{section}'")
         self.config.set(section, option, value)
         with open(self.config_path, 'w') as config_file:
             self.config.write(config_file)
+            logging.info(f"Created option '{option}'")
 
     def get_config_dir(self):
         """ Get configuration directory """

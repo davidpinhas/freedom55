@@ -97,6 +97,18 @@ fd55 config start
 
 The `config start` command will guide you through the configuration process and request the required parameters for the selected integrations.
 
+To configure a specific integration, you can run the `set` command with the integration:
+```bash
+fd55 config argo set [FLAGS]
+```
+
+for example, to set the ArgoCD Base URL and API token, run this command:
+```bash
+fd55 config argo set --url https://argo.domain.com --api_token $API_TOKEN
+```
+
+For more details, use the `fd55 config --help` or `fd55 config cf set --help` command to get a list of all available options.
+
 ## Integrations
 Freedom 55 is a powerful multi-tool that simplifies your workflow by integrating a variety of tools into a single interface. With Freedom 55, you can use a single tool instead of juggling multiple CLIs, which can clutter your environment and can be pretty overwhelming.
 
