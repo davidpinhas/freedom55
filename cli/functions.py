@@ -2,6 +2,7 @@ import json
 import base64
 import logging
 import os
+import requests
 logger = logging.getLogger()
 
 
@@ -72,3 +73,19 @@ class Functions:
         """ Base64 decode """
         data = str(base64.b64decode(Functions.json_parse(sample_string.data)))
         return data.strip("b'").strip("'")
+
+    def send_request(self, method, base_url, endpoint, headers=None, data=None):
+        """ Sends HTTP request """
+        url = str(base_url).strip("{").strip("}").strip("'")
+        url = str(url) + str(endpoint)
+        if method == "GET":
+            response = requests.get(url, headers=headers)
+        elif method == "POST":
+            response = requests.post(url, headers=headers, json=data)
+        elif method == "PUT":
+            response = requests.put(url, headers=headers, json=data)
+        elif method == "DELETE":
+            response = requests.delete(url, headers=headers)
+        else:
+            raise ValueError(f"{method} is not a valid HTTP method")
+        return response

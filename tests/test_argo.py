@@ -43,6 +43,25 @@ class TestArgo(unittest.TestCase):
         result = runner.invoke(argocd.list_repos)
         assert result.exit_code == 0
 
+    def test6_argo_add_repo(self):
+        """ Test the Argo add_repo function """
+        runner = CliRunner()
+        result = runner.invoke(argocd.add_repo, [
+                '--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
+        assert result.exit_code == 0
+
+    def test7_argo_update_repo(self):
+        """ Test the Argo update_repo function """
+        runner = CliRunner()
+        result = runner.invoke(argocd.update_repo, [
+                '--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
+        assert result.exit_code == 0
+
+    def test8_argo_delete_repo(self):
+        """ Test the Argo delete_repo function """
+        runner = CliRunner()
+        result = runner.invoke(argocd.delete_repo, ['--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
+        assert result.exit_code == 0
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestArgo)
