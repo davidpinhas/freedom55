@@ -11,7 +11,7 @@ def sops(ctx):
 
 
 @sops.command()
-@click.option('-k', '--key_file', help='SOPS key file', required=False)
+@click.option('-k', '--key-file', help='SOPS key file', required=False)
 @click.pass_context
 def set(ctx, key_file=None):
     """ Set SOPS keys """

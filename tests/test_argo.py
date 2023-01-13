@@ -47,14 +47,14 @@ class TestArgo(unittest.TestCase):
         """ Test the Argo add_repo function """
         runner = CliRunner()
         result = runner.invoke(argocd_repo.add, [
-            '--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
+            '--repo-url', 'https://github.com/davidpinhas/mc-server.git'])
         assert result.exit_code == 0
 
     def test7_argo_update_repo(self):
         """ Test the Argo update_repo function """
         runner = CliRunner()
         result = runner.invoke(argocd_repo.update, [
-            '--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
+            '--repo-url', 'https://github.com/davidpinhas/mc-server.git'])
         assert result.exit_code == 0
 
     def test8_argo_delete_repo(self):
@@ -62,7 +62,7 @@ class TestArgo(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(
             argocd_repo.delete, [
-                '--repo_url', 'https://github.com/davidpinhas/mc-server.git'])
+                '--repo-url', 'https://github.com/davidpinhas/mc-server.git'])
         assert result.exit_code == 0
 
 

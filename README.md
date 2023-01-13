@@ -387,7 +387,7 @@ Expected output:
 ### SOPS
 ---
 The SOPS integration encrypts and decrypts files using [Age encryption](https://github.com/FiloSottile/age).
-Both encrypt and decrypt operations require an `-i`/`--input_file` and `-o`/`--output_file` file arguments.
+Both encrypt and decrypt operations require an `-i`/`--input-file` and `-o`/`--output-file` file arguments.
 **Limitation**: As the [SOPS SDK](https://github.com/mozilla/sops#12development-branch) only has support for Golang, the SOPS client is required to be installed, you can read more in the [Requirements section](#requirements).
 
 This integration requires the following key:
@@ -402,7 +402,7 @@ age-keygen -o ~/.sops/key.txt
 The `key_file` parameter requires the full path of the key file location, for example `/Users/$USER/.sops/key.txt`.
 
 #### Encrypt File
-Encrypt a file using SOPS with the following command, by providing the `-i`/`--input_file` and `-o`/`--output_file` files:
+Encrypt a file using SOPS with the following command, by providing the `-i`/`--input-file` and `-o`/`--output-file` files:
 ```bash
 fd55 sops encrypt -i values.yaml -o encrypted-values.yaml
 ```
@@ -414,7 +414,7 @@ Expected output:
 ```
 
 #### Encrypt Using Regex
-For encrypting specific values, you may use the ``--encrypted_regex`` or ``-r`` flags to set a regex condition to encrypt:
+For encrypting specific values, you may use the ``--encrypted-regex`` or ``-r`` flags to set a regex condition to encrypt:
 ```bash
 fd55 sops encrypt -i values.yaml -o encrypted-values.yaml -r "ingress$"
 ```

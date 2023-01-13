@@ -12,7 +12,7 @@ def argo(ctx):
 
 @argo.command()
 @click.option('-u', '--url', help='ArgoCD base URL', required=False)
-@click.option('-p', '--api_token', help='ArgoCD Token', required=False)
+@click.option('-p', '--api-token', help='ArgoCD Token', required=False)
 @click.pass_context
 def set(ctx, url=None, api_token=None):
     """ Set ArgoCD keys """

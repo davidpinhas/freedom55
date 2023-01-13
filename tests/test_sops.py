@@ -10,11 +10,11 @@ class TestSops(unittest.TestCase):
         """ Test the SOPS encrypt function """
         runner = CliRunner()
         result = runner.invoke(integration_sops.encrypt,
-                               ['--input_file',
+                               ['--input-file',
                                 'test-values.yaml',
-                                '--output_file',
+                                '--output-file',
                                 'enc-values.yaml',
-                                '--key_file',
+                                '--key-file',
                                 'key.txt'])
         assert result.exit_code == 0
 
@@ -22,11 +22,11 @@ class TestSops(unittest.TestCase):
         """ Test the SOPS decrypt function """
         runner = CliRunner()
         result = runner.invoke(integration_sops.decrypt,
-                               ['--input_file',
+                               ['--input-file',
                                 'enc-values.yaml',
-                                '--output_file',
+                                '--output-file',
                                 'test-values.yaml',
-                                '--key_file',
+                                '--key-file',
                                 'key.txt'])
         assert result.exit_code == 0
 

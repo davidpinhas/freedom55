@@ -18,7 +18,7 @@ def oci(ctx=None):
               required=False)
 @click.option('-t', '--tenancy', help='OCI account tenancy', required=False)
 @click.option('-r', '--region', help='OCI account region', required=False)
-@click.option('-k', '--key_file', help='OCI key file', required=False)
+@click.option('-k', '--key-file', help='OCI key file', required=False)
 @click.pass_context
 def set(
         ctx,

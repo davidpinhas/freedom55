@@ -9,16 +9,16 @@ def sops(ctx):
 
 
 @sops.command()
-@click.option('-i', '--input_file', help='file to encrypt', required=True)
+@click.option('-i', '--input-file', help='file to encrypt', required=True)
 @click.option('-o',
-              '--output_file',
+              '--output-file',
               help='encrypted output file',
               required=True)
 @click.option('-r',
-              '--encrypted_regex',
+              '--encrypted-regex',
               help='set the encrypted key suffix',
               required=False)
-@click.option('-k', '--key_file', help='Age full key path', required=False)
+@click.option('-k', '--key-file', help='Age full key path', required=False)
 @click.pass_context
 def encrypt(ctx, input_file, output_file, encrypted_regex, key_file):
     """ Encrypt file using SOPS with Age encryption """
@@ -30,12 +30,12 @@ def encrypt(ctx, input_file, output_file, encrypted_regex, key_file):
 
 
 @sops.command()
-@click.option('-i', '--input_file', help='file to decrypt', required=True)
+@click.option('-i', '--input-file', help='file to decrypt', required=True)
 @click.option('-o',
-              '--output_file',
+              '--output-file',
               help='decrypted output file',
               required=True)
-@click.option('-k', '--key_file', help='Age full key path', required=False)
+@click.option('-k', '--key-file', help='Age full key path', required=False)
 @click.pass_context
 def decrypt(ctx, input_file, output_file, key_file=None):
     """ Decrypt file using SOPS with Age encryption """
