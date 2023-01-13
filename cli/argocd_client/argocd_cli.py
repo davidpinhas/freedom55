@@ -27,10 +27,16 @@ class ArgoCD:
         """ Get all ArgoCD applications """
         logging.info("Getting ArgoCD applications")
         argo = ArgoCD(api_endpoint=self.api_endpoint, api_token=self.api_token)
-        response = requests.request(
-            headers=argo.headers,
-            method="GET",
-            url=f"{self.api_endpoint}/api/v1/applications")
+        try:
+            response = requests.request(
+                headers=argo.headers,
+                method="GET",
+                url=f"{self.api_endpoint}/api/v1/applications")
+            if response.status_code != 200:
+                raise requests.exceptions.HTTPError
+        except requests.exceptions.HTTPError:
+            logging.error(f'Failed with status code: {response.status_code}')
+            logging.error(f'Encountered error:\n{response.text}')
         json_output = argo.load_response_json(response)
         if json_output['items'] is not None:
             print("\nArgoCD applications:")
@@ -47,67 +53,75 @@ class ArgoCD:
         """ Create an application """
         data = fn.open_json_file(json_file)
         try:
-            fn.send_request(
+            response = fn.send_request(
                 self,
                 method="POST",
                 data=data,
                 headers=self.headers,
                 base_url=self.api_endpoint,
                 endpoint=f"/api/v1/applications")
+            if response.status_code != 200:
+                raise requests.exceptions.HTTPError
             logging.info(
                 f"Successfully created application {data['metadata']['name']}")
-        except BaseException:
-            logging.error("Failed to create application")
-            exit()
+        except requests.exceptions.HTTPError:
+            logging.error(f'Failed with status code: {response.status_code}')
+            logging.error(f'Encountered error:\n{response.text}')
 
     def update_application(self, json_file: str):
         """ Send an Update request to update the applciation configuration """
         with open(json_file, 'r') as f:
             data = fn.open_json_file(json_file)
         try:
-            fn.send_request(
+            response = fn.send_request(
                 self,
                 method="PUT",
                 data=data,
                 headers=self.headers,
                 base_url=self.api_endpoint,
                 endpoint=f"/api/v1/applications/{data['metadata']['name']}")
+            if response.status_code != 200:
+                raise requests.exceptions.HTTPError
             logging.info(
                 f"Successfully updated application {data['metadata']['name']}")
-        except BaseException:
-            logging.error("Failed to update application")
-            exit()
+        except requests.exceptions.HTTPError:
+            logging.error(f'Failed with status code: {response.status_code}')
+            logging.error(f'Encountered error:\n{response.text}')
 
     def delete_application(self, application_name=None):
         """ Send a Delete request to delete an application """
         try:
-            fn.send_request(
+            response = fn.send_request(
                 self,
                 method="DELETE",
                 headers=self.headers,
                 base_url=self.api_endpoint,
                 endpoint=f"/api/v1/applications/{application_name}")
+            if response.status_code != 200:
+                raise requests.exceptions.HTTPError
             logging.info("Successfully deleted application")
-        except BaseException:
-            logging.error("Failed to delete application")
-            exit()
+        except requests.exceptions.HTTPError:
+            logging.error(f'Failed with status code: {response.status_code}')
+            logging.error(f'Encountered error:\n{response.text}')
 
     def list_repositories(self):
         """ Lists all repositories """
         table = PrettyTable()
         try:
-            request = fn.send_request(
+            response = fn.send_request(
                 self,
                 method="GET",
                 headers=self.headers,
                 base_url=self.api_endpoint,
                 endpoint=f"/api/v1/repositories")
+            if response.status_code != 200:
+                raise requests.exceptions.HTTPError
             logging.info(
                 f"Finished retrieving repositories")
-        except BaseException:
-            logging.error("Failed to retrieve repositories")
-            exit()
-        argo_repos = json.loads(str(request.text))
+        except requests.exceptions.HTTPError:
+            logging.error(f'Failed with status code: {response.status_code}')
+            logging.error(f'Encountered error:\n{response.text}')
+        argo_repos = json.loads(str(response.text))
         for obj in argo_repos['items']:
             logging.debug(f"Repository data:\n{obj}")
             table.field_names = ['Repository', 'State', 'Type']
