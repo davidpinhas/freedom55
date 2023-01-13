@@ -16,8 +16,8 @@ jobs:
           python-version: 3.11
       - name: Python Unittest
         run: |
-          apt update
-          apt install age -y
+          sudo apt update
+          sudo apt install age -y
           echo ${{ secrets.OCI_TEST_KEY}} > oci.key
           pip install --upgrade pip
           python3.11 -m venv freedom55-venv
