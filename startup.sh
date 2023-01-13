@@ -14,9 +14,9 @@ case "${unameOut}" in
     *)          machine="UNKNOWN:${unameOut}"
 esac
 
-echo "INFO: Installing prequisites"
+echo "INFO: Checking prequisites"
+# Check Python 3 installed
 if ! command -v python3 > /dev/null; then
-  # Python 3 is not installed
   echo "ERROR: Python 3 is not installed on this system"
   echo "
 You can install Python 3 using the following commands:
@@ -30,7 +30,9 @@ Download the Python 3 installer from the official Python website: https://www.py
 Run the installer and follow the prompts to install Python 3.
 "
   return 0
+
 # Check Python 3 version
+echo "INFO: Checking Python 3 version"
 fi
 if [[ "${machine}" == "MinGw" ]]; then
   minor_version=$(python -c 'import sys; print(sys.version_info)' | awk '{print $2}' | grep -o '[0-9]\+')
@@ -45,7 +47,7 @@ else
   return 0
 fi
 
-# Check if pip3 is installed
+# Check pip3 installed
 if ! command -v pip3 &> /dev/null; then
   echo "ERROR: PIP 3 is not installed"
   echo "You can install Python 3 using the following commands:
@@ -60,7 +62,8 @@ Run the installer and follow the prompts to install Python 3.
 " 
   return 0
 fi
-# Check if virtualenv is installed
+
+# Check virtualenv installed
 if [[ "${machine}" == "MinGw" ]]; then
   echo "INFO: Running on Windows, virtualenv not required"
 elif ! command -v virtualenv &> /dev/null; then
@@ -68,6 +71,7 @@ elif ! command -v virtualenv &> /dev/null; then
   return 0
 fi
 
+# Set variables
 if [[ "${machine}" == "MinGw" ]]; then
   python_bin="python"
   venv="python -m virtualenv freedom55-venv > /dev/null"
@@ -78,6 +82,7 @@ else
   venv="virtualenv --python=python3 freedom55-venv"
   venv_activate="source $PWD/freedom55-venv/bin/activate"
 fi
+
 # Setting up source code
 if [ -d "freedom55-venv" ]; then
   # Virtualenv exists
@@ -107,20 +112,25 @@ echo "
 ################
 "
 echo "INFO: Freedom 55 was initialized successfully."
+echo "INFO: Run 'fd55' to test the CLI."
 
 # Set up the alias command
 alias_name=$(printf "alias fd55CLI='cd %s && source freedom55-venv/bin/activate'" "$PWD")
   
-# Print the instructions to configure the CLI on the local machine
-echo "To configure the CLI on the local machine, run these three commands:"
+# Print the instructions to configure the CLI on the local machine with an alias
 echo "
-# set alias to access the current directory and activate venv"
-printf '$ if ! grep -q "%s" ~/.bashrc; then echo "%s" >> %s' "$alias_name" "$alias_name" "~/.bashrc; fi
+To configure the CLI on the local machine, run these three commands:"
+echo "
+### set alias to access the CLI directory and activate virtual environment"
+printf '---
+$ if ! grep -q "%s" ~/.bashrc; then echo "%s" >> %s' "$alias_name" "$alias_name" "~/.bashrc; fi
 "
 echo "
-# Source the bashrc file"
-echo "$ source ~/.bashrc
+### Source bashrc file"
+echo "---
+$ source ~/.bashrc
 "
-echo "# Run the alias"
-echo "$ fd55CLI
+echo "### Run alias"
+echo "---
+$ fd55CLI
 "
