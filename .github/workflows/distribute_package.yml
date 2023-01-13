@@ -23,18 +23,7 @@ jobs:
           python3.11 -m venv freedom55-venv
           source freedom55-venv/bin/activate
           pip3 install -r requirements.txt
-          bash tests/run_tests.sh \
-            --oci-user "${{ secrets.OCI_USER}}" \
-            --oci-fingerprint "${{ secrets.OCI_FINGERPRINT}}" \
-            --oci-tenancy "${{ secrets.OCI_TENANCY}}" \
-            --oci-region "${{ secrets.OCI_REGION}}" \
-            --oci-key-file "oci.key" \
-            --oci-vault "${{ secrets.OCI_VAULT}}" \
-            --argocd-url "${{ secrets.ARGO_URL}}" \
-            --argocd-token "${{ secrets.ARGO_TOKEN}}" \
-            --cloudflare-email "${{ secrets.CLOUDFLARE_EMAIL}}" \
-            --cloudflare-api-key "${{ secrets.CLOUDFLARE_API_KEY}}" \
-            --cloudflare-domain "${{ secrets.CLOUDFLARE_DOMAIN}}"
+          bash tests/run_tests.sh --oci-user "${{ secrets.OCI_USER}}" --oci-fingerprint "${{ secrets.OCI_FINGERPRINT}}" --oci-tenancy "${{ secrets.OCI_TENANCY}}" --oci-region "${{ secrets.OCI_REGION}}" --oci-key-file "oci.key" --oci-vault "${{ secrets.OCI_VAULT}}" --argocd-url "${{ secrets.ARGO_URL}}" --argocd-token "${{ secrets.ARGO_TOKEN}}" --cloudflare-email "${{ secrets.CLOUDFLARE_EMAIL}}" --cloudflare-api-key "${{ secrets.CLOUDFLARE_API_KEY}}" --cloudflare-domain "${{ secrets.CLOUDFLARE_DOMAIN}}"
       - name: Verify tests
         if: env.TEST_RESULTS != 'true'
         run: exit 1
