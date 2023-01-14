@@ -19,7 +19,6 @@ class K8s:
         config.load_kube_config()
         self.v1 = client.CoreV1Api()
 
-
     def get_argocd_server_pod(self):
         """ Get ArgoCD server pod name """
         ret = K8s().v1.list_namespaced_pod(namespace=self.namespace)

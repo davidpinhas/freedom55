@@ -210,6 +210,18 @@ class ArgoCD:
     def export_argocd_settings(self):
         """ Export ArgoCD server settings """
         k8s_client = K8s(namespace="argocd")
-        kubectl_output = k8s_client.kubectl.run(["exec", "-it", f"{k8s_client.get_argocd_server_pod()}", "-n", "argocd", "--", "argocd", "admin", "export", "-n", "argocd"])
+        kubectl_output = k8s_client.kubectl.run(
+            [
+                "exec",
+                "-it",
+                f"{k8s_client.get_argocd_server_pod()}",
+                "-n",
+                "argocd",
+                "--",
+                "argocd",
+                "admin",
+                "export",
+                "-n",
+                "argocd"])
         clean_kubectl_output = kubectl_output.stdout.strip()
         print(clean_kubectl_output)
