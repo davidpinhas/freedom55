@@ -1,5 +1,5 @@
 import click
-from cli.cli_groups.cli_options.argocd import argocd_app, argocd_repo
+from cli.cli_groups.cli_options.argocd import argocd_app, argocd_repo, argocd_server
 
 
 @click.group()
@@ -11,3 +11,4 @@ def argo(ctx):
 
 argo.add_command(argocd_app.app)
 argo.add_command(argocd_repo.repo)
+argo.add_command(argocd_server.server)

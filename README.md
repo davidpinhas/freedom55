@@ -126,6 +126,7 @@ The [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) integration allows you t
 #### Commands
 - [Repo](#Repo)
 - [App](#App)
+- [Server](#Server)
 
 This integration requires the following keys:
 * `url` - ArgoCD endpoint, for example: https://argo.mydomain.com
@@ -276,6 +277,22 @@ Expected output:
 ```
 2022-12-29 04:44:28,556|INFO|Successfully deleted application
 ```
+
+### Server
+#### Export ArgoCD server settings
+:warning: Limitation: The `export` command requires a local Kubectl client to be pre-configured with the desired Kubernetes cluster and the ArgoCD service must be running under the "argocd" namespace. Additionally, the pod name of the ArgoCD server must start with "**argocd-server**-xxxxx".
+
+To export the ArgoCD server settings, run the following command:
+```bash
+fd55 argo server export
+```
+This command will output the full settings of the ArgoCD server, which is required for the `import` command later.
+
+To save the export output to a file, use the following command:
+```bash
+fd55 argo server export > argocd-export-$(date +%d-%m-%Y).yaml
+```
+This command will create a file with the full server settings, and will use the current date in the file name.
 
 ### OCI
 ---

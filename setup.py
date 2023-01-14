@@ -33,5 +33,6 @@ setup(
         "requests",
         "python_terraform",
         "InquirerPy",
-        "prettytable"],
+        "prettytable",
+        "kubernetes"],
 )

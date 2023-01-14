@@ -2,6 +2,7 @@ import requests
 from prettytable import PrettyTable
 from utils.fd55_config import Config
 from utils.functions import Functions as fn
+from utils.k8s import K8s
 import json
 import logging
 logger = logging.getLogger()
@@ -205,3 +206,10 @@ class ArgoCD:
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
             logging.error(f'Encountered error:\n{response.text}')
+
+    def export_argocd_settings(self):
+        """ Export ArgoCD server settings """
+        k8s_client = K8s(namespace="argocd")
+        kubectl_output = k8s_client.kubectl.run(["exec", "-it", f"{k8s_client.get_argocd_server_pod()}", "-n", "argocd", "--", "argocd", "admin", "export", "-n", "argocd"])
+        clean_kubectl_output = kubectl_output.stdout.strip()
+        print(clean_kubectl_output)
