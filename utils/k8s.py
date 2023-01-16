@@ -12,7 +12,11 @@ class Kubectl:
             if shell:
                 args = self.command + args
                 proc = subprocess.run(
-                    args, shell=True, capture_output=True, text=True, universal_newlines=True)
+                    args,
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    universal_newlines=True)
                 lines = proc.stdout.split("\n")
                 for line in lines:
                     if line:
@@ -46,6 +50,10 @@ class K8s:
     def copy_file_to_argocd_server_pod(self, file):
         try:
             logging.info("Copying file to ArgoCD server pod")
-            K8s().kubectl.run(["cp", f"{file}", f"{self.get_argocd_server_pod()}:/tmp/", "-n", f"{self.namespace}"])
+            K8s().kubectl.run(["cp",
+                               f"{file}",
+                               f"{self.get_argocd_server_pod()}:/tmp/",
+                               "-n",
+                               f"{self.namespace}"])
         except Exception as e:
             logging.error(f"An error occurred: {e}")

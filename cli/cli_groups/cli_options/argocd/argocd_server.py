@@ -21,6 +21,7 @@ def export(ctx):
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
     argo.export_argocd_settings()
 
+
 @server.command(name='import', help_priority=2)
 @click.option('-f', '--file', help="ArgoCD backup file", required=True)
 @click.pass_context
