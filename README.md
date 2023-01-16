@@ -27,8 +27,8 @@ The goal of this project is to give you the freedom to work efficiently and effe
 -   [License](#License)
 
 ### Disclaimer
-:warning: The tool is currently in Alpha version and is under active development. Therefore, it may contain bugs and incomplete features.
-:warning: The versioning of the tool might reset in the future as the tool matures and approaches a stable release. 
+:warning: The tool is currently in Alpha version and is under active development. Therefore, it may contain bugs and incomplete features.<br>
+:warning: The versioning of the tool might reset in the future as the tool matures and approaches a stable release. <br>
 Please use the tool at your own risk and report any issues or feedback.
 
 ## Requirements
@@ -56,7 +56,7 @@ pip3 install dist/fd55-$VERSION.tar.gz
 Installing Freedom 55 as a binary is the recommended approach, as it provides improved performance when using the CLI, leading to faster execution times and a more efficient workflow.
 
 #### Windows Install
-To source the startup.sh file, you can use [Git Bash](https://git-scm.com/downloads), which can simplify the installation process.
+To source the startup.sh file, you can use [Git Bash](https://git-scm.com/downloads), which can simplify the installation process.<br>
 Press the Windows Key > Search and press Git Bash > Follow the steps mentioned [above](#Installation).
 
 For more details, read more on [What is Git Bash](https://www.gitkraken.com/blog/what-is-git-bash).
@@ -115,7 +115,7 @@ fd55 config argo set --url https://argo.domain.com --api-token $API_TOKEN
 For more details, use the `fd55 config --help` or `fd55 config cf set --help` command to get a list of all available options.
 
 ## Integrations
-Freedom 55 is a powerful multi-tool that simplifies your workflow by integrating a variety of tools into a single interface. With Freedom 55, you can use a single tool instead of juggling multiple CLIs, which can clutter your environment and can be pretty overwhelming.
+Freedom 55 is a powerful multi-tool that simplifies your workflow by integrating a variety of tools into a single interface. <br>With Freedom 55, you can use a single tool instead of juggling multiple CLIs, which can clutter your environment and can be pretty overwhelming.
 
 Here's a list of currently supported tools (limited support):
 * [ArgoCD](#Argocd)
@@ -170,7 +170,7 @@ Here's an example of a simple JSON file application spec:
 }
 ```
 
-For full details on the JSON payload, you can refer to the ArgoCD API Swagger documentation in the ArgoCD web interface. To access it, navigate to your ArgoCD server in your web browser:
+For full details on the JSON payload, you can refer to the ArgoCD API Swagger documentation in the ArgoCD web interface. <br>To access it, navigate to your ArgoCD server in your web browser:
 https://argo.mydomain.com/swagger-ui.
 
 ### Repo
@@ -416,8 +416,7 @@ Expected output:
 ### SOPS
 ---
 The SOPS integration encrypts and decrypts files using [Age encryption](https://github.com/FiloSottile/age).
-Both encrypt and decrypt operations require an `-i`/`--input-file` and `-o`/`--output-file` file arguments.
-**Limitation**: As the [SOPS SDK](https://github.com/mozilla/sops#12development-branch) only has support for Golang, the SOPS client is required to be installed, you can read more in the [Requirements section](#requirements).
+Both encrypt and decrypt operations require an `-i`/`--input-file` and `-o`/`--output-file` file arguments. <br>**Limitation**: As the [SOPS SDK](https://github.com/mozilla/sops#12development-branch) only has support for Golang, the SOPS client is required to be installed, you can read more in the [Requirements section](#requirements).
 
 This integration requires the following key:
 * `key_file` - The path to the Age key.
