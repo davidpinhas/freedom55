@@ -16,6 +16,11 @@ setup(
     classifiers=["Programming Language :: Python :: 3.10"],
     packages=[
         "cli/cli_groups",
+        "cli/cli_groups/cli_options",
+        "cli/cli_groups/cli_options/oci",
+        "cli/cli_groups/cli_options/argocd",
+        "cli/cli_groups/cli_options/cli_config",
+        "cli/cli_groups/cli_options/cloudflare",
         "cli/oci_client",
         "cli/argocd_client",
         "cli/sops_client",
