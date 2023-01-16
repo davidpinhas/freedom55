@@ -26,6 +26,11 @@ The goal of this project is to give you the freedom to work efficiently and effe
 -   [Contribution](#Contribution)
 -   [License](#License)
 
+### Disclaimer
+:warning: The tool is currently in Alpha version and is under active development. Therefore, it may contain bugs and incomplete features.
+:warning: The versioning of the tool might reset in the future as the tool matures and approaches a stable release. 
+Please use the tool at your own risk and report any issues or feedback.
+
 ## Requirements
 - Python 3.10 or higher - Ensure `Python3.10`, `Pip3` and `Virtualenv` are installed
 - Install Python dependencies - `$ pip3 install -r requirements.txt` [required for running tests locally]
