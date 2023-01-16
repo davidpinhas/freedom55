@@ -209,19 +209,36 @@ class ArgoCD:
 
     def export_argocd_settings(self):
         """ Export ArgoCD server settings """
-        k8s_client = K8s(namespace="argocd")
-        kubectl_output = k8s_client.kubectl.run(
-            [
-                "exec",
-                "-it",
-                f"{k8s_client.get_argocd_server_pod()}",
-                "-n",
-                "argocd",
-                "--",
-                "argocd",
-                "admin",
-                "export",
-                "-n",
-                "argocd"])
-        clean_kubectl_output = kubectl_output.stdout.strip()
-        print(clean_kubectl_output)
+        try:
+            k8s_client = K8s(namespace="argocd")
+            logging.info("Export started")
+            kubectl_output = k8s_client.kubectl.run(
+                [
+                    "exec",
+                    "-it",
+                    f"{k8s_client.get_argocd_server_pod()}",
+                    "-n",
+                    "argocd",
+                    "--",
+                    "argocd",
+                    "admin",
+                    "export",
+                    "-n",
+                    "argocd"])
+            clean_kubectl_output = kubectl_output.stdout.strip()
+            print(clean_kubectl_output)
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+
+
+    def import_argocd_settings(self, file):
+        """ Import ArgoCD server settings """
+        try:
+            k8s_client = K8s(namespace="argocd")
+            logging.info("Import started")
+            k8s_client.copy_file_to_argocd_server_pod(file=file)
+            k8s_client.kubectl.run(
+                ['exec', f'{k8s_client.get_argocd_server_pod()}', '-n', 'argocd', '--', 'argocd', 'admin', 'import', f'/tmp/{file}', '-n', 'argocd'])
+            logging.info("Import finished")
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")

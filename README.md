@@ -279,9 +279,9 @@ Expected output:
 ```
 
 ### Server
-#### Export ArgoCD server settings
-:warning: Limitation: The `export` command requires a local Kubectl client to be pre-configured with the desired Kubernetes cluster and the ArgoCD service must be running under the "argocd" namespace. Additionally, the pod name of the ArgoCD server must start with "**argocd-server**-xxxxx".
+:warning: Limitation: The `server` command requires a local Kubectl client to be pre-configured with the desired Kubernetes cluster and the ArgoCD service must be running under the "argocd" namespace. Additionally, the pod name of the ArgoCD server must start with "**argocd-server**-xxxxx".
 
+#### Export ArgoCD server settings
 To export the ArgoCD server settings, run the following command:
 ```bash
 fd55 argo server export
@@ -293,6 +293,13 @@ To save the export output to a file, use the following command:
 fd55 argo server export > argocd-export-$(date +%d-%m-%Y).yaml
 ```
 This command will create a file with the full server settings, and will use the current date in the file name.
+
+#### Import ArgoCD server settings
+To import the exported ArgoCD settings, run the command:
+```bash
+fd55 argo server import -f argocd-export-16-01-2023.yaml
+```
+The CLI will copy the file to the `/tmp` directory of the ArgoCD server pod and start the import.
 
 ### OCI
 ---
