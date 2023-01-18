@@ -27,9 +27,9 @@ The goal of this project is to give you the freedom to work efficiently and effe
 -   [Contribution](#Contribution)
 -   [License](#License)
 
-### Disclaimer
-:warning: The tool is currently in Alpha version and is under active development. Therefore, it may contain bugs and incomplete features.<br>
-:warning: The versioning of the tool might reset in the future as the tool matures and approaches a stable release. <br>
+### :warning: Disclaimer
+- The tool is currently in Alpha version and is under active development. Therefore, it may contain bugs and incomplete features.<br>
+- The versioning of the tool might reset in the future as the tool matures and approaches a stable release. <br>
 Please use the tool at your own risk and report any issues or feedback.
 
 ## Requirements
