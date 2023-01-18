@@ -23,6 +23,7 @@ The goal of this project is to give you the freedom to work efficiently and effe
     -   [SOPS](#SOPS)
     -   [Terraform](#Terraform)
     -   [Cloudflare](#Cloudflare)
+    -   [ChatGPT](#ChatGPT)
 -   [Contribution](#Contribution)
 -   [License](#License)
 
@@ -92,12 +93,14 @@ fd55 oci kms encrypt --string "Random text"
 To configure Freedom 55 CLI with your desired integrations, run the `fd55 config start` command:
 ```bash
 fd55 config start
-2022-12-31 15:20:25,055|INFO|Running config validation
+2023-01-17 22:56:13,438|INFO|Running config validation
 ? Select integrations to configure
   ◉ OCI
   ◉ SOPS
   ○ ARGOCD
-❯ ○ TERRAFORM
+  ○ TERRAFORM
+❯ ○ CLOUDFLARE
+  ◉ AI
 ```
 
 The `config start` command will guide you through the configuration process and request the required parameters for the selected integrations.
@@ -123,6 +126,7 @@ Here's a list of currently supported tools (limited support):
 * [SOPS](#SOPS)
 * [Terraform](#Terraform)
 * [Cloudflare](#Cloudflare)
+* [ChatGPT](#ChatGPT)
 
 ### ArgoCD
 ---
@@ -610,6 +614,21 @@ Expected output:
 2023-01-08 01:28:58,198|INFO|Finished deleting DNS record 'test.domain.com'
 ```
 
+### ChatGPT
+---
+The [OpenAI](https://openai.com) integration utilizes the official [OpenAI API](https://beta.openai.com/docs/api-reference/introduction?lang=python) to access their language model engine, which is set to use the *text-davinci-003* engine by default.
+
+This integration requires the following keys:
+* `api_key` - OpenAI API key.
+
+#### Chat
+
+To send a message to model, run:
+```bash
+fd55 ai chat -p "create abash script to backup and upgrade the kubernetes cluster"
+```
+
+The output should be printed to the console in chunks as soon as they come.
 ## Contribution
 - Give a star. :star:
 - Feel free to Fork and Clone. :beers:

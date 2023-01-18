@@ -5,6 +5,7 @@ from cli.cli_groups.integration_tf import tf
 from cli.cli_groups.integration_argocd import argo
 from cli.cli_groups.integration_cli_config import config
 from cli.cli_groups.integration_cloudflare import cf
+from cli.cli_groups.integration_ai import ai
 
 
 @click.group()
@@ -43,6 +44,7 @@ main.add_command(tf)
 main.add_command(argo)
 main.add_command(cf)
 main.add_command(config)
+main.add_command(ai)
 
 if __name__ == '__main__':
     main(obj={})

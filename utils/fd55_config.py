@@ -7,7 +7,7 @@ import shutil
 import datetime
 from utils.functions import Functions as fn
 logger = logging.getLogger()
-component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM", "CLOUDFLARE"]
+component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM", "CLOUDFLARE", "AI"]
 
 
 class Config:
@@ -16,12 +16,14 @@ class Config:
     sops_key_list = ["key_file"]
     tf_key_list = []
     cf_key_list = ['email', 'api_key', 'domain_name']
+    ai_key_list = ['api_key']
     all_lists = [
         oci_key_list,
         argo_key_list,
         sops_key_list,
         tf_key_list,
-        cf_key_list]
+        cf_key_list,
+        ai_key_list]
 
     def __init__(self):
         self.config_dir = self.get_config_dir()
@@ -173,6 +175,12 @@ class Config:
                             component=component, key_list=config.tf_key_list):
                         pass
             if component == "CLOUDFLARE":
+                if not config.validate_config_option(
+                        component, key_list=config.cf_key_list):
+                    if config.start_configuration(
+                            component=component, key_list=config.cf_key_list):
+                        pass
+            if component == "AI":
                 if not config.validate_config_option(
                         component, key_list=config.cf_key_list):
                     if config.start_configuration(

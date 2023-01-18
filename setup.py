@@ -21,6 +21,7 @@ setup(
         "cli/cli_groups/cli_options/argocd",
         "cli/cli_groups/cli_options/cli_config",
         "cli/cli_groups/cli_options/cloudflare",
+        "cli/chatgpt_client",
         "cli/oci_client",
         "cli/argocd_client",
         "cli/sops_client",
@@ -39,5 +40,6 @@ setup(
         "python_terraform",
         "InquirerPy",
         "prettytable",
-        "kubernetes"],
+        "kubernetes",
+        "openai"],
 )

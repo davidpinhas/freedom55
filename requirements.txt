@@ -6,3 +6,4 @@ build==0.9.0
 InquirerPy==0.3.4
 prettytable==3.5.0
 kubernetes==25.3.0
+openai==0.26.1

@@ -5,7 +5,7 @@ from cli.cli_groups.cli_options.argocd import argocd_app, argocd_repo, argocd_se
 @click.group()
 @click.pass_context
 def argo(ctx):
-    """ OCI Commands """
+    """ ArgoCD Commands """
     ctx.ensure_object(dict)
 
 
