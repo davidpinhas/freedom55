@@ -616,19 +616,21 @@ Expected output:
 
 ### ChatGPT
 ---
-The [OpenAI](https://openai.com) integration utilizes the official [OpenAI API](https://beta.openai.com/docs/api-reference/introduction?lang=python) to access their language model engine, which is set to use the *text-davinci-003* engine by default.
+The [OpenAI](https://openai.com) integration utilizes the official [OpenAI API](https://beta.openai.com/docs/api-reference/introduction?lang=python) to access their language model engine, which is set to use the "*text-davinci-003*" engine by default.
 
 This integration requires the following keys:
 * `api_key` - OpenAI API key.
 
 #### Chat
+![](images/openai_chat.gif)
 
 To send a message to model, run:
 ```bash
-fd55 ai chat -p "create abash script to backup and upgrade the kubernetes cluster"
+fd55 ai chat -p "create a bash script to backup and upgrade a kubernetes cluster"
 ```
 
-The output should be printed to the console in chunks as soon as they come.
+The output should be printed to the console in chunks (EngineAPIResource generator events) as soon as they become available.
+
 ## Contribution
 - Give a star. :star:
 - Feel free to Fork and Clone. :beers:
