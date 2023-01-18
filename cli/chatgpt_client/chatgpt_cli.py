@@ -10,7 +10,12 @@ class ChatGPT:
         openai.api_key = f"{str(config.get('AI', 'api_key'))}"
         self.engine = "text-davinci-003"
 
-    def send_openai_request(self, prompt, full_output=False, file=None, iterations=None):
+    def send_openai_request(
+            self,
+            prompt,
+            full_output=False,
+            file=None,
+            iterations=None):
         try:
             logging.info("Creating request to OpenAI")
             if file is not None:
@@ -44,4 +49,3 @@ class ChatGPT:
         except BaseException:
             logging.error("Failed to get a response from OpenAI")
             exit()
-
