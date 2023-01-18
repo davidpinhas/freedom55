@@ -2,6 +2,7 @@ import click
 from utils.cli_help_order import CliHelpOrder
 from cli.chatgpt_client.chatgpt_cli import ChatGPT
 
+
 @click.group(cls=CliHelpOrder)
 @click.pass_context
 def ai(ctx):

@@ -4,6 +4,7 @@ import itertools
 from utils.fd55_config import Config
 config = Config()
 
+
 class ChatGPT:
     def __init__(self):
         openai.api_key = f"{str(config.get('AI', 'api_key'))}"
@@ -27,6 +28,6 @@ class ChatGPT:
                 event_text = event['choices'][0]['text']
                 print(f"{event_text}", end="", flush=True)
             print("\n\n#################################")
-        except:
+        except BaseException:
             logging.error("Failed to get a response from OpenAI")
             exit()
