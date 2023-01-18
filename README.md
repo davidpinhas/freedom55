@@ -628,8 +628,19 @@ To send a message to model, run:
 ```bash
 fd55 ai chat -p "create a bash script to backup and upgrade a kubernetes cluster"
 ```
-
 The output should be printed to the console in chunks (EngineAPIResource generator events) as soon as they become available.
+
+It is possible to pass a file with `--file` as a reference to your prompt. For example, we have the file test.py that we want to add logging to, to do so we can run:
+```bash
+fd55 ai chat -p "add logging" --file test.py
+```
+The test.py file content will be added to the passed prompt to add it as a reference.
+
+In case you want to save the output to a new file, you can use the `--output` flag to print the full output:
+```bash
+fd55 ai chat -p "add logging" --file test.py --output > test2.py
+```
+The `--output` flag will wait for the full output to be retrieved and prints out the file content to the console.
 
 ## Contribution
 - Give a star. :star:
