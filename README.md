@@ -245,9 +245,12 @@ Expected output:
 ```
 2022-12-29 04:21:49,356|INFO|Getting ArgoCD applications
 
-ArgoCD applications:
-* my_app1
-* my_app2
++-------------------------+
+|       Application       |
++-------------------------+
+|         my_app1         |
+|         my_app2         |
++-------------------------+
 ```
 
 #### Create Application

@@ -26,8 +26,9 @@ class ArgoCD:
 
     def get_applications(self):
         """ Get all ArgoCD applications """
-        logging.info("Getting ArgoCD applications")
+        logging.info("Retrieving ArgoCD applications")
         argo = ArgoCD(api_endpoint=self.api_endpoint, api_token=self.api_token)
+        table = PrettyTable()
         try:
             response = requests.request(
                 headers=argo.headers,
@@ -35,20 +36,16 @@ class ArgoCD:
                 url=f"{self.api_endpoint}/api/v1/applications")
             if response.status_code != 200:
                 raise requests.exceptions.HTTPError
+            response_data = json.loads(response.text)
+            for obj in range(len(response_data["items"])):
+                response_obj = response_data['items'][obj]
+                table.field_names = ['Application']
+                row = [response_obj['metadata']['name']]
+                table.add_row(row)
+            print(f"\n{table}")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
             logging.error(f'Encountered error:\n{response.text}')
-        json_output = argo.load_response_json(response)
-        if json_output['items'] is not None:
-            print("\nArgoCD applications:")
-            for i in range(len(json_output['items'])):
-                print(
-                    "* %s" %
-                    json.dumps(
-                        json_output['items'][i]['metadata']['name'],
-                        indent=4).strip('"'))
-        else:
-            logging.info("No applications found")
 
     def create_application(self, json_file: str):
         """ Create an application """
