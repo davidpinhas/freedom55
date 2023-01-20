@@ -24,7 +24,10 @@ class ChatGPT:
             found_valid_line = False
             for line in lines:
                 if not found_valid_line:
-                    if re.search(r"[a-zA-Z0-9À-ÿ]+", line) and not (line.startswith(" ") or line.startswith("#") and not line.startswith("#!")):
+                    if re.search(
+                            r"[a-zA-Z0-9À-ÿ]+",
+                            line) and not (
+                            line.startswith(" ") or line.startswith("#") and not line.startswith("#!")):
                         found_valid_line = True
                         f.write(line)
                 else:
@@ -41,7 +44,8 @@ class ChatGPT:
                 with open(file, 'r') as f:
                     file_content = f.read()
                     new_prompt = ""
-                    new_prompt += prompt + '. File to modify: \n' + file_content + "\n\n Return the improved version in full."
+                    new_prompt += prompt + '. File to modify: \n' + \
+                        file_content + "\n\n Return the improved version in full."
                     logging.debug(f"Manifested new prompt:\n{prompt}")
                 while True:
                     output = openai.Completion.create(
@@ -80,12 +84,14 @@ class ChatGPT:
                 with open(file, 'r') as f:
                     file_content = f.read()
                     original_prompt = prompt
-                    prompt += prompt + '. File to improve: \n' + file_content + "\n\n Return the improved version in full."
+                    prompt += prompt + '. File to improve: \n' + file_content + \
+                        "\n\n Return the improved version in full."
                     logging.debug(f"Manifested new prompt:\n{prompt}")
                 if iterations:
                     iterations = int(iterations)
                     if int(iterations) and iterations > 0:
-                        ChatGPT().iterate_code_rewrite(file=file, iterations=iterations, prompt=original_prompt)
+                        ChatGPT().iterate_code_rewrite(
+                            file=file, iterations=iterations, prompt=original_prompt)
                         exit()
             if file is None and iterations:
                 logging.error(f"Iterations argument requires a '--file'")
