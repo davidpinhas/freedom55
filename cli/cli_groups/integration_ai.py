@@ -22,7 +22,7 @@ def ai(ctx):
               required=False)
 @click.option('-i',
               '--iterations',
-              help='Number of iterations to loop the AI',
+              help='Number of iterations to use the propmt over a file',
               required=False)
 @click.pass_context
 def chat(ctx, prompt, output=None, file=None, iterations=None):

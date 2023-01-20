@@ -624,7 +624,7 @@ The [OpenAI](https://openai.com) integration utilizes the official [OpenAI API](
 This integration requires the following keys:
 * `api_key` - OpenAI API key.
 
-#### Chat
+### Chat
 ![](images/openai_chat.gif)
 
 To send a message to model, run:
@@ -644,6 +644,40 @@ In case you want to save the output to a new file, you can use the `--output` fl
 fd55 ai chat -p "add logging" --file test.py --output > test2.py
 ```
 The `--output` flag will wait for the full output to be retrieved and prints out the file content to the console.
+
+## :warning: :books: Experimental Features of OpenAI Integration
+This section provides an overview of the experimental features available with the OpenAI integration.
+
+### -i/--iterations Flag
+The `-i` or `--iterations` flag allows you to specify the number of iterations to use the same prompt over the same file.  
+It is important to note that when using this flag, the `-f` or `--file` flag must also be passed in order for the iteration process to function correctly.  
+:warning: This command will modify the specified file, therefore, it is highly recommended to manually backup the file before running the command.
+By default, the command will create  a `$FILE_NAME.bak` file at the same directory with the original file content.
+
+### Example
+As an example, consider the following simple Python script, which sends a ping to Google:
+```python
+import os
+hostname = "google.com"
+response = os.system("ping -c 1 " + hostname)
+if response == 0:
+  print(hostname, 'is up!')
+else:
+  print(hostname, 'is down!')
+```
+
+By utilizing the `-i`/`--iterations` flag, you can specify the number of times this script should be executed with a specific prompt.  
+
+For example, to improve specific sections of the file, you could use the command:
+```bash
+fd55 ai chat -p "improve code, add functionality, create threads, better performance" --file test.py --iterations 10
+```
+
+As shown in the following figure, you can see the results of the iteration process, where the script's performance and functionality were improved with each iteration:
+![](images/openai_iterations_example.gif)
+
+It is important to keep in mind that the larger the script, the longer each iteration will take and the token consumption will increase with each iteration.  
+The current token limit is set to `2048`.
 
 ## Contribution
 - Give a star. :star:
