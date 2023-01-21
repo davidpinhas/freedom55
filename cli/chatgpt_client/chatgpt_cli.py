@@ -67,7 +67,7 @@ class ChatGPT:
                     break
                 with open(file, 'w') as f:
                     f.write(output.choices[0].text)
-                logging.info(f"Iteration {i} - Finished updating file")
+                logging.info(f"Iteration {i+1} - Finished updating file")
             logging.info(f"All iterations on file '{file}' finished")
 
     def send_openai_request(

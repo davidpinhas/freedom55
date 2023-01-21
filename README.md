@@ -624,6 +624,9 @@ The [OpenAI](https://openai.com) integration utilizes the official [OpenAI API](
 This integration requires the following keys:
 * `api_key` - OpenAI API key.
 
+The OpenAI integration will use up your tokens according to your account plan.
+Read here for more details on OpenAI [Rate Limits](https://beta.openai.com/docs/guides/rate-limits/what-are-the-rate-limits-for-our-api).  
+
 ### Chat
 ![](images/openai_chat.gif)
 
@@ -651,7 +654,7 @@ This section provides an overview of the experimental features available with th
 ### -i/--iterations Flag
 The `-i` or `--iterations` flag allows you to specify the number of iterations to use the same prompt over the same file.  
 It is important to note that when using this flag, the `-f` or `--file` flag must also be passed in order for the iteration process to function correctly.  
-:warning: This command will modify the specified file, therefore, it is highly recommended to manually backup the file before running the command.
+:warning: Warning! This command will modify the specified file, therefore, it is highly recommended to manually backup the file before running the command.
 By default, the command will create  a `$FILE_NAME.bak` file at the same directory with the original file content.
 
 ### Example
