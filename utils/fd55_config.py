@@ -27,7 +27,8 @@ class Config:
 
     def __init__(self):
         if os.environ.get('FD55_CONFIG_FILE_PATH'):
-            self.config_dir = os.path.dirname(os.environ['FD55_CONFIG_FILE_PATH'])
+            self.config_dir = os.path.dirname(
+                os.environ['FD55_CONFIG_FILE_PATH'])
             self.config_path = os.environ['FD55_CONFIG_FILE_PATH']
         else:
             self.config_dir = self.get_config_dir()
