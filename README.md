@@ -117,6 +117,16 @@ fd55 config argo set --url https://argo.domain.com --api-token $API_TOKEN
 
 For more details, use the `fd55 config --help` or `fd55 config cf set --help` command to get a list of all available options.
 
+In order to set a custom path for the config.ini file, you can set the `FD55_CONFIG_FILE_PATH` environment variable.
+**Note** that this will treat the directory of the `config.ini` file as the **home directory** of the Freedom 55 CLI.  
+This can be done by executing the following command in your terminal:
+```bash
+export FD55_CONFIG_FILE_PATH="path/to/config.ini"
+```
+
+Once this environment variable is set, the Freedom 55 CLI will use the custom path for the `config.ini` file when running commands.  
+Please note that this step may vary depending on the operating system you are using and the way environment variables are set. If you wish to make this change permanent, You should add this line to your shell profile file such as .bash_profile or .bashrc.
+
 ## Integrations
 Freedom 55 is a powerful multi-tool that simplifies your workflow by integrating a variety of tools into a single interface. <br>With Freedom 55, you can use a single tool instead of juggling multiple CLIs, which can clutter your environment and can be pretty overwhelming.
 

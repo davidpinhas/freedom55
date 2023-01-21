@@ -26,8 +26,12 @@ class Config:
         ai_key_list]
 
     def __init__(self):
-        self.config_dir = self.get_config_dir()
-        self.config_path = os.path.join(self.config_dir, 'config.ini')
+        if os.environ.get('FD55_CONFIG_FILE_PATH'):
+            self.config_dir = os.path.dirname(os.environ['FD55_CONFIG_FILE_PATH'])
+            self.config_path = os.environ['FD55_CONFIG_FILE_PATH']
+        else:
+            self.config_dir = self.get_config_dir()
+            self.config_path = os.path.join(self.config_dir, 'config.ini')
         self.config = configparser.ConfigParser()
         self.config.read(self.config_path)
 
@@ -120,7 +124,7 @@ class Config:
         """ Validate the configuration file """
         logging.debug("Validating fd55 config file")
         logging.debug(
-            f"fd55 config file is located under {self.get_config_dir()}/config.ini")
+            f"fd55 config file is located under {self.config_dir}/config.ini")
         if not self.validate_config_section(component):
             return False
         else:
