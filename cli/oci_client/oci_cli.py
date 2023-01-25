@@ -43,7 +43,7 @@ class Oci:
                             data['lifecycle_state'],
                             data['time_created']]
                         for ip in data[inner_value]:
-                            if ip['is_public'] == True:
+                            if ip['is_public']:
                                 default_row.append(ip['ip_address'])
             else:
                 default_field_names = ['Name', 'State', 'Time Created']
@@ -140,24 +140,33 @@ class Oci:
                 f"Deleted vault '{data['display_name']}' with ID - {data['id']}")
         except oci.exceptions.ServiceError as e:
             logging.error(f"Failed with message:\n{e}")
-        
+
     def list_lb(id=None):
         """ List load balancers """
         kwargs = {'Public IP': 'ip_addresses'}
         lb_client = OciValidator.set_lb_client()
-        lb_list = lb_client.list_network_load_balancers(compartment_id=OciValidator.set_config()["tenancy"])
-        Oci.oci_data_table(object_list=lb_list, items=True, id=id, kwargs=kwargs)
+        lb_list = lb_client.list_network_load_balancers(
+            compartment_id=OciValidator.set_config()["tenancy"])
+        Oci.oci_data_table(
+            object_list=lb_list,
+            items=True,
+            id=id,
+            kwargs=kwargs)
 
     def list_lb_nsg(id=None):
         """ List load balancer NSG """
-        logging.info(f"Listing load balancer network security groups for ID - {id}")
-        lb_nsg_list = OciValidator.set_virtual_network_client().list_network_security_groups(compartment_id=OciValidator.set_config()["tenancy"])
+        logging.info(
+            f"Listing load balancer network security groups for ID - {id}")
+        lb_nsg_list = OciValidator.set_virtual_network_client().list_network_security_groups(
+            compartment_id=OciValidator.set_config()["tenancy"])
         Oci.oci_data_table(object_list=lb_nsg_list, id=id)
 
     def list_lb_nsg_rules(id=None):
         """ List load balancer NSG rules """
-        logging.info(f"Listing load balancer network security groups for ID - {id}")
-        lb_nsg_rules_list = OciValidator.set_virtual_network_client().list_network_security_group_security_rules(network_security_group_id=id)
+        logging.info(
+            f"Listing load balancer network security groups for ID - {id}")
+        lb_nsg_rules_list = OciValidator.set_virtual_network_client(
+        ).list_network_security_group_security_rules(network_security_group_id=id)
         object_items = lb_nsg_rules_list.data
         for obj in object_items:
             table = PrettyTable()
@@ -168,36 +177,57 @@ class Oci:
                 table.add_row(row)
             print(table)
 
-    def update_lb_nsg_rule(id=None, rule_id=None, protocol=None, direction=None, description=None, destination=None, destination_type=None, icmp_type=None, icmp_code=None, is_stateless=None, source=None, source_type=None, tcp_destination_min=None, tcp_destination_max=None, tcp_source_min=None, tcp_source_max=None, udp_destination_min=None, udp_destination_max=None, udp_source_min=None, udp_source_max=None):
+    def update_lb_nsg_rule(
+            id=None,
+            rule_id=None,
+            protocol=None,
+            direction=None,
+            description=None,
+            destination=None,
+            destination_type=None,
+            icmp_type=None,
+            icmp_code=None,
+            is_stateless=None,
+            source=None,
+            source_type=None,
+            tcp_destination_min=None,
+            tcp_destination_max=None,
+            tcp_source_min=None,
+            tcp_source_max=None,
+            udp_destination_min=None,
+            udp_destination_max=None,
+            udp_source_min=None,
+            udp_source_max=None):
         """ Update load balancer NSG rule """
         logging.info("Updating load balancer network security group rule")
         core_client = OciValidator.set_virtual_network_client()
         icmp_options = oci.core.models.IcmpOptions(
-                    type=icmp_type,
-                    code=icmp_code)
+            type=icmp_type,
+            code=icmp_code)
         tcp_destination_range = oci.core.models.PortRange(
-                            max=int(tcp_destination_max) if tcp_destination_max else None,
-                            min=int(tcp_destination_min) if tcp_destination_min else None)
+            max=int(tcp_destination_max) if tcp_destination_max else None,
+            min=int(tcp_destination_min) if tcp_destination_min else None)
         tcp_source_range = oci.core.models.PortRange(
-                        max=int(tcp_source_max) if tcp_source_max else None,
-                        min=int(tcp_source_min) if tcp_source_min else None)
+            max=int(tcp_source_max) if tcp_source_max else None,
+            min=int(tcp_source_min) if tcp_source_min else None)
         udp_destination_range = oci.core.models.PortRange(
-                        max=int(udp_destination_max) if udp_destination_max else None,
-                        min=int(udp_destination_min) if udp_destination_min else None)
+            max=int(udp_destination_max) if udp_destination_max else None,
+            min=int(udp_destination_min) if udp_destination_min else None)
         udp_source_range = oci.core.models.PortRange(
-                        max=int(udp_source_max) if udp_source_max else None,
-                        min=int(udp_source_min) if udp_source_min else None)
-        tcp_options = oci.core.models.TcpOptions(destination_port_range=tcp_destination_range)
+            max=int(udp_source_max) if udp_source_max else None,
+            min=int(udp_source_min) if udp_source_min else None)
+        tcp_options = oci.core.models.TcpOptions(
+            destination_port_range=tcp_destination_range)
         if tcp_destination_max and tcp_destination_min and tcp_source_max and tcp_source_min:
             tcp_options = oci.core.models.TcpOptions(
-                        destination_port_range=tcp_destination_range,
-                        source_port_range=tcp_source_range)
+                destination_port_range=tcp_destination_range,
+                source_port_range=tcp_source_range)
         udp_options = oci.core.models.UdpOptions(
-                    destination_port_range=udp_destination_range)
+            destination_port_range=udp_destination_range)
         if udp_destination_range and udp_source_range:
             udp_options = oci.core.models.UdpOptions(
-                        destination_port_range=udp_destination_range,
-                        source_port_range=udp_source_range)
+                destination_port_range=udp_destination_range,
+                source_port_range=udp_source_range)
         kargs = {
             'direction': direction,
             'id': rule_id,
@@ -218,9 +248,14 @@ class Oci:
         logging.debug(f"Provided arguments: {kargs}")
 
         # https://docs.oracle.com/en-us/iaas/tools/python-sdk-examples/2.90.2/core/update_network_security_group_security_rules.py.html
-        new_test = core_client.update_network_security_group_security_rules(network_security_group_id=id, update_network_security_group_security_rules_details=oci.core.models.UpdateNetworkSecurityGroupSecurityRulesDetails(security_rules=[
-            oci.core.models.UpdateSecurityRuleDetails(**kargs)]))
-        logging.info(f"Successfully updated NSG rule with the following response:\n{new_test.data}")
+        new_test = core_client.update_network_security_group_security_rules(
+            network_security_group_id=id,
+            update_network_security_group_security_rules_details=oci.core.models.UpdateNetworkSecurityGroupSecurityRulesDetails(
+                security_rules=[
+                    oci.core.models.UpdateSecurityRuleDetails(
+                        **kargs)]))
+        logging.info(
+            f"Successfully updated NSG rule with the following response:\n{new_test.data}")
 
     #### KMS SECRETS ####
 
