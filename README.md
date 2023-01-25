@@ -27,7 +27,7 @@ The goal of this project is to give you the freedom to work efficiently and effe
 -   [Contribution](#Contribution)
 -   [License](#License)
 
-### :warning: Disclaimer
+## :warning: Disclaimer
 - The tool is currently in Alpha version and is under active development. Therefore, it may contain bugs and incomplete features.<br>
 - The versioning of the tool might reset in the future as the tool matures and approaches a stable release. <br>
 Please use the tool at your own risk and report any issues or feedback.
@@ -47,7 +47,7 @@ source startup.sh
 
 The script will create a virtual environment and provide steps to configure the alias for sourcing the venv.
 
-#### Installing Pip Binary
+### Installing Pip Binary
 To install the Freedom 55 CLI as a binary, you'll need to build the binary and install it using Pip3:
 ```bash
 python3 -m build
@@ -56,7 +56,7 @@ pip3 install dist/fd55-$VERSION.tar.gz
 
 Installing Freedom 55 as a binary is the recommended approach, as it provides improved performance when using the CLI, leading to faster execution times and a more efficient workflow.
 
-#### Windows Install
+### Windows Install
 To source the startup.sh file, you can use [Git Bash](https://git-scm.com/downloads), which can simplify the installation process.<br>
 Press the Windows Key > Search and press Git Bash > Follow the steps mentioned [above](#Installation).
 
@@ -85,11 +85,11 @@ For example:
 fd55 oci kms encrypt --string "Random text"
 ```
 
-### Options
+## Options
 - `-v/--Verbose debug`: (Optional) Specify the log level. If not provided, the default level is 'info'.
 - `--help`: (Optional) Show the help message and exit.
 
-### Configuration
+## Configuration
 To configure Freedom 55 CLI with your desired integrations, run the `fd55 config start` command:
 ```bash
 fd55 config start
@@ -138,11 +138,11 @@ Here's a list of currently supported tools (limited support):
 * [Cloudflare](#Cloudflare)
 * [ChatGPT](#ChatGPT)
 
-### ArgoCD
+## ArgoCD
 ---
 The [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) integration allows you to retrieve application information and manage the ArgoCD server and its applications.
 
-#### Commands
+### Commands
 - [Repo](#Repo)
 - [App](#App)
 - [Server](#Server)
@@ -187,8 +187,8 @@ Here's an example of a simple JSON file application spec:
 For full details on the JSON payload, you can refer to the ArgoCD API Swagger documentation in the ArgoCD web interface. <br>To access it, navigate to your ArgoCD server in your web browser:
 https://argo.mydomain.com/swagger-ui.
 
-### Repo
-#### Get Repositories
+## Repo
+### Get Repositories
 Get all ArgoCD applications:
 ```bash
 fd55 argo repo list
@@ -205,7 +205,7 @@ Expected output:
 +---------------------------------------------------------+------------+------+
 ```
 
-#### Create Repository
+### Create Repository
 Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_CreateRepository
 
 To create an application, use the `-f` option to provide the json file application spec:
@@ -218,7 +218,7 @@ Expected output:
 2023-01-13 07:35:52,900|INFO|Created repository - https://github.com/davidpinhas/mc-server.git
 ```
 
-#### Update Repository
+### Update Repository
 Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_UpdateRepository
 
 To update an application:
@@ -231,7 +231,7 @@ Expected output:
 2023-01-13 07:38:05,468|INFO|Updated repository - https://github.com/davidpinhas/mc-server.git
 ```
 
-#### Delete Repository
+### Delete Repository
 Swagger ref - https://argo.mydomain.com/swagger-ui#operation/RepositoryService_DeleteRepository
 
 To delete an application, use the `-n` option to provide the name of the application you wish to delete:
@@ -244,8 +244,8 @@ Expected output:
 2023-01-13 07:39:01,319|INFO|Deleted repository - https://github.com/davidpinhas/mc-server.git
 ```
 
-### App
-#### Get Applications
+## App
+### Get Applications
 Get all ArgoCD applications:
 ```bash
 fd55 argo app list
@@ -263,7 +263,7 @@ Expected output:
 +-------------------------+
 ```
 
-#### Create Application
+### Create Application
 Swagger ref - https://argo.mydomain.com/swagger-ui#operation/ApplicationService_Create
 
 To create an application, use the `-f` option to provide the json file application spec:
@@ -276,7 +276,7 @@ Expected output:
 2022-12-29 04:19:36,131|INFO|Successfully created application my_app
 ```
 
-#### Update Application
+### Update Application
 Swagger ref - https://argo.mydomain.com/swagger-ui#operation/ApplicationService_Update
 
 To update an application:
@@ -289,7 +289,7 @@ Expected output:
 2022-12-29 04:44:05,954|INFO|Successfully updated application my_app
 ```
 
-#### Delete Application
+### Delete Application
 To delete an application, use the `-n` option to provide the name of the application you wish to delete:
 ```bash
 fd55 argo app delete --name my_app
@@ -300,10 +300,10 @@ Expected output:
 2022-12-29 04:44:28,556|INFO|Successfully deleted application
 ```
 
-### Server
+## Server
 :warning: Limitation: The `server` command requires a local Kubectl client to be pre-configured with the desired Kubernetes cluster and the ArgoCD service must be running under the "argocd" namespace. Additionally, the pod name of the ArgoCD server must start with "**argocd-server**-xxxxx".
 
-#### Export ArgoCD server settings
+### Export ArgoCD server settings
 To export the ArgoCD server settings, run the following command:
 ```bash
 fd55 argo server export
@@ -316,20 +316,22 @@ fd55 argo server export > argocd-export-$(date +%d-%m-%Y).yaml
 ```
 This command will create a file with the full server settings, and will use the current date in the file name.
 
-#### Import ArgoCD server settings
+### Import ArgoCD server settings
 To import the exported ArgoCD settings, run the command:
 ```bash
 fd55 argo server import -f argocd-export-16-01-2023.yaml
 ```
 The CLI will copy the file to the `/tmp` directory of the ArgoCD server pod and start the import.
 
-### OCI
+## OCI
 ---
 [OCI (Oracle Cloud Infrastructure)](https://www.oracle.com/il-en/cloud/) integration utilizes the [KMS feature](https://www.oracle.com/il-en/security/cloud-security/key-management/) and lets you encrypt and decrypt a string.
 
-#### Commands
+### Commands
 - [Vault](#Vault)
 - [KMS](#KMS)
+- [Load Balancer](#Load Balancer)
+- [WAF](#WAF)
 
 This integration requires the following keys:
 * `user` - The OCID of the user for whom the key pair is being added
@@ -341,8 +343,8 @@ This integration requires the following keys:
 For more details on retrieving the required keys, read more in Oracle's [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs) Docs.
 #TODO: Add support for encryption and decryption of binaries.
 
-### Vault
-#### List vaults
+## Vault
+### List vaults
 To get a list of all current vaults under the tenancy that was set in the [Freedom 55 config file](#Configuration), run the following command:
 ```bash
 fd55 oci vault list
@@ -364,7 +366,7 @@ To print the ID of the vaults, you can add the `--id` argument:
 fd55 oci vault list --id
 ```
 
-#### Set vault
+### Set vault
 In order to setup a vault with the CLI to perform the KMS operations, you can use:
 ```bash
 fd55 oci vault set
@@ -384,14 +386,14 @@ After selecting the desired KMS vault, the name of the vault will be added to th
 
 The `set-vault` command only iteriates over vaults with **ACTIVE** 'lifecycle_state', therefore, newly created vault will not appear in the menu until reaching that state.
 
-#### Create vault
+### Create vault
 To create a new vault, use the command below and provide the `-n`/`--name` argument to name the vault:
 ```bash
 fd55 oci vault create --name test-vault
 ```
 The vault will be created as "*DEFAULT*" vault type.
 
-#### Delete vault
+### Delete vault
 To schedule a vault deletion, you can use the following command:
 ```bash
 fd55 oci vault delete --id $VAULT_ID
@@ -404,8 +406,8 @@ To overwrite the days for deletion, you can use the `-d`/`--days` argument (the 
 fd55 oci vault delete --id $VAULT_ID --days 7
 ```
 
-### KMS
-#### Encrypt String
+## KMS
+### Encrypt String
 To encrypt a secret:
 ```bash
 fd55 oci kms encrypt --string "This is my secret"
@@ -418,7 +420,7 @@ Expected output:
 (KMS encrypted secret)
 ```
 
-#### Decrypt With KMS
+### Decrypt With KMS
 For decrypting a secret, the KMS encrypted value needs to be provided as a string (decrpyting needs to be performed with the same key the value was encrypted to begin with):
 ```bash
 fd55 oci kms decrypt --string "Qf7eN7k3cJBlAFpAtSVaPqM...."
@@ -430,7 +432,56 @@ Expected output:
 2022-12-29 04:56:08,184|INFO|Decrypted string - This is my secret
 ```
 
-### SOPS
+## Load Balancer
+### List load banancers
+To list all load balancers from the configure `tenancy`, run:
+```bash
+fd55 oci lb list
+```
+
+Expected output:
+```
++---------------+--------+---------------------------+-----------------+
+|      Name     | State  |        Time Created       |    Public IP    |
++---------------+--------+---------------------------+-----------------+
+| K3s public LB | ACTIVE | 2022-12-01T01:50:06+00:00 | 123.123.123.123 |
++---------------+--------+---------------------------+-----------------+
+```
+
+## WAF
+### List network security groups
+To list the network security groups, run:
+```bash
+fd55 oci waf list-nsg
+```
+
+Expected output:
+```
+2023-01-25 00:51:45,400|INFO|Listing load balancer network security groups for ID - None
++---------------------------+-----------+----------------------------------+
+|           Name            |   State   |           Time Created           |
++---------------------------+-----------+----------------------------------+
+|       Kubeapi public      | AVAILABLE | 2022-12-01T01:50:02.117000+00:00 |
+|  Kubernetes public LB nsg | AVAILABLE | 2022-12-01T01:50:02.063000+00:00 |
+|      Workers public LB    | AVAILABLE | 2022-12-01T01:50:02.045000+00:00 |
++---------------------------+-----------+----------------------------------+
+```
+
+### List load banancer network security groups rules
+To retrieve a specific load balancer NSG rules, run the following command with the `--id` argument:
+```bash
+fd55 oci waf list-nsg-rules --id ocid1.networksecuritygroup.oc1......
+```
+The command will return a table for each rule.
+
+### Update load banancer network security groups rules
+In order to update a LB NSG rule, run the following command:
+```bash
+fd55 oci waf update-nsg-rule --id ocid1.networksecuritygroup.oc1... --rule-id $NSG_RULE_ID --protocol 6 --direction INGRESS --description "Allow HTTPS from all" --source "123.123.123.123$/32" --source-type CIDR_BLOCK --destination-type CIDR_BLOCK --tcp-destination-min 443 --tcp-destination-max 443
+```
+The command should return an JSON response upon a successful update.
+
+## SOPS
 ---
 The SOPS integration encrypts and decrypts files using [Age encryption](https://github.com/FiloSottile/age).
 Both encrypt and decrypt operations require an `-i`/`--input-file` and `-o`/`--output-file` file arguments. <br>**Limitation**: As the [SOPS SDK](https://github.com/mozilla/sops#12development-branch) only has support for Golang, the SOPS client is required to be installed, you can read more in the [Requirements section](#requirements).
@@ -451,7 +502,7 @@ To run the command using a specific Age key, you may utilize the `-k`/`--key-fil
 fd55 sops encrypt --input-file values.yaml --output-file encrypted-values.yaml --key-file key.txt
 ```
 
-#### Encrypt File
+### Encrypt File
 Encrypt a file using SOPS with the following command, by providing the `-i`/`--input-file` and `-o`/`--output-file` files:
 ```bash
 fd55 sops encrypt --input-file values.yaml --output-file encrypted-values.yaml
@@ -463,7 +514,7 @@ Expected output:
 2022-12-29 05:13:38,113|INFO|Finished encrypting encrypted-values.yaml file
 ```
 
-#### Encrypt Using Regex
+### Encrypt Using Regex
 For encrypting specific values, you may use the ``--encrypted-regex`` or ``-r`` flags to set a regex condition to encrypt:
 ```bash
 fd55 sops encrypt --input-file values.yaml --output-file encrypted-values.yaml --encrypted-regex "ingress$"
@@ -476,7 +527,7 @@ Expected output:
 2022-12-29 05:15:42,564|INFO|Finished encrypting encrypted-values.yaml file
 ```
 
-#### Encrypt Multiple Values With Regex
+### Encrypt Multiple Values With Regex
 To encrypt multiple values, use the ``|`` sign:
 ```bash
 fd55 sops encrypt --input-file values.yaml --output-file encrypted-values.yaml --encrypted-regex "ingress|domain|spec"
@@ -489,7 +540,7 @@ Expected output:
 2022-12-29 05:52:54,012|INFO|Finished encrypting encrypted-values.yaml file
 ```
 
-#### Decrypt File
+### Decrypt File
 In order to decrypt a file, use the following:
 ```bash
 fd55 sops decrypt --input-file encrypted-values.yaml --output-file decrypted-values.yaml
@@ -501,41 +552,41 @@ Expected output:
 2022-12-29 05:10:09,858|INFO|Finished decrypting decrypted-values.yaml file
 ```
 
-### Terraform
+## Terraform
 ---
 To run the [Terraform](https://www.terraform.io) integration, you will need to provide the path of Terraform project with ``--path`` or ``-p`` flags.
 
-#### Get Output From Terraform Plan
+### Get Output From Terraform Plan
 For example, run the command below to get the output of the Terraform plan:
 ```bash
 fd55 tf output --path /path/to/tf/plan
 ```
 
-#### Initialize Terraform Plan
+### Initialize Terraform Plan
 ```bash
 fd55 tf init --path /path/to/tf/plan
 ```
 
-#### Plan The Terraform Plan
+### Plan The Terraform Plan
 ```bash
 fd55 tf plan --path /path/to/tf/plan
 ```
 
-#### Apply Terraform Plan
+### Apply Terraform Plan
 ```bash
 fd55 tf apply --path /path/to/tf/plan
 ```
 
-#### Destroy Terraform Plan
+### Destroy Terraform Plan
 ```bash
 fd55 tf destroy --path /path/to/tf/plan
 ```
 
-### Cloudflare
+## Cloudflare
 ---
 The [Cloudflare](https://www.cloudflare.com/en-gb/) integration utilizes the official [Cloudflare API](https://developers.cloudflare.com/api/) to perform its actions in the background to modify the configured domain DNS records.
 
-#### Commands
+### Commands
 - [DNS](#DNS)
 
 This integration requires the following keys:
@@ -543,8 +594,8 @@ This integration requires the following keys:
 * `api_key` - API key with Read permissions for DNS Zone.
 * `domain_name` - Domain name.
 
-### DNS
-#### List DNS records
+## DNS
+### List DNS records
 In order to list all DNS records, run the following command:
 ```bash
 fd55 cf dns list
@@ -563,7 +614,7 @@ Expected output:
 
 To list the IDs of the DNS records, use the `--id` flag.
 
-#### DNS Records
+### DNS Records
 Freedom 55 allows the user to modify domain DNS records by creating, updating and deleting records.
 
 The **Create** and **Update** commands require the following arguments:
@@ -576,7 +627,7 @@ Option | Alias | Default| Description | Example | Required
 `--comment` | NA | "`DNS record updated with Freedom 55`" | Add comment to DNS record | "*New CNAME*" | **No**
 `--proxied` | `-p` | `False` | Flag: Set proxy to TRUE | NA | **No**
 
-##### Create DNS record
+### Create DNS record
 To create a DNS record, we can run the following command:
 ```bash
 fd55 cf dns create --name test.domain.com --content 123.123.123.123 --type A
@@ -606,7 +657,7 @@ The DNS will be created with the provided arguments and set default ones for the
 
 The output will be similar to the update command.
 
-##### Update DNS record
+### Update DNS record
 In order to update the DNS record, use the following command:
 ```bash
 fd55 cf dns update --name test.domain.com --content @ --type CNAME --proxied
@@ -614,7 +665,7 @@ fd55 cf dns update --name test.domain.com --content @ --type CNAME --proxied
 
 In the above output we used the `@` sign to set the root address (the domain name) and configured the DNS record to be a *CNAME*.
 
-##### Delete DNS record
+### Delete DNS record
 To delete a DNS record, you can use the below command and specify the full DNS name:
 ```bash
 fd55 cf dns delete --name test.domain.com
@@ -627,7 +678,7 @@ Expected output:
 2023-01-08 01:28:58,198|INFO|Finished deleting DNS record 'test.domain.com'
 ```
 
-### ChatGPT
+## ChatGPT
 ---
 The [OpenAI](https://openai.com) integration utilizes the official [OpenAI API](https://beta.openai.com/docs/api-reference/introduction?lang=python) to access their language model engine, which is set to use the "*text-davinci-003*" engine by default.
 
@@ -637,7 +688,7 @@ This integration requires the following keys:
 The OpenAI integration will use up your tokens according to your account plan.
 Read here for more details on OpenAI [Rate Limits](https://beta.openai.com/docs/guides/rate-limits/what-are-the-rate-limits-for-our-api).  
 
-### Chat
+## Chat
 ![](images/openai_chat.gif)
 
 To send a message to model, run:
@@ -658,7 +709,7 @@ fd55 ai chat -p "add logging" --file test.py --output > test2.py
 ```
 The `--output` flag will wait for the full output to be retrieved and prints out the file content to the console.
 
-## :warning: :books: Experimental Features of OpenAI Integration
+### :warning: :books: Experimental Features of OpenAI Integration
 This section provides an overview of the experimental features available with the OpenAI integration.
 
 ### -i/--iterations Flag
@@ -667,7 +718,7 @@ It is important to note that when using this flag, the `-f` or `--file` flag mus
 :warning: Warning! This command will modify the specified file, therefore, it is highly recommended to manually backup the file before running the command.
 By default, the command will create  a `$FILE_NAME.bak` file at the same directory with the original file content.
 
-### Example
+## Example
 As an example, consider the following simple Python script, which sends a ping to Google:
 ```python
 import os

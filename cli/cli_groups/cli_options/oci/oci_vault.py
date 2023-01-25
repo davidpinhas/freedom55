@@ -5,7 +5,7 @@ from utils.cli_help_order import CliHelpOrder
 @click.group(cls=CliHelpOrder)
 @click.pass_context
 def vault(ctx):
-    """ OCI commands """
+    """ OCI KMS vault commands """
     ctx.ensure_object(dict)
 
 

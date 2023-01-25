@@ -62,6 +62,36 @@ class OciValidator:
             OciValidator.set_config())
         return oci_kms_vault_client
 
+    def set_lb_client():
+        """ Set the OCI load balancer client """
+        oci_lb_client = oci.network_load_balancer.NetworkLoadBalancerClient(
+            OciValidator.set_config())
+        return oci_lb_client
+
+    def set_virtual_network_client():
+        """ Set the OCI Virtual Network client """
+        oci_virtual_network_client = oci.core.VirtualNetworkClient(
+            OciValidator.set_config())
+        return oci_virtual_network_client
+
+    def set_lb_nsg_rules_details(security_rules=None):
+        """ Set details for load balancer network security group rule update """
+        lb_nsg_rules_details = oci.core.models.UpdateNetworkSecurityGroupSecurityRulesDetails(security_rules=security_rules)
+        return lb_nsg_rules_details
+
+    def set_security_rule_details(id=None, protocol=None, direction=None, description=None, destination=None, destination_type=None, icmp_type=None, icmp_code=None, is_stateless=None, source=None, source_type=None, tcp_destination_min=None, tcp_destination_max=None, tcp_source_min=None, tcp_source_max=None, udp_destination_min=None, udp_destination_max=None, udp_source_min=None, udp_source_max=None):
+        """ Set details for security rule update """
+        security_rule = oci.core.models.UpdateSecurityRuleDetails()
+        security_rule.id = str(id)
+        security_rule.protocol = str(protocol)
+        security_rule.direction = str(direction)
+        security_rule.description = str(description)
+        security_rule.destination = str(destination)
+        security_rule.destination_type = str(destination_type)
+        security_rule.is_stateless = str(is_stateless)
+        security_rule.source = str(source)
+        return security_rule
+
     def set_vault_details(name=None):
         """ Set details for vault creation """
         vault_details = oci.key_management.models.CreateVaultDetails(

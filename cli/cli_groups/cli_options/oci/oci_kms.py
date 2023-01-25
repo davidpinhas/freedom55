@@ -5,7 +5,7 @@ from utils.cli_help_order import CliHelpOrder
 @click.group(cls=CliHelpOrder)
 @click.pass_context
 def kms(ctx):
-    """ OCI commands """
+    """ OCI KMS commands """
     ctx.ensure_object(dict)
 
 
