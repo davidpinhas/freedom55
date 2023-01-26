@@ -1,7 +1,7 @@
 ![](images/Freedom55.png)
 ____
 
-The operational client for maintaining, modifying, and operating your homelab.
+The operational client for maintaining, modifying, and operating your infrastructure.
 Written in Python by David Pinhas, this multi-tool is constantly expanding to support more integrations. Make your homelab management a ***breeze*** with Freedom 55 CLI.
 
 The goal of this project is to give you the freedom to work efficiently and effectively with one unified tool.
@@ -28,7 +28,7 @@ The goal of this project is to give you the freedom to work efficiently and effe
 -   [License](#License)
 
 ## :warning: Disclaimer
-- The tool is currently in Alpha version and is under active development. Therefore, it may contain bugs and incomplete features.<br>
+- Not production ready! The tool is currently in Alpha version and is under active development. Therefore, it may contain bugs and incomplete features.<br>
 - The versioning of the tool might reset in the future as the tool matures and approaches a stable release. <br>
 Please use the tool at your own risk and report any issues or feedback.
 
@@ -75,7 +75,7 @@ winpty fd55 config start
 ```
 
 ## Usage
-To use the Freedom 55 CLI, we'll first call fd55, than the integration and it's sub-command:
+To use the Freedom 55 CLI, we'll first call fd55, than the integration and its command:
 ```bash
 fd55 [INTEGRATION] [COMMAND] [OPTIONS] [FLAGS]
 ```
@@ -330,7 +330,7 @@ The CLI will copy the file to the `/tmp` directory of the ArgoCD server pod and 
 ### Commands
 - [Vault](#Vault)
 - [KMS](#KMS)
-- [Load Balancer](#Load Balancer)
+- [Load Balancer](#load-balancer)
 - [WAF](#WAF)
 
 This integration requires the following keys:
@@ -432,6 +432,7 @@ Expected output:
 2022-12-29 04:56:08,184|INFO|Decrypted string - This is my secret
 ```
 
+<a id="load-balancer"></a>
 ## Load Balancer
 ### List load banancers
 To list all load balancers from the configure `tenancy`, run:
@@ -477,7 +478,17 @@ The command will return a table for each rule.
 ### Update load banancer network security groups rules
 In order to update a LB NSG rule, run the following command:
 ```bash
-fd55 oci waf update-nsg-rule --id ocid1.networksecuritygroup.oc1... --rule-id $NSG_RULE_ID --protocol 6 --direction INGRESS --description "Allow HTTPS from all" --source "123.123.123.123$/32" --source-type CIDR_BLOCK --destination-type CIDR_BLOCK --tcp-destination-min 443 --tcp-destination-max 443
+fd55 oci waf update-nsg-rule \
+    --id ocid1.networksecuritygroup.oc1... \
+    --rule-id $NSG_RULE_ID \
+    --protocol 6 \
+    --direction INGRESS \
+    --description 'Allow HTTPS from all' \
+    --source '123.123.123.123/32' \
+    --source-type CIDR_BLOCK \
+    --destination-type CIDR_BLOCK \
+    --tcp-destination-min 443 \
+    --tcp-destination-max 443
 ```
 The command should return an JSON response upon a successful update.
 

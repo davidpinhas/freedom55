@@ -156,7 +156,7 @@ class Oci:
     def list_lb_nsg(id=None):
         """ List load balancer NSG """
         logging.info(
-            f"Listing load balancer network security groups for ID - {id}")
+            f"Listing load balancer network security groups")
         lb_nsg_list = OciValidator.set_virtual_network_client().list_network_security_groups(
             compartment_id=OciValidator.set_config()["tenancy"])
         Oci.oci_data_table(object_list=lb_nsg_list, id=id)
