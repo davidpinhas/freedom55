@@ -45,7 +45,8 @@ class ArgoCD:
             print(f"\n{table}")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
-            logging.error(f'Encountered error listing ArgoCD applications:\n{response.text}')
+            logging.error(
+                f'Encountered error listing ArgoCD applications:\n{response.text}')
 
     def create_application(self, json_file: str):
         """ Create an application """
@@ -64,7 +65,8 @@ class ArgoCD:
                 f"Successfully created application {data['metadata']['name']}")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
-            logging.error(f'Encountered error creating ArgoCD application:\n{response.text}')
+            logging.error(
+                f'Encountered error creating ArgoCD application:\n{response.text}')
 
     def update_application(self, json_file: str):
         """ Send an Update request to update the applciation configuration """
@@ -84,7 +86,8 @@ class ArgoCD:
                 f"Successfully updated application {data['metadata']['name']}")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
-            logging.error(f'Encountered error updating ArgoCD application:\n{response.text}')
+            logging.error(
+                f'Encountered error updating ArgoCD application:\n{response.text}')
 
     def delete_application(self, application_name=None):
         """ Send a Delete request to delete an application """
@@ -100,7 +103,8 @@ class ArgoCD:
             logging.info("Successfully deleted application")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
-            logging.error(f'Encountered error deleting ArgoCD application:\n{response.text}')
+            logging.error(
+                f'Encountered error deleting ArgoCD application:\n{response.text}')
 
     def list_repositories(self):
         """ List all repositories """
@@ -118,7 +122,8 @@ class ArgoCD:
                 f"Finished retrieving repositories")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
-            logging.error(f'Encountered error listing ArgoCD repositories:\n{response.text}')
+            logging.error(
+                f'Encountered error listing ArgoCD repositories:\n{response.text}')
         argo_repos = json.loads(str(response.text))
         for obj in argo_repos['items']:
             logging.debug(f"Repository data:\n{obj}")
@@ -155,7 +160,8 @@ class ArgoCD:
                 f"Created repository - {repo_url}")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
-            logging.error(f'Encountered error adding ArgoCD repository:\n{response.text}')
+            logging.error(
+                f'Encountered error adding ArgoCD repository:\n{response.text}')
 
     def update_repo(self, repo_url, username=None, password=None, name=None):
         """ Update a repository """
@@ -183,7 +189,8 @@ class ArgoCD:
                 f"Updated repository - {repo_url}")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
-            logging.error(f'Encountered error updating ArgoCD repository:\n{response.text}')
+            logging.error(
+                f'Encountered error updating ArgoCD repository:\n{response.text}')
 
     def delete_repo(self, repo_url=None):
         """ Delete a repository """
@@ -202,7 +209,8 @@ class ArgoCD:
                 f"Deleted repository - {repo_url}")
         except requests.exceptions.HTTPError:
             logging.error(f'Failed with status code: {response.status_code}')
-            logging.error(f'Encountered error deleting ArgoCD repository:\n{response.text}')
+            logging.error(
+                f'Encountered error deleting ArgoCD repository:\n{response.text}')
 
     def export_argocd_settings(self):
         """ Export ArgoCD server settings """
@@ -225,7 +233,8 @@ class ArgoCD:
             clean_kubectl_output = kubectl_output.stdout.strip()
             print(clean_kubectl_output)
         except Exception as e:
-            logging.error(f"An error occurred while exporting ArgoCD server settings: {e}")
+            logging.error(
+                f"An error occurred while exporting ArgoCD server settings: {e}")
 
     def import_argocd_settings(self, file):
         """ Import ArgoCD server settings """
@@ -246,4 +255,5 @@ class ArgoCD:
                                     'argocd'])
             logging.info("Import finished")
         except Exception as e:
-            logging.error(f"An error occurred while importing ArgoCD server settings: {e}")
+            logging.error(
+                f"An error occurred while importing ArgoCD server settings: {e}")
