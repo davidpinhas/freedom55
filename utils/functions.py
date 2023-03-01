@@ -58,8 +58,9 @@ class Functions:
         try:
             with open(json_file, 'r') as f:
                 return json.load(f)
-        except BaseException:
-            logging.error("JSON file might be corrupted or doesn't exist")
+        except Exception as e:
+            logging.error(
+                f"An error occurred while opening JSON with error: {e}")
             exit()
 
     def base64_encode(sample_string):
