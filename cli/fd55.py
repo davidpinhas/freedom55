@@ -12,7 +12,7 @@ from cli.cli_groups.integration_ai import ai
 @click.option('-v', '--verbosity', default='info',
               help='Logging level (info, warn, error, debug)',
               required=False)
-@click.version_option(version='3.1.8')
+@click.version_option(version='3.1.9')
 @click.pass_context
 def main(ctx, verbosity):
     import logging

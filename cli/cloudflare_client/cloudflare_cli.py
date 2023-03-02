@@ -119,7 +119,8 @@ class Cloudflare:
 
     def list_waf_rules(self):
         """ List firewall rules """
-        logging.info(f"Retrieving firewall rules for domain '{self.domain_name}'")
+        logging.info(
+            f"Retrieving firewall rules for domain '{self.domain_name}'")
         table = PrettyTable()
         zone_id = self.get_zone_id()
         url = f"{self.base_url}/zones/{zone_id}/firewall/rules"
@@ -134,13 +135,14 @@ class Cloudflare:
                     dns_record['id'],
                     dns_record['description'],
                     dns_record['filter']['expression']
-                    ]
+                ]
                 table.add_row(row)
             print(table)
         except Exception as e:
             logging.error(
                 f"Failed to retrieve firewall rules with error: {e}")
-            logging.error(f"Request failed with error: {firewall_rules['errors']}")
+            logging.error(
+                f"Request failed with error: {firewall_rules['errors']}")
 
     def create_dns_record(
             self,

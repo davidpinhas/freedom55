@@ -52,12 +52,3 @@ def list(ctx):
 #         ttl=ttl,
 #         comment=comment,
 #         proxied=proxied)
-
-
-
-
-
-
-
-
-
