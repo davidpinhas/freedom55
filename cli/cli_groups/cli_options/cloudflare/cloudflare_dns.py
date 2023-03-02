@@ -6,7 +6,7 @@ from cli.cloudflare_client.cloudflare_cli import Cloudflare
 @click.group(cls=CliHelpOrder)
 @click.pass_context
 def dns(ctx):
-    """ Cloudflare commands """
+    """ Cloudflare DNS commands """
     ctx.ensure_object(dict)
 
 

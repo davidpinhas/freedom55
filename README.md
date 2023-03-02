@@ -689,6 +689,23 @@ Expected output:
 2023-01-08 01:28:58,198|INFO|Finished deleting DNS record 'test.domain.com'
 ```
 
+## WAF
+### List firewall rules
+To list firewall rules, run the following command:
+```bash
+fd55 cf waf list
+```
+
+Expected output:
+```
+2023-03-02 02:29:38,850|INFO|Retrieving firewall rules for domain 'domain.com'
++----------------------------------+-------------+--------------------------------------------------------------------------------------+
+|                ID                | Description |                                      Expression                                      |
++----------------------------------+-------------+--------------------------------------------------------------------------------------+
+|                id1               |  Whitelist  | (ip.src eq 123.123.123.123 and ip.src eq 124.124.124.124)                            |
+|                id2               |  Blacklist  |  (ip.src in {0.0.0.0/0} and ip.src ne 123.123.123.123 and ip.src ne 124.124.124.124) |
++----------------------------------+-------------+--------------------------------------------------------------------------------------+```
+
 ## ChatGPT
 ---
 The [OpenAI](https://openai.com) integration utilizes the official [OpenAI API](https://beta.openai.com/docs/api-reference/introduction?lang=python) to access their language model engine, which is set to use the "*text-davinci-003*" engine by default.

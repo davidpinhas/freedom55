@@ -1,6 +1,7 @@
 import unittest
 from click.testing import CliRunner
 from cli.cli_groups.integration_cloudflare import cloudflare_dns
+from cli.cli_groups.integration_cloudflare import cloudflare_waf
 from utils.fd55_config import Config
 unittest.TestLoader.sortTestMethodsUsing = None
 config = Config()
@@ -46,6 +47,12 @@ class TestCloudflare(unittest.TestCase):
         result = runner.invoke(
             cloudflare_dns.delete, [
                 '--name', f'freedom55.test.{config.get("CLOUDFLARE", "domain_name")}'])
+        assert result.exit_code == 0
+
+    def test5_list_waf(self):
+        """ Test the list_waf_rules function """
+        runner = CliRunner()
+        result = runner.invoke(cloudflare_waf.list)
         assert result.exit_code == 0
 
 

@@ -117,6 +117,31 @@ class Cloudflare:
                 f"Failed to retrieve DNS records list with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
+    def list_waf_rules(self):
+        """ List firewall rules """
+        logging.info(f"Retrieving firewall rules for domain '{self.domain_name}'")
+        table = PrettyTable()
+        zone_id = self.get_zone_id()
+        url = f"{self.base_url}/zones/{zone_id}/firewall/rules"
+        try:
+            response = requests.get(url, headers=self.headers)
+            firewall_rules = json.loads(response.text)
+            for obj in range(len(firewall_rules["result"])):
+                dns_record = firewall_rules['result'][obj]
+                table.field_names = [
+                    'ID', 'Description', 'Expression']
+                row = [
+                    dns_record['id'],
+                    dns_record['description'],
+                    dns_record['filter']['expression']
+                    ]
+                table.add_row(row)
+            print(table)
+        except Exception as e:
+            logging.error(
+                f"Failed to retrieve firewall rules with error: {e}")
+            logging.error(f"Request failed with error: {firewall_rules['errors']}")
+
     def create_dns_record(
             self,
             dns_zone_name,
