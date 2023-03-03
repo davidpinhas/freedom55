@@ -47,7 +47,13 @@ def list(ctx):
               help='rule description',
               required=False)
 @click.pass_context
-def create(ctx, expression, paused=False, action=None, name=None, description=None):
+def create(
+        ctx,
+        expression,
+        paused=False,
+        action=None,
+        name=None,
+        description=None):
     """ Create firewall rule """
     Cloudflare().create_waf_rule(
         id=name,

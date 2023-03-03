@@ -7,6 +7,7 @@ from utils.fd55_config import Config
 logger = logging.getLogger()
 config = Config()
 
+
 class Cloudflare:
     def __init__(self):
         blocked_domains = ['.cf', '.ga', '.gq', '.ml', '.tk']
@@ -15,7 +16,8 @@ class Cloudflare:
         self.email = config.get('CLOUDFLARE', 'email')
         self.domain_name = config.get('CLOUDFLARE', 'domain_name')
         self.base_url = "https://api.cloudflare.com/client/v4"
-        self.cf = CloudFlare.CloudFlare(email=self.email, key=self.global_api_key)
+        self.cf = CloudFlare.CloudFlare(
+            email=self.email, key=self.global_api_key)
         if any(self.domain_name.endswith(option)
                for option in blocked_domains):
             logging.error(
@@ -247,7 +249,13 @@ class Cloudflare:
             logging.error(
                 f"Request failed with error: {firewall_rules['errors']}")
 
-    def create_waf_rule(self, id=None, action=None, expression=None, paused=False, description=None):
+    def create_waf_rule(
+            self,
+            id=None,
+            action=None,
+            expression=None,
+            paused=False,
+            description=None):
         """ Create firewall rules """
         logging.info(
             f"Creating firewall rule for domain '{self.domain_name}'")
@@ -269,5 +277,10 @@ class Cloudflare:
         except Exception as e:
             print(e)
             exit(1)
-        logging.info('Firewall rule created:\n' + json.dumps(r[0], indent=4, sort_keys=False) + '\n')
-
+        logging.info(
+            'Firewall rule created:\n' +
+            json.dumps(
+                r[0],
+                indent=4,
+                sort_keys=False) +
+            '\n')
