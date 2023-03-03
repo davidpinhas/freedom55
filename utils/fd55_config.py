@@ -15,7 +15,7 @@ class Config:
     argo_key_list = ["url", "api_token"]
     sops_key_list = ["key_file"]
     tf_key_list = []
-    cf_key_list = ['email', 'api_key', 'domain_name']
+    cf_key_list = ['email', 'api_key', 'global_api_key', 'domain_name']
     ai_key_list = ['api_key']
     all_lists = [
         oci_key_list,
@@ -141,7 +141,10 @@ class Config:
             self.config.add_section(component)
             print(f"\n* Provide required keys for {component} integration")
             for key in key_list:
-                value = input(f'Enter the value for {key}: ')
+                if key != "global_api_key":
+                    value = input(f'Enter the value for {key}: ')
+                else:
+                    value = input(f'Enter the value for {key} (optional): ')
                 self.config.set(component, key, value)
                 with open(self.config_path, 'w') as config_file:
                     self.config.write(config_file)
@@ -187,9 +190,9 @@ class Config:
                         pass
             if component == "AI":
                 if not config.validate_config_option(
-                        component, key_list=config.cf_key_list):
+                        component, key_list=config.ai_key_list):
                     if config.start_configuration(
-                            component=component, key_list=config.cf_key_list):
+                            component=component, key_list=config.ai_key_list):
                         pass
                 else:
                     logging.error('Configuration failed.')

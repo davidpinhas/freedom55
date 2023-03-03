@@ -208,7 +208,6 @@ class Cloudflare:
             f"Retrieving firewall rules for domain '{self.domain_name}'")
         table = PrettyTable()
         zone_id = self.get_zone_id()
-        print(zone_id)
         url = f"{self.base_url}/zones/{zone_id}/firewall/rules"
         try:
             response = requests.get(url, headers=self.headers)
