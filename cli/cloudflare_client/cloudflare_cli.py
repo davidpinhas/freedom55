@@ -1,11 +1,11 @@
 import requests
 import json
 import logging
+import CloudFlare
 from prettytable import PrettyTable
 from utils.fd55_config import Config
 logger = logging.getLogger()
 config = Config()
-
 
 class Cloudflare:
     def __init__(self):
@@ -15,6 +15,7 @@ class Cloudflare:
         self.email = config.get('CLOUDFLARE', 'email')
         self.domain_name = config.get('CLOUDFLARE', 'domain_name')
         self.base_url = "https://api.cloudflare.com/client/v4"
+        self.cf = CloudFlare.CloudFlare(email=self.email, key=self.global_api_key)
         if any(self.domain_name.endswith(option)
                for option in blocked_domains):
             logging.error(
@@ -246,17 +247,27 @@ class Cloudflare:
             logging.error(
                 f"Request failed with error: {firewall_rules['errors']}")
 
-    def create_waf_rule(self):
+    def create_waf_rule(self, id=None, action=None, expression=None, paused=False, description=None):
         """ Create firewall rules """
         logging.info(
             f"Creating firewall rule for domain '{self.domain_name}'")
         zone_id = self.get_zone_id()
-        url = f"{self.base_url}/zones/{zone_id}/firewall/rules"
+        my_filter = {
+            'expression': expression,
+            'paused': paused,
+            'description': description,
+        }
+        my_data = [
+            {
+                'action': action,
+                'filter': my_filter,
+                'description': id,
+            }
+        ]
         try:
-            response = requests.post(url, headers=self.headers, data='')
-            firewall_rules = json.loads(response.text)
+            r = self.cf.zones.firewall.rules.post(zone_id, data=my_data)
         except Exception as e:
-            logging.error(
-                f"Failed to create firewall rule with error: {e}")
-            logging.error(
-                f"Request failed with error: {firewall_rules['errors']}")
+            print(e)
+            exit(1)
+        logging.info('Firewall rule created:\n' + json.dumps(r[0], indent=4, sort_keys=False) + '\n')
+

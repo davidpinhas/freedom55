@@ -26,20 +26,32 @@ def list(ctx):
 
 
 @waf.command(help_priority=2)
+@click.option('-n',
+              '--name',
+              help="name of the firewall rule")
+@click.option('-a',
+              '--action',
+              help="select rule action, valid values: (allow,block). 'block' used by default",
+              default='block')
+@click.option('-e',
+              '--expression',
+              help='set rule expression',
+              required=True)
+@click.option('-p',
+              '--paused',
+              help='set if the rule is pasued, valid values: (true,false)',
+              is_flag=True,
+              default=False)
+@click.option('-d',
+              '--description',
+              help='rule description',
+              required=False)
 @click.pass_context
-def create(
-        ctx,
-        action,
-        expression,
-        id=None,
-        paused=None,
-        description=None,
-        priority=None):
+def create(ctx, expression, paused=False, action=None, name=None, description=None):
     """ Create firewall rule """
     Cloudflare().create_waf_rule(
+        id=name,
         action=action,
         expression=expression,
-        id=id,
         paused=paused,
-        description=description,
-        priority=priority)
+        description=description)
