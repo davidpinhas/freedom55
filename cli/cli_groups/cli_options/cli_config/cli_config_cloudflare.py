@@ -13,7 +13,10 @@ def cf(ctx=None):
 @cf.command()
 @click.option('-u', '--email', help='User email', required=False)
 @click.option('-p', '--api-key', help='Cloudflare API key', required=False)
-@click.option('-g', '--global-api-key', help='Cloudflare Global API key', required=False)
+@click.option('-g',
+              '--global-api-key',
+              help='Cloudflare Global API key',
+              required=False)
 @click.option('-d',
               '--domain-name',
               help='Cloudflare domain name',
