@@ -16,6 +16,7 @@ class Cloudflare:
         self.email = config.get('CLOUDFLARE', 'email')
         self.domain_name = config.get('CLOUDFLARE', 'domain_name')
         self.base_url = "https://api.cloudflare.com/client/v4"
+        self.zone_id = self.get_zone_id()
         self.cf = CloudFlare.CloudFlare(
             email=self.email, key=self.global_api_key)
         if any(self.domain_name.endswith(option)
@@ -77,8 +78,7 @@ class Cloudflare:
     def get_dns_record_id(self, name=None):
         """ Get DNS record ID """
         logging.info(f"Retrieving DNS record ID for {name}")
-        zone_id = self.get_zone_id()
-        url = f"{self.base_url}/zones/{zone_id}/dns_records"
+        url = f"{self.base_url}/zones/{self.zone_id}/dns_records"
         try:
             response = requests.get(url, headers=self.set_default_headers())
             records = json.loads(response.text)
@@ -98,8 +98,7 @@ class Cloudflare:
         """ List DNS records """
         logging.info(f"Retrieving DNS records for domain '{self.domain_name}'")
         table = PrettyTable()
-        zone_id = self.get_zone_id()
-        url = f"{self.base_url}/zones/{zone_id}/dns_records"
+        url = f"{self.base_url}/zones/{self.zone_id}/dns_records"
         try:
             response = requests.get(url, headers=self.set_default_headers())
             records = json.loads(response.text)
@@ -142,8 +141,7 @@ class Cloudflare:
             proxied=None):
         """ Create DNS record """
         logging.info(f"Creating DNS record '{dns_zone_name}'")
-        zone_id = self.get_zone_id()
-        url = f"{self.base_url}/zones/{zone_id}/dns_records"
+        url = f"{self.base_url}/zones/{self.zone_id}/dns_records"
         payload = Cloudflare.set_payload(
             comment=comment,
             type=type,
@@ -177,10 +175,9 @@ class Cloudflare:
             proxied=None):
         """ Update DNS record """
         logging.info(f"Updating DNS record '{dns_zone_name}'")
-        zone_id = self.get_zone_id()
         dns_record_id, dns_record_ip = self.get_dns_record_id(
             name=dns_zone_name)
-        url = f"{self.base_url}/zones/{zone_id}/dns_records/{dns_record_id}"
+        url = f"{self.base_url}/zones/{self.zone_id}/dns_records/{dns_record_id}"
         payload = Cloudflare.set_payload(
             comment=comment,
             type=type,
@@ -208,10 +205,9 @@ class Cloudflare:
             dns_zone_name):
         """ Delete DNS record """
         logging.info(f"Deleting DNS record '{dns_zone_name}'")
-        zone_id = self.get_zone_id()
         dns_record_id, dns_record_ip = self.get_dns_record_id(
             name=dns_zone_name)
-        url = f"{self.base_url}/zones/{zone_id}/dns_records/{dns_record_id}"
+        url = f"{self.base_url}/zones/{self.zone_id}/dns_records/{dns_record_id}"
         try:
             response = requests.request(
                 "DELETE", url, headers=self.set_default_headers())
@@ -227,8 +223,7 @@ class Cloudflare:
         logging.info(
             f"Retrieving firewall rules for domain '{self.domain_name}'")
         table = PrettyTable()
-        zone_id = self.get_zone_id()
-        url = f"{self.base_url}/zones/{zone_id}/firewall/rules"
+        url = f"{self.base_url}/zones/{self.zone_id}/firewall/rules"
         try:
             response = requests.get(url, headers=self.set_default_headers())
             firewall_rules = json.loads(response.text)
@@ -249,6 +244,15 @@ class Cloudflare:
             logging.error(
                 f"Request failed with error: {firewall_rules['errors']}")
 
+    def list_waf_rule_filters(self):
+        r = self.cf.zones.filters.get(self.zone_id)
+        table = PrettyTable()
+        for obj in r:
+            table.field_names = ['ID', 'Expression']
+            row = [obj['id'], obj['expression']]
+            table.add_row(row)
+        print(table)
+
     def create_waf_rule(
             self,
             id=None,
@@ -259,7 +263,6 @@ class Cloudflare:
         """ Create firewall rules """
         logging.info(
             f"Creating firewall rule for domain '{self.domain_name}'")
-        zone_id = self.get_zone_id()
         my_filter = {
             'expression': expression,
             'paused': paused,
@@ -273,9 +276,9 @@ class Cloudflare:
             }
         ]
         try:
-            r = self.cf.zones.firewall.rules.post(zone_id, data=my_data)
+            r = self.cf.zones.firewall.rules.post(self.zone_id, data=my_data)
         except Exception as e:
-            print(e)
+            logging.error(f"Failed with error: {e}")
             exit(1)
         logging.info(
             'Firewall rule created:\n' +
@@ -284,3 +287,73 @@ class Cloudflare:
                 indent=4,
                 sort_keys=False) +
             '\n')
+    
+    def create_waf_rule(
+            self,
+            id=None,
+            action=None,
+            expression=None,
+            paused=False,
+            description=None):
+        """ Create firewall rules """
+        logging.info(
+            f"Creating firewall rule for domain '{self.domain_name}'")
+        my_filter = {
+            'expression': expression,
+            'paused': paused,
+            'description': description,
+        }
+        my_data = [
+            {
+                'action': action,
+                'filter': my_filter,
+                'description': id,
+            }
+        ]
+        try:
+            r = self.cf.zones.firewall.rules.post(self.zone_id, data=my_data)
+        except Exception as e:
+            logging.error(f"Failed with error: {e}")
+            exit(1)
+        logging.info(
+            'Firewall rule created:\n' +
+            json.dumps(
+                r[0],
+                indent=4,
+                sort_keys=False) +
+            '\n')
+
+    # def update_waf_rule(self):
+    #     """ Update firewall rules """
+    #     logging.info(f"Updating firewall rule for domain '{self.domain_name}'")
+    #     try:
+    #         r = self.cf.zones.firewall.rules.put(self.zone_id, data='')
+    #     except Exception as e:
+    #         logging.error(f"Failed with error: {e}")
+    #         exit(1)
+    #     logging.info('Firewall rule updated:\n' + json.dumps(r[0], indent=4, sort_keys=False) + '\n')
+
+    def delete_waf_rule(self, name=None, id=None):
+        try:
+            r = self.cf.zones.firewall.rules.get(self.zone_id)
+            for i in r:
+                if name == i['description']:
+                    deleted_rule = self.cf.zones.firewall.rules.delete(self.zone_id, i['id'])
+                elif id == i['id']:
+                    deleted_rule = self.cf.zones.firewall.rules.delete(self.zone_id, i['id'])
+                logging.info('Deleted firewall rule with ID ' + deleted_rule['id'])
+        except Exception as e:
+            logging.error(f"Failed with error: {e}")
+            exit(1)
+
+    def delete_waf_rule_filter(self, id=None):
+        try:
+            r = self.cf.zones.filters.get(self.zone_id)
+            for i in r:
+                if id == i['id']:
+                    logging.info(f"Deleting firewall rule filter '{i['id']}'")
+                    self.cf.zones.filters.delete(self.zone_id, i['id'])
+                    logging.info(f"Successfully deleted firewall rule filter with ID '{i['id']}'")
+        except Exception as e:
+            logging.error(f"Failed with error: {e}")
+            exit(1)

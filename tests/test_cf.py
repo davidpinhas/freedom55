@@ -49,12 +49,17 @@ class TestCloudflare(unittest.TestCase):
                 '--name', f'freedom55.test.{config.get("CLOUDFLARE", "domain_name")}'])
         assert result.exit_code == 0
 
-    def test5_list_waf(self):
+    def test5_list_waf_rules(self):
         """ Test the list_waf_rules function """
         runner = CliRunner()
         result = runner.invoke(cloudflare_waf.list)
         assert result.exit_code == 0
 
+    def test6_list_waf_rules_filters(self):
+        """ Test the list_waf_rules_filters function """
+        runner = CliRunner()
+        result = runner.invoke(cloudflare_waf.list_filters)
+        assert result.exit_code == 0
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCloudflare)
