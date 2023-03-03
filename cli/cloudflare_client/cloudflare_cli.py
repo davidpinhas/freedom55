@@ -240,8 +240,6 @@ class Cloudflare:
                 f"Failed to retrieve firewall rules with error: {e}")
             logging.error(
                 f"Request failed with error: {firewall_rules['errors']}")
-<<<<<<< HEAD
-=======
 
     def create_waf_rule(self):
         """ Create firewall rules """
@@ -257,4 +255,3 @@ class Cloudflare:
                 f"Failed to create firewall rule with error: {e}")
             logging.error(
                 f"Request failed with error: {firewall_rules['errors']}")
->>>>>>> fc55531 (prepare cf waf create command)
