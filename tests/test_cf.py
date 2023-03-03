@@ -61,6 +61,7 @@ class TestCloudflare(unittest.TestCase):
         result = runner.invoke(cloudflare_waf.list_filters)
         assert result.exit_code == 0
 
+
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestCloudflare)
     unittest.TestLoader.sort_test_methods_by_name(

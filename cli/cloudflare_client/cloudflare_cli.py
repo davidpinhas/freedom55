@@ -287,7 +287,7 @@ class Cloudflare:
                 indent=4,
                 sort_keys=False) +
             '\n')
-    
+
     def create_waf_rule(
             self,
             id=None,
@@ -338,10 +338,14 @@ class Cloudflare:
             r = self.cf.zones.firewall.rules.get(self.zone_id)
             for i in r:
                 if name == i['description']:
-                    deleted_rule = self.cf.zones.firewall.rules.delete(self.zone_id, i['id'])
+                    deleted_rule = self.cf.zones.firewall.rules.delete(
+                        self.zone_id, i['id'])
                 elif id == i['id']:
-                    deleted_rule = self.cf.zones.firewall.rules.delete(self.zone_id, i['id'])
-                logging.info('Deleted firewall rule with ID ' + deleted_rule['id'])
+                    deleted_rule = self.cf.zones.firewall.rules.delete(
+                        self.zone_id, i['id'])
+                logging.info(
+                    'Deleted firewall rule with ID ' +
+                    deleted_rule['id'])
         except Exception as e:
             logging.error(f"Failed with error: {e}")
             exit(1)
@@ -353,7 +357,8 @@ class Cloudflare:
                 if id == i['id']:
                     logging.info(f"Deleting firewall rule filter '{i['id']}'")
                     self.cf.zones.filters.delete(self.zone_id, i['id'])
-                    logging.info(f"Successfully deleted firewall rule filter with ID '{i['id']}'")
+                    logging.info(
+                        f"Successfully deleted firewall rule filter with ID '{i['id']}'")
         except Exception as e:
             logging.error(f"Failed with error: {e}")
             exit(1)

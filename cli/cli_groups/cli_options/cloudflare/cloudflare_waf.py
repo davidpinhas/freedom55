@@ -5,6 +5,7 @@ from utils.fd55_config import Config
 from utils.functions import Functions as fn
 import logging
 
+
 @click.group(cls=CliHelpOrder)
 @click.pass_context
 def waf(ctx):
