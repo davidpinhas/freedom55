@@ -11,13 +11,9 @@ class Cloudflare:
     def __init__(self):
         blocked_domains = ['.cf', '.ga', '.gq', '.ml', '.tk']
         self.api_key = config.get('CLOUDFLARE', 'api_key')
+        self.global_api_key = config.get('CLOUDFLARE', 'global_api_key')
         self.email = config.get('CLOUDFLARE', 'email')
         self.domain_name = config.get('CLOUDFLARE', 'domain_name')
-        self.headers = {
-            "X-Auth-Email": self.email,
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
         self.base_url = "https://api.cloudflare.com/client/v4"
         if any(self.domain_name.endswith(option)
                for option in blocked_domains):
@@ -28,6 +24,22 @@ class Cloudflare:
             logging.warn(
                 "Read more here - https://community.cloudflare.com/t/unable-to-update-ddns-using-api-for-some-tlds/167228/11")
             exit()
+
+    def set_default_headers(self):
+        headers = {
+            "X-Auth-Email": self.email,
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        return headers
+
+    def set_global_headers(self):
+        headers = {
+            "X-Auth-Email": self.email,
+            "Authorization": f"Bearer {self.global_api_key}",
+            "Content-Type": "application/json"
+        }
+        return headers
 
     def set_payload(
             comment=None,
@@ -52,7 +64,7 @@ class Cloudflare:
         logging.debug(f"Retrieving zone ID")
         url = f"{self.base_url}/zones?name={self.domain_name}&status=active"
         try:
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.set_default_headers())
             records = json.loads(response.text)
             return records["result"][0]["id"]
         except Exception as e:
@@ -65,7 +77,7 @@ class Cloudflare:
         zone_id = self.get_zone_id()
         url = f"{self.base_url}/zones/{zone_id}/dns_records"
         try:
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.set_default_headers())
             records = json.loads(response.text)
             for i in range(len(records["result"])):
                 if records["result"][i]["name"] == f"{name}":
@@ -86,7 +98,7 @@ class Cloudflare:
         zone_id = self.get_zone_id()
         url = f"{self.base_url}/zones/{zone_id}/dns_records"
         try:
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.set_default_headers())
             records = json.loads(response.text)
             for obj in range(len(records["result"])):
                 dns_record = records['result'][obj]
@@ -138,7 +150,7 @@ class Cloudflare:
             proxied=proxied)
         try:
             response = requests.request(
-                "POST", url, headers=self.headers, data=json.dumps(payload))
+                "POST", url, headers=self.set_default_headers(), data=json.dumps(payload))
             records = json.loads(response.text)
             logging.info(f"New metadata for '{dns_zone_name}' record:")
             for key, value in records['result'].items():
@@ -172,7 +184,7 @@ class Cloudflare:
             proxied=proxied)
         try:
             response = requests.put(
-                url, headers=self.headers, data=json.dumps(payload))
+                url, headers=self.set_default_headers(), data=json.dumps(payload))
             records = json.loads(response.text)
             logging.info(f"New metadata for '{dns_zone_name}' record:")
             for key, value in records['result'].items():
@@ -194,7 +206,7 @@ class Cloudflare:
         url = f"{self.base_url}/zones/{zone_id}/dns_records/{dns_record_id}"
         try:
             response = requests.request("DELETE",
-                                        url, headers=self.headers)
+                                        url, headers=self.set_default_headers())
             records = json.loads(response.text)
             logging.info(f"Finished deleting DNS record '{dns_zone_name}'")
         except Exception as e:
@@ -210,7 +222,7 @@ class Cloudflare:
         zone_id = self.get_zone_id()
         url = f"{self.base_url}/zones/{zone_id}/firewall/rules"
         try:
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.set_default_headers())
             firewall_rules = json.loads(response.text)
             for obj in range(len(firewall_rules["result"])):
                 dns_record = firewall_rules['result'][obj]
@@ -228,3 +240,21 @@ class Cloudflare:
                 f"Failed to retrieve firewall rules with error: {e}")
             logging.error(
                 f"Request failed with error: {firewall_rules['errors']}")
+<<<<<<< HEAD
+=======
+
+    def create_waf_rule(self):
+        """ Create firewall rules """
+        logging.info(
+            f"Creating firewall rule for domain '{self.domain_name}'")
+        zone_id = self.get_zone_id()
+        url = f"{self.base_url}/zones/{zone_id}/firewall/rules"
+        try:
+            response = requests.post(url, headers=self.headers, data='')
+            firewall_rules = json.loads(response.text)
+        except Exception as e:
+            logging.error(
+                f"Failed to create firewall rule with error: {e}")
+            logging.error(
+                f"Request failed with error: {firewall_rules['errors']}")
+>>>>>>> fc55531 (prepare cf waf create command)
