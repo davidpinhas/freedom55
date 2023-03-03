@@ -150,7 +150,10 @@ class Cloudflare:
             proxied=proxied)
         try:
             response = requests.request(
-                "POST", url, headers=self.set_default_headers(), data=json.dumps(payload))
+                "POST",
+                url,
+                headers=self.set_default_headers(),
+                data=json.dumps(payload))
             records = json.loads(response.text)
             logging.info(f"New metadata for '{dns_zone_name}' record:")
             for key, value in records['result'].items():
@@ -184,7 +187,9 @@ class Cloudflare:
             proxied=proxied)
         try:
             response = requests.put(
-                url, headers=self.set_default_headers(), data=json.dumps(payload))
+                url,
+                headers=self.set_default_headers(),
+                data=json.dumps(payload))
             records = json.loads(response.text)
             logging.info(f"New metadata for '{dns_zone_name}' record:")
             for key, value in records['result'].items():
@@ -205,8 +210,8 @@ class Cloudflare:
             name=dns_zone_name)
         url = f"{self.base_url}/zones/{zone_id}/dns_records/{dns_record_id}"
         try:
-            response = requests.request("DELETE",
-                                        url, headers=self.set_default_headers())
+            response = requests.request(
+                "DELETE", url, headers=self.set_default_headers())
             records = json.loads(response.text)
             logging.info(f"Finished deleting DNS record '{dns_zone_name}'")
         except Exception as e:

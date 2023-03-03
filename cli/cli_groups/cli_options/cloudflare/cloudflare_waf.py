@@ -24,8 +24,22 @@ def list(ctx):
     """ List firewall rules """
     Cloudflare().list_waf_rules()
 
+
 @waf.command(help_priority=2)
 @click.pass_context
-def create(ctx, action, expression, id=None, paused=None, description=None, priority=None):
+def create(
+        ctx,
+        action,
+        expression,
+        id=None,
+        paused=None,
+        description=None,
+        priority=None):
     """ Create firewall rule """
-    Cloudflare().create_waf_rule(action=action, expression=expression, id=id, paused=paused, description=description, priority=priority)
+    Cloudflare().create_waf_rule(
+        action=action,
+        expression=expression,
+        id=id,
+        paused=paused,
+        description=description,
+        priority=priority)
