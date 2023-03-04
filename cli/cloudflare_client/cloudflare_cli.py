@@ -289,22 +289,22 @@ class Cloudflare:
                 sort_keys=False) +
             '\n')
 
-    def update_waf_rule(self, 
-            id=None,
-            name=None,
-            action=None,
-            expression=None,
-            paused=False,
-            description=None):
+    def update_waf_rule(self,
+                        id=None,
+                        name=None,
+                        action=None,
+                        expression=None,
+                        paused=False,
+                        description=None):
         """ Update firewall rule """
         logging.info(f"Updating firewall rule for domain '{self.domain_name}'")
         try:
-            rule = self.cf.zones.firewall.rules.get(self.zone_id, params={'id':id})
+            rule = self.cf.zones.firewall.rules.get(
+                self.zone_id, params={'id': id})
             rule_filter = {
                 'id': rule[0]['filter']['id'],
                 'expression': f"({expression})" or f"({rule[0]['filter']['expression']})",
-                'paused': paused or False
-            }
+                'paused': paused or False}
             if description:
                 rule_filter['description'] = description
             rule_data = [
@@ -316,21 +316,32 @@ class Cloudflare:
                 }
             ]
             if expression or paused or description:
-                self.cf.zones.filters.put(self.zone_id, rule[0]['filter']['id'], data=rule_filter)
-            r = self.cf.zones.firewall.rules.put(self.zone_id, id, data=rule_data[0])
+                self.cf.zones.filters.put(
+                    self.zone_id, rule[0]['filter']['id'], data=rule_filter)
+            r = self.cf.zones.firewall.rules.put(
+                self.zone_id, id, data=rule_data[0])
         except Exception as e:
             logging.error(f"Failed with error: {e}")
             exit(1)
-        logging.info('Firewall rule updated:\n' + json.dumps(r, indent=4, sort_keys=False) + '\n')
+        logging.info(
+            'Firewall rule updated:\n' +
+            json.dumps(
+                r,
+                indent=4,
+                sort_keys=False) +
+            '\n')
 
     def delete_waf_rule(self, name=None, id=None):
         try:
             r = self.cf.zones.firewall.rules.get(self.zone_id)
-            fn.modify_config_approval(f"Delete firewall rule and filter. Would you like to proceed? Y/n: ")
+            fn.modify_config_approval(
+                f"Delete firewall rule and filter. Would you like to proceed? Y/n: ")
             for i in r:
                 if name == i['description'] or id == i['id']:
-                    deleted_rule = self.cf.zones.firewall.rules.delete(self.zone_id, i['id'])
-                    self.cf.zones.filters.delete(self.zone_id, i['filter']['id'])
+                    deleted_rule = self.cf.zones.firewall.rules.delete(
+                        self.zone_id, i['id'])
+                    self.cf.zones.filters.delete(
+                        self.zone_id, i['filter']['id'])
             logging.info('Deleted firewall rule with ID ' + deleted_rule['id'])
         except Exception as e:
             logging.error(f"Failed with error: {e}")

@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf8") as f:
 
 setup(
     name="fd55",
-    version="3.2.7",
+    version="3.2.8",
     description="Freedom 55 CLI is a operational tool to maintain a personal homelab",
     long_description=readme,
     long_description_content_type="text/markdown",

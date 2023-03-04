@@ -27,5 +27,6 @@ class TestOci(unittest.TestCase):
         result = runner.invoke(oci_vault.list, ['--id'])
         assert result.exit_code == 0
 
+
 if __name__ == '__main__':
     unittest.main()

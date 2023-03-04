@@ -87,16 +87,16 @@ def create(
               help='rule filter description',
               required=False)
 @click.pass_context
-def update(ctx, 
-        id, 
-        expression,
-        paused=False,
-        action=None,
-        name=None,
-        description=None):
+def update(ctx,
+           id,
+           expression,
+           paused=False,
+           action=None,
+           name=None,
+           description=None):
     """ Update firewall rule """
     Cloudflare().update_waf_rule(
-        id=id, 
+        id=id,
         name=name,
         action=action,
         expression=expression,
