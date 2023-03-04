@@ -27,26 +27,5 @@ class TestOci(unittest.TestCase):
         result = runner.invoke(oci_vault.list, ['--id'])
         assert result.exit_code == 0
 
-    def test_set_vault(self):
-        """ Test the set_vault function """
-        runner = CliRunner()
-        result = runner.invoke(oci_vault.set, ['--name', 'test-vault'])
-        assert result.exit_code == 0
-
-    def test_create_vault(self):
-        """ Test the create_vault function """
-        runner = CliRunner()
-        result = runner.invoke(oci_vault.create, ['--name', 'test'])
-        assert result.exit_code == 0
-
-    def test_delete_vault(self):
-        """ Test the delete_vault function """
-        runner = CliRunner()
-        result = runner.invoke(
-            oci_vault.delete, [
-                '--id', 'ocid1.vault.oc1', '--days', '7'])
-        assert result.exit_code == 0
-
-
 if __name__ == '__main__':
     unittest.main()

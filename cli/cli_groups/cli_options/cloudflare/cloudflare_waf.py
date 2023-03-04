@@ -57,7 +57,7 @@ def create(
         description=None):
     """ Create firewall rule """
     Cloudflare().create_waf_rule(
-        id=name,
+        name=name,
         action=action,
         expression=expression,
         paused=paused,
@@ -65,9 +65,10 @@ def create(
 
 
 @waf.command(help_priority=3)
+@click.option('--id', help="rule id to update")
 @click.option('-n',
               '--name',
-              help="name of the firewall rule")
+              help="firewall rule name")
 @click.option('-a',
               '--action',
               help="select rule action, valid values: (allow,block). 'block' used by default",
@@ -83,12 +84,24 @@ def create(
               default=False)
 @click.option('-d',
               '--description',
-              help='rule description',
+              help='rule filter description',
               required=False)
 @click.pass_context
-def update(ctx):
+def update(ctx, 
+        id, 
+        expression,
+        paused=False,
+        action=None,
+        name=None,
+        description=None):
     """ Update firewall rule """
-    Cloudflare().update_waf_rule()
+    Cloudflare().update_waf_rule(
+        id=id, 
+        name=name,
+        action=action,
+        expression=expression,
+        paused=paused,
+        description=description)
 
 
 @waf.command(help_priority=4)

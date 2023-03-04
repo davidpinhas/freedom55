@@ -4,6 +4,7 @@ import logging
 import CloudFlare
 from prettytable import PrettyTable
 from utils.fd55_config import Config
+from utils.functions import Functions as fn
 logger = logging.getLogger()
 config = Config()
 
@@ -255,7 +256,7 @@ class Cloudflare:
 
     def create_waf_rule(
             self,
-            id=None,
+            name=None,
             action=None,
             expression=None,
             paused=False,
@@ -263,20 +264,20 @@ class Cloudflare:
         """ Create firewall rules """
         logging.info(
             f"Creating firewall rule for domain '{self.domain_name}'")
-        my_filter = {
-            'expression': expression,
-            'paused': paused,
-            'description': description,
+        rule_filter = {
+            'expression': f"({expression})",
+            'paused': paused or False,
+            'description': description or "No description provided",
         }
-        my_data = [
+        rule_data = [
             {
-                'action': action,
-                'filter': my_filter,
-                'description': id,
+                'action': action or "block",
+                'filter': rule_filter,
+                'description': name,
             }
         ]
         try:
-            r = self.cf.zones.firewall.rules.post(self.zone_id, data=my_data)
+            r = self.cf.zones.firewall.rules.post(self.zone_id, data=rule_data)
         except Exception as e:
             logging.error(f"Failed with error: {e}")
             exit(1)
@@ -288,64 +289,49 @@ class Cloudflare:
                 sort_keys=False) +
             '\n')
 
-    def create_waf_rule(
-            self,
+    def update_waf_rule(self, 
             id=None,
+            name=None,
             action=None,
             expression=None,
             paused=False,
             description=None):
-        """ Create firewall rules """
-        logging.info(
-            f"Creating firewall rule for domain '{self.domain_name}'")
-        my_filter = {
-            'expression': expression,
-            'paused': paused,
-            'description': description,
-        }
-        my_data = [
-            {
-                'action': action,
-                'filter': my_filter,
-                'description': id,
-            }
-        ]
+        """ Update firewall rule """
+        logging.info(f"Updating firewall rule for domain '{self.domain_name}'")
         try:
-            r = self.cf.zones.firewall.rules.post(self.zone_id, data=my_data)
+            rule = self.cf.zones.firewall.rules.get(self.zone_id, params={'id':id})
+            rule_filter = {
+                'id': rule[0]['filter']['id'],
+                'expression': f"({expression})" or f"({rule[0]['filter']['expression']})",
+                'paused': paused or False
+            }
+            if description:
+                rule_filter['description'] = description
+            rule_data = [
+                {
+                    'id': id or rule[0]['filter']['id'],
+                    'action': action or rule[0]['filter']['action'],
+                    'filter': rule_filter or rule[0]['filter']['rule_filter'],
+                    'description': name or rule[0]['description']
+                }
+            ]
+            if expression or paused or description:
+                self.cf.zones.filters.put(self.zone_id, rule[0]['filter']['id'], data=rule_filter)
+            r = self.cf.zones.firewall.rules.put(self.zone_id, id, data=rule_data[0])
         except Exception as e:
             logging.error(f"Failed with error: {e}")
             exit(1)
-        logging.info(
-            'Firewall rule created:\n' +
-            json.dumps(
-                r[0],
-                indent=4,
-                sort_keys=False) +
-            '\n')
-
-    # def update_waf_rule(self):
-    #     """ Update firewall rules """
-    #     logging.info(f"Updating firewall rule for domain '{self.domain_name}'")
-    #     try:
-    #         r = self.cf.zones.firewall.rules.put(self.zone_id, data='')
-    #     except Exception as e:
-    #         logging.error(f"Failed with error: {e}")
-    #         exit(1)
-    #     logging.info('Firewall rule updated:\n' + json.dumps(r[0], indent=4, sort_keys=False) + '\n')
+        logging.info('Firewall rule updated:\n' + json.dumps(r, indent=4, sort_keys=False) + '\n')
 
     def delete_waf_rule(self, name=None, id=None):
         try:
             r = self.cf.zones.firewall.rules.get(self.zone_id)
+            fn.modify_config_approval(f"Delete firewall rule and filter. Would you like to proceed? Y/n: ")
             for i in r:
-                if name == i['description']:
-                    deleted_rule = self.cf.zones.firewall.rules.delete(
-                        self.zone_id, i['id'])
-                elif id == i['id']:
-                    deleted_rule = self.cf.zones.firewall.rules.delete(
-                        self.zone_id, i['id'])
-                logging.info(
-                    'Deleted firewall rule with ID ' +
-                    deleted_rule['id'])
+                if name == i['description'] or id == i['id']:
+                    deleted_rule = self.cf.zones.firewall.rules.delete(self.zone_id, i['id'])
+                    self.cf.zones.filters.delete(self.zone_id, i['filter']['id'])
+            logging.info('Deleted firewall rule with ID ' + deleted_rule['id'])
         except Exception as e:
             logging.error(f"Failed with error: {e}")
             exit(1)
