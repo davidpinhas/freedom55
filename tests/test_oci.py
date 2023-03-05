@@ -1,7 +1,7 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups.integration_oci import oci_kms, oci_vault
-from cli.oci_client.oci_cli import Oci
+from fd55.cli.cli_groups.integration_oci import oci_kms, oci_vault
+from fd55.cli.oci_client.oci_cli import Oci
 
 
 class TestOci(unittest.TestCase):

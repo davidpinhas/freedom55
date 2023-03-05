@@ -1,8 +1,8 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups.integration_cloudflare import cloudflare_dns
-from cli.cli_groups.integration_cloudflare import cloudflare_waf
-from utils.fd55_config import Config
+from fd55.cli.cli_groups.integration_cloudflare import cloudflare_dns
+from fd55.cli.cli_groups.integration_cloudflare import cloudflare_waf
+from fd55.utils.fd55_config import Config
 unittest.TestLoader.sortTestMethodsUsing = None
 config = Config()
 

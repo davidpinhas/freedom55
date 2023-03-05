@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups.integration_argocd import argocd_app, argocd_repo
+from fd55.cli.cli_groups.integration_argocd import argocd_app, argocd_repo
 unittest.TestLoader.sortTestMethodsUsing = None
 
 

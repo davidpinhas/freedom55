@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups import integration_tf
+from fd55.cli.cli_groups import integration_tf
 
 
 class TestTerraform(unittest.TestCase):

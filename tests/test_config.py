@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups.integration_cli_config import cli_config_argocd, cli_config_cloudflare, cli_config_oci, cli_config_sops
+from fd55.cli.cli_groups.integration_cli_config import cli_config_argocd, cli_config_cloudflare, cli_config_oci, cli_config_sops
 unittest.TestLoader.sortTestMethodsUsing = None
 
 

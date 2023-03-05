@@ -1,6 +1,6 @@
 import unittest
 from click.testing import CliRunner
-from cli.cli_groups import integration_sops
+from fd55.cli.cli_groups import integration_sops
 unittest.TestLoader.sortTestMethodsUsing = None
 
 
