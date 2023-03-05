@@ -66,13 +66,13 @@ jobs:
         
         # Update versions
         sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" setup.py
-        sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" cli/fd55.py
+        sed -i "s/$CURRENT_VERSION/$NEW_VERSION/g" fd55/cli/fd55.py
         
         git config --local user.email "${{ secrets.USERNAME }}"
         git config --local user.name "${{ secrets.USERNAME }}"
         git add .
         echo "New setup.py version: $(cat setup.py | grep 'version=')"
-        echo "New CLI version: $(cat cli/fd55.py | grep 'version=')"
+        echo "New CLI version: $(cat fd55/cli/fd55.py | grep 'version=')"
         git commit -m "Update version to $NEW_VERSION"
         git push origin
     # needs: [cli-tests]
