@@ -38,7 +38,6 @@ setup(
         "click",
         "oci",
         "requests",
-        "python_terraform",
         "InquirerPy",
         "prettytable",
         "kubernetes",
