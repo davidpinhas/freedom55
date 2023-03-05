@@ -3,6 +3,7 @@ import logging
 
 logger = logging.getLogger()
 
+
 class TerraformCli:
     def __init__(self, working_dir):
         self.working_dir = working_dir
@@ -10,9 +11,15 @@ class TerraformCli:
 
     def tf_init(self):
         cmd = ["terraform", "init"]
-        self.logger.info(f"Initializing Terraform in directory {self.working_dir}")
+        self.logger.info(
+            f"Initializing Terraform in directory {self.working_dir}")
         try:
-            result = subprocess.run(cmd, cwd=self.working_dir, check=True, capture_output=True, text=True)
+            result = subprocess.run(
+                cmd,
+                cwd=self.working_dir,
+                check=True,
+                capture_output=True,
+                text=True)
             self.logger.debug(result.stdout)
             return 0
         except subprocess.CalledProcessError as e:
@@ -25,7 +32,12 @@ class TerraformCli:
             cmd.extend(["-out", outfile])
         self.logger.info(f"Running Terraform plan")
         try:
-            result = subprocess.run(cmd, cwd=self.working_dir, check=True, capture_output=True, text=True)
+            result = subprocess.run(
+                cmd,
+                cwd=self.working_dir,
+                check=True,
+                capture_output=True,
+                text=True)
             self.logger.debug(result.stdout)
             return 0
         except subprocess.CalledProcessError as e:
@@ -36,7 +48,12 @@ class TerraformCli:
         cmd = ["terraform", "apply", planfile]
         self.logger.info(f"Applying Terraform changes")
         try:
-            result = subprocess.run(cmd, cwd=self.working_dir, check=True, capture_output=True, text=True)
+            result = subprocess.run(
+                cmd,
+                cwd=self.working_dir,
+                check=True,
+                capture_output=True,
+                text=True)
             self.logger.debug(result.stdout)
             return 0
         except subprocess.CalledProcessError as e:
@@ -47,7 +64,12 @@ class TerraformCli:
         cmd = ["terraform", "destroy", "-auto-approve"]
         self.logger.info(f"Destroying Terraform resources")
         try:
-            result = subprocess.run(cmd, cwd=self.working_dir, check=True, capture_output=True, text=True)
+            result = subprocess.run(
+                cmd,
+                cwd=self.working_dir,
+                check=True,
+                capture_output=True,
+                text=True)
             self.logger.debug(result.stdout)
             return 0
         except subprocess.CalledProcessError as e:
