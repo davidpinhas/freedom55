@@ -21,7 +21,10 @@ def init(ctx, path):
 
 @tf.command(help_priority=2)
 @click.option('-p', '--path', help='Path of Terraform project', required=True)
-@click.option('-f', '--file', help='path to Terraform plan file', required=True)
+@click.option('-f',
+              '--file',
+              help='path to Terraform plan file',
+              required=True)
 @click.pass_context
 def plan(ctx, path, file):
     """ Run Terraform plan on the selected path """
@@ -32,7 +35,10 @@ def plan(ctx, path, file):
 
 @tf.command(help_priority=3)
 @click.option('-p', '--path', help='Path of Terraform project', required=True)
-@click.option('-f', '--planfile', help='Path to Terraform plan file', required=True)
+@click.option('-f',
+              '--planfile',
+              help='Path to Terraform plan file',
+              required=True)
 @click.pass_context
 def apply(ctx, path, planfile):
     """ Apply the changes """

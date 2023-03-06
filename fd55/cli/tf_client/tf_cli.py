@@ -25,7 +25,6 @@ class TerraformCli:
             logging.error(e.stderr)
             return e.returncode
 
-
     def tf_plan(self, outfile=None):
         cmd = ["terraform", "plan"]
         if outfile:
