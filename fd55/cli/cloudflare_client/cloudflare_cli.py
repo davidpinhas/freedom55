@@ -1,5 +1,6 @@
 import requests
 import json
+import traceback
 import logging
 import CloudFlare
 from prettytable import PrettyTable
@@ -279,7 +280,8 @@ class Cloudflare:
         try:
             r = self.cf.zones.firewall.rules.post(self.zone_id, data=rule_data)
         except Exception as e:
-            logging.error(f"Failed with error: {e}")
+            logging.error(f"Failed with error: '{e}'")
+            logging.error(traceback.format_exc())
             exit(1)
         logging.info(
             'Firewall rule created:\n' +
@@ -321,7 +323,8 @@ class Cloudflare:
             r = self.cf.zones.firewall.rules.put(
                 self.zone_id, id, data=rule_data[0])
         except Exception as e:
-            logging.error(f"Failed with error: {e}")
+            logging.error(f"Failed with error: '{e}'")
+            logging.error(traceback.format_exc())
             exit(1)
         logging.info(
             'Firewall rule updated:\n' +
@@ -344,7 +347,8 @@ class Cloudflare:
                         self.zone_id, i['filter']['id'])
             logging.info('Deleted firewall rule with ID ' + deleted_rule['id'])
         except Exception as e:
-            logging.error(f"Failed with error: {e}")
+            logging.error(f"Failed with error: '{e}'")
+            logging.error(traceback.format_exc())
             exit(1)
 
     def delete_waf_rule_filter(self, id=None):
@@ -357,5 +361,6 @@ class Cloudflare:
                     logging.info(
                         f"Successfully deleted firewall rule filter with ID '{i['id']}'")
         except Exception as e:
-            logging.error(f"Failed with error: {e}")
+            logging.error(f"Failed with error: '{e}'")
+            logging.error(traceback.format_exc())
             exit(1)
