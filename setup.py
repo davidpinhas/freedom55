@@ -41,5 +41,6 @@ setup(
         "InquirerPy",
         "prettytable",
         "kubernetes",
+        "CloudFlare",
         "openai"],
 )
