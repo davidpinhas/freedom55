@@ -598,14 +598,15 @@ fd55 tf destroy --path /path/to/tf/plan
 The [Cloudflare](https://www.cloudflare.com/en-gb/) integration utilizes the official [Cloudflare API](https://developers.cloudflare.com/api/) to perform its actions in the background to modify the configured domain DNS records.
 
 ### Commands
-- [DNS](#DNS)
+- [DNS](#CF-DNS)
+- [WAF](#CF-WAF)
 
 This integration requires the following keys:
 * `email` - Email address used to authenticate with Cloudflare.
 * `api_key` - API key with Read permissions for DNS Zone.
 * `domain_name` - Domain name.
 
-## DNS
+## CF-DNS
 ### List DNS records
 In order to list all DNS records, run the following command:
 ```bash
@@ -689,7 +690,7 @@ Expected output:
 2023-01-08 01:28:58,198|INFO|Finished deleting DNS record 'test.domain.com'
 ```
 
-## WAF
+## CF-WAF
 ### List firewall rules
 To list firewall rules, run the following command:
 ```bash
@@ -705,6 +706,48 @@ Expected output:
 |                id1               |  Whitelist  | (ip.src eq 123.123.123.123 and ip.src eq 124.124.124.124)                            |
 |                id2               |  Blacklist  |  (ip.src in {0.0.0.0/0} and ip.src ne 123.123.123.123 and ip.src ne 124.124.124.124) |
 +----------------------------------+-------------+--------------------------------------------------------------------------------------+
+```
+
+### Create firewall rule
+To Create a firewall rule, you can run the following command:
+```bash
+fd55 cf waf create -a block -e "ip.src eq 123.123.123.123" --description "testing rule creation" -n test-rule
+```
+The command will create a firewall rule and a coresponding filter for the rule.
+
+To view the full command options, run:
+```bash
+fd55 cf waf create --help
+```
+
+### Update firewall rule
+For updating a firewall rule, you need to provide the firewall rule ID and the new expression:
+```bash
+fd55 cf waf update --id f5ed... -e "ip.src eq 12.12.12.12"
+```
+The ID of the firewall rule can be found by listing the run using `waf list` command.
+
+### Delete firewall rule
+To delete a firewall rule, provide the firewall rule ID or the name of the firewall rule when using the `waf delete` command.
+The command will prompt a warning that the operation will delete the firewall rule and it's cooresponding firewall rule filter, with a request to approve the action:
+```bash
+fd55 cf waf delete --name test-rule
+2023-03-15 19:03:34,246|WARNING|Deleting firewall rule and filter
+Would you like to proceed? Y/n: Y
+2023-03-15 19:03:39,051|INFO|Deleted firewall rule with ID f5ed...
+```
+
+### List firewall rule filters
+Listing the firewall rules filters can be achieved with the following command:
+
+```bash
+fd55 cf waf list-filters
+```
+
+### Delete firewall rule filter
+In case deleting a specific firewall rule filter is required, this is possible with the `waf delete-filter` command along with the rule filter ID:
+```bash
+fd55 cf waf delete-filter --id f5ed...
 ```
 
 ## ChatGPT

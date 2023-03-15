@@ -337,8 +337,9 @@ class Cloudflare:
     def delete_waf_rule(self, name=None, id=None):
         try:
             r = self.cf.zones.firewall.rules.get(self.zone_id)
+            logging.warn("Deleting firewall rule and filter")
             fn.modify_config_approval(
-                f"Delete firewall rule and filter. Would you like to proceed? Y/n: ")
+                f"Would you like to proceed? Y/n: ")
             for i in r:
                 if name == i['description'] or id == i['id']:
                     deleted_rule = self.cf.zones.firewall.rules.delete(
