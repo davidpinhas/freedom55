@@ -36,6 +36,10 @@ Please use the tool at your own risk and report any issues or feedback.
 - Python 3.10 or higher - Ensure `Python3.10`, `Pip3` and `Virtualenv` are installed
 - Install Python dependencies - `$ pip3 install -r requirements.txt` [required for running tests locally]
 - OCI keys and OCIDs - In order to [configure Freedom 55](#configuration) the OCI integration, you will need the [minimum required keys and OCIDs](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Required_Keys_and_OCIDs)
+- Freedom55 CLI requires the following clients to be locally installed:
+  Terraform CLI - https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+  OCI CLI - https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm
+  SOPS CLI - https://github.com/mozilla/sops#download
 
 ## Installation
 In order to install the CLI on your local machine, you can clone the repository and utilize the startup.sh script:
