@@ -1,4 +1,5 @@
 #!/bin/bash
+# Deactivate existing virtual env
 deactivate &> /dev/null
 echo "
 ############################
@@ -83,25 +84,25 @@ else
   venv_activate="source $PWD/freedom55-venv/bin/activate"
 fi
 
-# Setting up source code
+# Setting up source code virtual environment
 if [ -d "freedom55-venv" ]; then
   # Virtualenv exists
   echo "INFO: Activating virtualenv"
-  eval $venv_activate
+  eval $venv_activate || { echo "ERROR: Failed to activate virtualenv."; return 0; }
   echo "INFO: Installing requirements"
-  pip install -r requirements.txt &> /dev/null
+  pip install -r requirements.txt &> /dev/null || { echo "ERROR: Failed to install requirements."; return 0; }
   echo "INFO: Developing setup.py"
-  $python_bin setup.py develop &> /dev/null
+  $python_bin setup.py develop &> /dev/null || { echo "ERROR: Failed to develop setup.py."; return 0; }
 else
   # Virtualenv created
   echo "INFO: Creating virtualenv"
-  eval $venv &> /dev/null
+  eval $venv &> /dev/null || { echo "ERROR: Failed to create virtualenv."; return 0; }
   echo "INFO: Activating virtualenv"
-  eval $venv_activate
+  eval $venv_activate || { echo "ERROR: Failed to activate virtualenv."; return 0; }
   echo "INFO: Installing requirements"
-  pip install -r requirements.txt &> /dev/null
+  pip install -r requirements.txt &> /dev/null || { echo "ERROR: Failed to install requirements."; return 0; }
   echo "INFO: Developing setup.py"
-  $python_bin setup.py develop &> /dev/null
+  $python_bin setup.py develop &> /dev/null || { echo "ERROR: Failed to develop setup.py."; return 0; }
   eval $venv_activate
 fi
 
