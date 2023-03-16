@@ -20,8 +20,8 @@ class ArgoCD:
         }
         if not api_token:
             self.headers = {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
+                "Content-Type": "application/json",
+                "Accept": "application/json"
             }
 
     def load_response_json(self, response):
