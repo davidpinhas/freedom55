@@ -15,13 +15,17 @@ class TestTerraform(unittest.TestCase):
     def test2_tf_plan(self):
         """ Test the Terraform plan function """
         runner = CliRunner()
-        result = runner.invoke(integration_tf.plan, ['--path', '.', '--file', 'tfplan'])
+        result = runner.invoke(
+            integration_tf.plan, [
+                '--path', '.', '--file', 'tfplan'])
         assert result.exit_code == 0
 
     def test3_tf_apply(self):
         """ Test the Terraform apply function """
         runner = CliRunner()
-        result = runner.invoke(integration_tf.apply, ['--path', '.', '--planfile', 'tfplan'])
+        result = runner.invoke(
+            integration_tf.apply, [
+                '--path', '.', '--planfile', 'tfplan'])
         assert result.exit_code == 0
 
     def test4_tf_output(self):
