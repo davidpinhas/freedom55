@@ -34,7 +34,7 @@ class TestArgo(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(
             argocd_app.delete, [
-                '--name', 'freedom55_argo_test_app'])
+                '--name', 'freedom55-argo-test-app'])
         assert result.exit_code == 0
 
     def test5_argo_list_repos(self):
