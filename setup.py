@@ -37,6 +37,7 @@ setup(
     install_requires=[
         "click",
         "oci",
+        "retry",
         "requests",
         "InquirerPy",
         "prettytable",

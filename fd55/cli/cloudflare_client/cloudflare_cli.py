@@ -3,6 +3,7 @@ import json
 import traceback
 import logging
 import CloudFlare
+from retry import retry
 from prettytable import PrettyTable
 from fd55.utils.fd55_config import Config
 from fd55.utils.functions import Functions as fn
@@ -65,6 +66,7 @@ class Cloudflare:
         logging.debug(f"Payload: {payload}")
         return payload
 
+    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
     def get_zone_id(self):
         """ Get zone ID """
         logging.debug(f"Retrieving zone ID")
@@ -77,6 +79,7 @@ class Cloudflare:
             logging.error(f"Failed to Get zone ID with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
+    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
     def get_dns_record_id(self, name=None):
         """ Get DNS record ID """
         logging.info(f"Retrieving DNS record ID for {name}")
@@ -96,6 +99,7 @@ class Cloudflare:
             logging.error(f"Failed to get DNS record ID with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
+    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
     def list_dns_records(self, id=None):
         """ List DNS records """
         logging.info(f"Retrieving DNS records for domain '{self.domain_name}'")
@@ -133,6 +137,7 @@ class Cloudflare:
                 f"Failed to retrieve DNS records list with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
+    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
     def create_dns_record(
             self,
             dns_zone_name,
@@ -164,9 +169,10 @@ class Cloudflare:
         except Exception as e:
             logging.error(f"Failed to create DNS record with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
-            exit()
+            raise e
         logging.info(f"Finished modifying DNS record")
 
+    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
     def update_dns_record(
             self,
             dns_zone_name,
@@ -199,7 +205,7 @@ class Cloudflare:
         except Exception as e:
             logging.error(f"Failed to update DNS record with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
-            exit()
+            raise e
         logging.info(f"Finished modifying DNS record")
 
     def delete_dns_record(
@@ -218,8 +224,9 @@ class Cloudflare:
         except Exception as e:
             logging.error(f"Failed to delete DNS record with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
-            exit()
+            raise e
 
+    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
     def list_waf_rules(self):
         """ List firewall rules """
         logging.info(
@@ -255,6 +262,7 @@ class Cloudflare:
             table.add_row(row)
         print(table)
 
+    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
     def create_waf_rule(
             self,
             name=None,
@@ -282,7 +290,7 @@ class Cloudflare:
         except Exception as e:
             logging.error(f"Failed with error: '{e}'")
             logging.error(traceback.format_exc())
-            exit(1)
+            raise e
         logging.info(
             'Firewall rule created:\n' +
             json.dumps(
@@ -291,6 +299,7 @@ class Cloudflare:
                 sort_keys=False) +
             '\n')
 
+    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
     def update_waf_rule(self,
                         id=None,
                         name=None,
@@ -325,7 +334,7 @@ class Cloudflare:
         except Exception as e:
             logging.error(f"Failed with error: '{e}'")
             logging.error(traceback.format_exc())
-            exit(1)
+            raise e
         logging.info(
             'Firewall rule updated:\n' +
             json.dumps(
@@ -350,7 +359,7 @@ class Cloudflare:
         except Exception as e:
             logging.error(f"Failed with error: '{e}'")
             logging.error(traceback.format_exc())
-            exit(1)
+            raise e
 
     def delete_waf_rule_filter(self, id=None):
         try:
@@ -364,4 +373,4 @@ class Cloudflare:
         except Exception as e:
             logging.error(f"Failed with error: '{e}'")
             logging.error(traceback.format_exc())
-            exit(1)
+            raise e
