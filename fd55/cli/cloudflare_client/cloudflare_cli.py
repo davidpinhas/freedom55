@@ -66,7 +66,8 @@ class Cloudflare:
         logging.debug(f"Payload: {payload}")
         return payload
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def get_zone_id(self):
         """ Get zone ID """
         logging.debug(f"Retrieving zone ID")
@@ -79,7 +80,8 @@ class Cloudflare:
             logging.error(f"Failed to Get zone ID with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def get_dns_record_id(self, name=None):
         """ Get DNS record ID """
         logging.info(f"Retrieving DNS record ID for {name}")
@@ -99,7 +101,8 @@ class Cloudflare:
             logging.error(f"Failed to get DNS record ID with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def list_dns_records(self, id=None):
         """ List DNS records """
         logging.info(f"Retrieving DNS records for domain '{self.domain_name}'")
@@ -137,7 +140,8 @@ class Cloudflare:
                 f"Failed to retrieve DNS records list with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def create_dns_record(
             self,
             dns_zone_name,
@@ -172,7 +176,8 @@ class Cloudflare:
             raise e
         logging.info(f"Finished modifying DNS record")
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def update_dns_record(
             self,
             dns_zone_name,
@@ -226,7 +231,8 @@ class Cloudflare:
             logging.error(f"Request failed with error: {records['errors']}")
             raise e
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def list_waf_rules(self):
         """ List firewall rules """
         logging.info(
@@ -262,7 +268,8 @@ class Cloudflare:
             table.add_row(row)
         print(table)
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def create_waf_rule(
             self,
             name=None,
@@ -299,7 +306,8 @@ class Cloudflare:
                 sort_keys=False) +
             '\n')
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def update_waf_rule(self,
                         id=None,
                         name=None,
