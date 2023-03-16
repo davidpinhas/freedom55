@@ -130,7 +130,7 @@ resource "null_resource" "example" {
 }
 EOF
 python -m unittest tests/test_tf.py || TEST_RESULTS=false
-rm tmp_tf_test.tf
+rm -rf tmp_tf_test.tf terraform.tfstate* .terraform* tfplan
 
 echo "
 ##### Running SOPS tests #####"
