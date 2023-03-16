@@ -327,6 +327,18 @@ fd55 argo server import -f argocd-export-16-01-2023.yaml
 ```
 The CLI will copy the file to the `/tmp` directory of the ArgoCD server pod and start the import.
 
+### Create ArgoCD JWT token
+To generate a JWT token, use the following command and provide the ArgoCD admin `user` and `password`:
+```bash
+fd55 argo server create-jwt -u $USER -p $PASSWORD
+```
+
+The output will print the newly generated JWT token:
+```bash
+2023-03-16 13:20:39,460|INFO|Generating JWT token
+2023-03-16 13:20:40,348|INFO|Created JWT Token: eyJhb....
+```
+
 ## OCI
 ---
 [OCI (Oracle Cloud Infrastructure)](https://www.oracle.com/il-en/cloud/) integration utilizes the [KMS feature](https://www.oracle.com/il-en/security/cloud-security/key-management/) and lets you encrypt and decrypt a string.

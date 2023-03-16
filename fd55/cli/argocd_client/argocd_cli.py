@@ -10,7 +10,7 @@ config = Config()
 
 
 class ArgoCD:
-    def __init__(self, api_endpoint, api_token):
+    def __init__(self, api_endpoint=None, api_token=None):
         self.api_endpoint = api_endpoint
         self.api_token = api_token
         self.headers = {
@@ -18,6 +18,11 @@ class ArgoCD:
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
+        if not api_token:
+            self.headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+            }
 
     def load_response_json(self, response):
         json_output = response.json()
@@ -257,3 +262,23 @@ class ArgoCD:
         except Exception as e:
             logging.error(
                 f"An error occurred while importing ArgoCD server settings: {e}")
+
+    def create_jwt(self, username, password):
+        """ Create ArgoCD JWT token """
+        logging.info("Generating JWT token")
+        argo = ArgoCD(api_endpoint=self.api_endpoint, api_token=self.api_token)
+        try:
+            payload = f'{{"username":"{username}","password":"{password}"}}'
+            response = requests.request(
+                headers=argo.headers,
+                method="POST",
+                data=payload,
+                url=f"{self.api_endpoint}/api/v1/session")
+            if response.status_code != 200:
+                raise requests.exceptions.HTTPError
+            response_data = json.loads(response.text)
+            logging.info(f"Created JWT Token: {response_data['token']}")
+        except requests.exceptions.HTTPError:
+            logging.error(f'Failed with status code: {response.status_code}')
+            logging.error(
+                f'Encountered error creating JWT:\n{response.text}')
