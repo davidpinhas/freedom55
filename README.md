@@ -51,7 +51,7 @@ source startup.sh
 
 The script will create a virtual environment and provide steps to configure the alias for sourcing the venv.
 
-### Installing Pip Binary
+### Installing Pip Binary (Recommended)
 To install the Freedom 55 CLI as a binary, you'll need to build the binary and install it using Pip3:
 ```bash
 python3 -m build
