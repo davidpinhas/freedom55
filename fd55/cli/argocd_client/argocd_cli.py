@@ -69,9 +69,10 @@ class ArgoCD:
             logging.info(
                 f"Successfully created application {data['metadata']['name']}")
         except requests.exceptions.HTTPError:
+            r = json.loads(response.text)
             logging.error(f'Failed with status code: {response.status_code}')
             logging.error(
-                f'Encountered error creating ArgoCD application:\n{response.text}')
+                f"Encountered error creating ArgoCD application: {r['error']}")
 
     def update_application(self, json_file: str):
         """ Send an Update request to update the applciation configuration """
