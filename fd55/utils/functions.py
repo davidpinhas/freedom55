@@ -62,11 +62,13 @@ class Functions:
             logging.error(f"The file '{json_file}' could not be found.")
             exit()
         except json.JSONDecodeError as e:
-            logging.error(f"Failed decoding file '{json_file}' with error: {e}")
+            logging.error(
+                f"Failed decoding file '{json_file}' with error: {e}")
             logging.error("The JSON is likely invalid.")
             exit()
         except Exception as e:
-            logging.error(f"An error occurred while opening '{json_file}' with error: {e}")
+            logging.error(
+                f"An error occurred while opening '{json_file}' with error: {e}")
             exit()
 
     def base64_encode(sample_string):
