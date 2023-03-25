@@ -1,5 +1,4 @@
 import json
-import pprint
 import logging
 import requests
 from fd55.utils.fd55_config import Config
