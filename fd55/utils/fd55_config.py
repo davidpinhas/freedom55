@@ -7,11 +7,12 @@ import shutil
 import datetime
 from fd55.utils.functions import Functions as fn
 logger = logging.getLogger()
-component_list = ["OCI", "SOPS", "ARGOCD", "TERRAFORM", "CLOUDFLARE", "AI"]
+component_list = ["OCI", "NEXUS", "SOPS", "ARGOCD", "TERRAFORM", "CLOUDFLARE", "AI"]
 
 
 class Config:
     oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file"]
+    nexus_key_list = ["url", "user", "password"]
     argo_key_list = ["url", "api_token"]
     sops_key_list = ["key_file"]
     tf_key_list = []
@@ -19,6 +20,7 @@ class Config:
     ai_key_list = ['api_key']
     all_lists = [
         oci_key_list,
+        nexus_key_list,
         argo_key_list,
         sops_key_list,
         tf_key_list,
@@ -163,6 +165,12 @@ class Config:
                         component, key_list=config.oci_key_list):
                     if config.start_configuration(
                             component=component, key_list=config.oci_key_list):
+                        pass
+            if component == "NEXUS":
+                if not config.validate_config_option(
+                        component, key_list=config.nexus_key_list):
+                    if config.start_configuration(
+                            component=component, key_list=config.nexus_key_list):
                         pass
             if component == "ARGOCD":
                 if not config.validate_config_option(
