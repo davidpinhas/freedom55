@@ -6,6 +6,7 @@ import logging
 import requests
 from tabulate import tabulate
 from fd55.utils.fd55_config import Config
+from fd55.utils.k8s import K8s
 config = Config()
 
 
@@ -20,17 +21,16 @@ class NexusRepositoryManager:
             f"{str(config.get('NEXUS', 'password'))}")
 
     def get_nexus_pod(self):
-        nexus_pods = subprocess.check_output(
-            [
-                'kubectl',
-                'get',
+        logging.info("Get Nexus pod")
+        output = K8s().kubectl.run(['get',
                 'pods',
                 '-n',
                 'nexus',
                 '-o',
-                'jsonpath="{.items[*].metadata.name}"']).decode('utf-8').strip('"\n').split(' ')
+                'jsonpath="{.items[*].metadata.name}"'])
+        nexus_pods = output.stdout.strip().strip('"').split(' ')
         if not nexus_pods:
-            logging.warning('No nexus pods found')
+            logging.warning('No Nexus pods found')
             exit(1)
         return nexus_pods[0]
 
