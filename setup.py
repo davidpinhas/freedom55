@@ -21,6 +21,7 @@ setup(
         "fd55/cli/cli_groups/cli_options/argocd",
         "fd55/cli/cli_groups/cli_options/cli_config",
         "fd55/cli/cli_groups/cli_options/cloudflare",
+        "fd55/cli/cli_groups/cli_options/nexus",
         "fd55/cli/chatgpt_client",
         "fd55/cli/oci_client",
         "fd55/cli/nexus_client",

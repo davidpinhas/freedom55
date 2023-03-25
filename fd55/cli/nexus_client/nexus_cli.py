@@ -11,11 +11,11 @@ config = Config()
 
 class NexusRepositoryManager:
     def __init__(self):
-        url = "https://nexus.domain.com/service/rest/v1/tasks"
-        nexus_pod = self.get_nexus_pod()
-        backup_dir = f"nexus-data-{datetime.datetime.now().strftime('%y%m%d_%H%M%S')}"
-        headers = {'Accept': 'application/json'}
-        auth = ('$USER', '$PASS')
+        self.url = f"{str(config.get('NEXUS', 'url'))}"
+        self.nexus_pod = self.get_nexus_pod()
+        self.backup_dir = f"nexus_data_{datetime.datetime.now().strftime('%y%m%d_%H%M%S')}"
+        self.headers = {'Accept': 'application/json'}
+        self.auth = (f"{str(config.get('NEXUS', 'user'))}", f"{str(config.get('NEXUS', 'password'))}")
 
     def get_nexus_pod(self):
         nexus_pods = subprocess.check_output(
@@ -47,7 +47,7 @@ class NexusRepositoryManager:
 
     def get_backup_task(self):
         logging.info("Retrieving backup task ID")
-        response = requests.get(self.url, headers=self.headers, auth=self.auth)
+        response = requests.get(f"{self.url}/service/rest/v1/tasks", headers=self.headers, auth=self.auth)
         backup_task_id = json.loads(response.text)
         for i in backup_task_id['items']:
             if i['type'] != 'db.backup':
@@ -60,10 +60,10 @@ class NexusRepositoryManager:
         task_id = self.get_backup_task()
         logging.info("Running backup task")
         response = requests.post(
-            url=f'{self.url}/{task_id}/run',
+            url=f'{self.url}/service/rest/v1/tasks/{task_id}/run',
             headers=self.headers,
             auth=self.auth)
-        if response.status_code != 204:
+        if response.status_code not in range(200, 207):
             logging.error(
                 f"Backup task failed with status code {response.status_code}")
             exit(1)
@@ -80,9 +80,16 @@ class NexusRepositoryManager:
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
 
-    def print_directory_contents(self):
-        backup_dir_content = f"nexus-conf-backup/{self.backup_dir}/backup"
-        logging.info(f"Searching files in dir '{self.backup_dir}'")
+    def print_directory_contents(self, new_dir=False):
+        if new_dir == True:
+            backup_dir_content = f"nexus-conf-backup/{self.backup_dir}/backup"
+            logging.info(f"Searching files in dir '{self.backup_dir}'")
+        else:
+            snapshot_dirs = [dir_name for dir_name in os.listdir('nexus-conf-backup/') if dir_name.startswith('nexus_data_')]
+            snapshot_dirs.sort(reverse=True)
+            latest_snapshot_dir = snapshot_dirs[0]
+            backup_dir_content = f"nexus-conf-backup/{latest_snapshot_dir}/backup"
+            logging.info(f"Searching files in dir {latest_snapshot_dir}")
         files = os.listdir(backup_dir_content)
         config_files = []
         security_files = []
@@ -112,8 +119,3 @@ class NexusRepositoryManager:
                 headers=[
                     "#",
                     "Component Backup Files"]))
-
-# run_backup_task()
-# check_backup_directory(nexus_pod)
-# copy_backup_directory()
-# print_directory_contents()
