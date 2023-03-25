@@ -23,6 +23,7 @@ setup(
         "fd55/cli/cli_groups/cli_options/cloudflare",
         "fd55/cli/chatgpt_client",
         "fd55/cli/oci_client",
+        "fd55/cli/nexus_cli",
         "fd55/cli/argocd_client",
         "fd55/cli/sops_client",
         "fd55/cli/tf_client",
@@ -43,5 +44,6 @@ setup(
         "prettytable",
         "kubernetes",
         "CloudFlare",
+        "tabulate",
         "openai"],
 )
