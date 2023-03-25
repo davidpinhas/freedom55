@@ -8,6 +8,7 @@ from tabulate import tabulate
 from fd55.utils.fd55_config import Config
 config = Config()
 
+
 class NexusRepositoryManager:
     def __init__(self):
         url = "https://nexus.domain.com/service/rest/v1/tasks"
@@ -17,7 +18,15 @@ class NexusRepositoryManager:
         auth = ('$USER', '$PASS')
 
     def get_nexus_pod(self):
-        nexus_pods = subprocess.check_output(['kubectl', 'get', 'pods', '-n', 'nexus', '-o', 'jsonpath="{.items[*].metadata.name}"']).decode('utf-8').strip('"\n').split(' ')
+        nexus_pods = subprocess.check_output(
+            [
+                'kubectl',
+                'get',
+                'pods',
+                '-n',
+                'nexus',
+                '-o',
+                'jsonpath="{.items[*].metadata.name}"']).decode('utf-8').strip('"\n').split(' ')
         if not nexus_pods:
             logging.warning('No nexus pods found')
             exit(1)
@@ -32,7 +41,8 @@ class NexusRepositoryManager:
 
         check_dir_empty_command = f'kubectl exec -n nexus {self.nexus_pod} -- test -d /nexus-data/backup'
         if subprocess.call(check_dir_empty_command, shell=True) != 0:
-            logging.warning(f'Directory /nexus-data/backup is empty in {self.nexus_pod}')
+            logging.warning(
+                f'Directory /nexus-data/backup is empty in {self.nexus_pod}')
             exit(1)
 
     def get_backup_task(self):
@@ -49,9 +59,13 @@ class NexusRepositoryManager:
     def run_backup_task(self):
         task_id = self.get_backup_task()
         logging.info("Running backup task")
-        response = requests.post(url=f'{self.url}/{task_id}/run', headers=self.headers, auth=self.auth)
+        response = requests.post(
+            url=f'{self.url}/{task_id}/run',
+            headers=self.headers,
+            auth=self.auth)
         if response.status_code != 204:
-            logging.error(f"Backup task failed with status code {response.status_code}")
+            logging.error(
+                f"Backup task failed with status code {response.status_code}")
             exit(1)
 
     def copy_backup_directory(self):
@@ -60,7 +74,11 @@ class NexusRepositoryManager:
             os.mkdir('nexus-conf-backup')
         os.mkdir(f"nexus-conf-backup/{self.backup_dir}")
         cmd = f"kubectl -n nexus cp nexus/{self.nexus_pod}:/nexus-data nexus-conf-backup/{self.backup_dir}"
-        subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(
+            cmd,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
 
     def print_directory_contents(self):
         backup_dir_content = f"nexus-conf-backup/{self.backup_dir}/backup"
@@ -79,16 +97,21 @@ class NexusRepositoryManager:
         config_files = sorted(config_files)
         security_files = sorted(security_files)
         component_files = sorted(component_files)
-        config_table = [[i+1, f] for i, f in enumerate(config_files)]
-        security_table = [[i+1, f] for i, f in enumerate(security_files)]
-        component_table = [[i+1, f] for i, f in enumerate(component_files)]
+        config_table = [[i + 1, f] for i, f in enumerate(config_files)]
+        security_table = [[i + 1, f] for i, f in enumerate(security_files)]
+        component_table = [[i + 1, f] for i, f in enumerate(component_files)]
         logging.info(f"Contents of backup")
         print("-------------------------")
         print(tabulate(config_table, headers=["#", "Config Backup Files"]))
         print("-------------------------")
         print(tabulate(security_table, headers=["#", "Security Backup Files"]))
         print("-------------------------")
-        print(tabulate(component_table, headers=["#", "Component Backup Files"]))
+        print(
+            tabulate(
+                component_table,
+                headers=[
+                    "#",
+                    "Component Backup Files"]))
 
 # run_backup_task()
 # check_backup_directory(nexus_pod)
