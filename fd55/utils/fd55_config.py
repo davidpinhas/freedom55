@@ -7,7 +7,14 @@ import shutil
 import datetime
 from fd55.utils.functions import Functions as fn
 logger = logging.getLogger()
-component_list = ["OCI", "NEXUS", "SOPS", "ARGOCD", "TERRAFORM", "CLOUDFLARE", "AI"]
+component_list = [
+    "OCI",
+    "NEXUS",
+    "SOPS",
+    "ARGOCD",
+    "TERRAFORM",
+    "CLOUDFLARE",
+    "AI"]
 
 
 class Config:
