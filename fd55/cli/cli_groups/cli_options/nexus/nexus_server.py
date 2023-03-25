@@ -16,11 +16,13 @@ def run_backup_task(ctx):
     """ Run backup task """
     NexusRepositoryManager().run_backup_task()
 
+
 @server.command(help_priority=2)
 @click.pass_context
 def list_repos(ctx):
     """ Retrieve repositories list """
     NexusRepositoryManager().list_repositories()
+
 
 @server.command(help_priority=3)
 @click.pass_context
