@@ -23,11 +23,11 @@ class NexusRepositoryManager:
     def get_nexus_pod(self):
         logging.info("Get Nexus pod")
         output = K8s().kubectl.run(['get',
-                'pods',
-                '-n',
-                'nexus',
-                '-o',
-                'jsonpath="{.items[*].metadata.name}"'])
+                                    'pods',
+                                    '-n',
+                                    'nexus',
+                                    '-o',
+                                    'jsonpath="{.items[*].metadata.name}"'])
         nexus_pods = output.stdout.strip().strip('"').split(' ')
         if not nexus_pods:
             logging.warning('No Nexus pods found')
