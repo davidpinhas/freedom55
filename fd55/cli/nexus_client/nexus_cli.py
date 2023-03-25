@@ -15,7 +15,9 @@ class NexusRepositoryManager:
         self.nexus_pod = self.get_nexus_pod()
         self.backup_dir = f"nexus_data_{datetime.datetime.now().strftime('%y%m%d_%H%M%S')}"
         self.headers = {'Accept': 'application/json'}
-        self.auth = (f"{str(config.get('NEXUS', 'user'))}", f"{str(config.get('NEXUS', 'password'))}")
+        self.auth = (
+            f"{str(config.get('NEXUS', 'user'))}",
+            f"{str(config.get('NEXUS', 'password'))}")
 
     def get_nexus_pod(self):
         nexus_pods = subprocess.check_output(
@@ -47,7 +49,10 @@ class NexusRepositoryManager:
 
     def get_backup_task(self):
         logging.info("Retrieving backup task ID")
-        response = requests.get(f"{self.url}/service/rest/v1/tasks", headers=self.headers, auth=self.auth)
+        response = requests.get(
+            f"{self.url}/service/rest/v1/tasks",
+            headers=self.headers,
+            auth=self.auth)
         backup_task_id = json.loads(response.text)
         for i in backup_task_id['items']:
             if i['type'] != 'db.backup':
@@ -81,11 +86,12 @@ class NexusRepositoryManager:
             stderr=subprocess.PIPE)
 
     def print_directory_contents(self, new_dir=False):
-        if new_dir == True:
+        if new_dir:
             backup_dir_content = f"nexus-conf-backup/{self.backup_dir}/backup"
             logging.info(f"Searching files in dir '{self.backup_dir}'")
         else:
-            snapshot_dirs = [dir_name for dir_name in os.listdir('nexus-conf-backup/') if dir_name.startswith('nexus_data_')]
+            snapshot_dirs = [dir_name for dir_name in os.listdir(
+                'nexus-conf-backup/') if dir_name.startswith('nexus_data_')]
             snapshot_dirs.sort(reverse=True)
             latest_snapshot_dir = snapshot_dirs[0]
             backup_dir_content = f"nexus-conf-backup/{latest_snapshot_dir}/backup"
