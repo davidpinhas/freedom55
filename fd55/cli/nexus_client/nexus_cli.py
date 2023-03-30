@@ -50,13 +50,13 @@ class NexusRepositoryManager:
             print(f"{json.dumps(json.loads(response.text), indent=4)}")
         return json.loads(response.text)
 
-    def list_blob_stores(self):
+    def list_blob_stores(self, print_list=True):
         logging.info("Retrieving list of blob stores")
         response = requests.get(
             f"{self.url}/service/rest/v1/blobstores",
             headers=self.headers,
             auth=self.auth)
-        blob_stores = json.loads(response.text)
-        logging.info("List of blob stores:")
-        print(f"{json.dumps(blob_stores, indent=4)}")
-        return blob_stores
+        if print_list:
+            logging.info("List of blob stores:")
+            print(f"{json.dumps(json.loads(response.text), indent=4)}")
+        return json.loads(response.text)
