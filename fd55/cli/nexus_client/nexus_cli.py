@@ -13,6 +13,14 @@ class NexusRepositoryManager:
             f"{str(config.get('NEXUS', 'user'))}",
             f"{str(config.get('NEXUS', 'password'))}")
 
+    def check_task_state(self, id):
+        response = requests.get(
+            f"{self.url}/service/rest/v1/tasks/{id}",
+            headers=self.headers,
+            auth=self.auth)
+        logging.info(f"Task state: '{json.loads(response.text)['currentState']}'")
+        return json.loads(response.text)['currentState']
+
     def get_backup_task(self):
         logging.info("Retrieving backup task ID")
         response = requests.get(

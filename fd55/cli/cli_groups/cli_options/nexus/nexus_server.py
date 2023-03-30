@@ -11,20 +11,28 @@ def server(ctx):
 
 
 @server.command(help_priority=1)
+@click.option('--id', help="task id")
+@click.pass_context
+def check_task_state(ctx, id):
+    """ Check task state """
+    NexusRepositoryManager().check_task_state(id=id)
+
+
+@server.command(help_priority=2)
 @click.pass_context
 def run_backup_task(ctx):
     """ Run backup task """
     NexusRepositoryManager().run_backup_task()
 
 
-@server.command(help_priority=2)
+@server.command(help_priority=3)
 @click.pass_context
 def list_repos(ctx):
     """ Retrieve repositories list """
     NexusRepositoryManager().list_repositories()
 
 
-@server.command(help_priority=3)
+@server.command(help_priority=4)
 @click.pass_context
 def list_blob_store(ctx):
     """ Retrieve blob store information """
