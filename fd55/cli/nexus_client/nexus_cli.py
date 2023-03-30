@@ -39,16 +39,16 @@ class NexusRepositoryManager:
                 f"Backup task failed with status code {response.status_code}")
             exit(1)
 
-    def list_repositories(self):
+    def list_repositories(self, print_list=True):
         logging.info("Retrieving list of repositories")
         response = requests.get(
             f"{self.url}/service/rest/v1/repositories",
             headers=self.headers,
             auth=self.auth)
-        repositories = json.loads(response.text)
-        logging.info("List of repositories:")
-        print(f"{json.dumps(repositories, indent=4)}")
-        return repositories
+        if print_list:
+            logging.info("List of repositories:")
+            print(f"{json.dumps(json.loads(response.text), indent=4)}")
+        return json.loads(response.text)
 
     def list_blob_stores(self):
         logging.info("Retrieving list of blob stores")
