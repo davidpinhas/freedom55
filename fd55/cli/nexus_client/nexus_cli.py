@@ -18,7 +18,8 @@ class NexusRepositoryManager:
             f"{self.url}/service/rest/v1/tasks/{id}",
             headers=self.headers,
             auth=self.auth)
-        logging.info(f"Task state: '{json.loads(response.text)['currentState']}'")
+        logging.info(
+            f"Task state: '{json.loads(response.text)['currentState']}'")
         return json.loads(response.text)['currentState']
 
     def get_backup_task(self):
