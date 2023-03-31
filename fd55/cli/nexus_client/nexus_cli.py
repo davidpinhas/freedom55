@@ -1,4 +1,5 @@
 import json
+import time
 import logging
 import requests
 from fd55.utils.fd55_config import Config
@@ -36,13 +37,22 @@ class NexusRepositoryManager:
                 logging.info(f"Backup task ID - '{i['id']}'")
                 return i['id']
 
-    def run_backup_task(self):
+    def run_backup_task(self, retries=10):
+        task_status = False
         task_id = self.get_backup_task()
         logging.info("Running backup task")
         response = requests.post(
             url=f'{self.url}/service/rest/v1/tasks/{task_id}/run',
             headers=self.headers,
             auth=self.auth)
+        while task_status != 'WAITING':
+            for i in range(retries):
+                task_status = self.check_task_state(task_id)
+                if task_status == 'WAITING':
+                    logging.info("Finished backup task")
+                    break
+                time.sleep(2)
+
         if response.status_code not in range(200, 207):
             logging.error(
                 f"Backup task failed with status code {response.status_code}")
