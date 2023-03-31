@@ -132,9 +132,6 @@ class Config:
 
     def validate_config_option(self, component, key_list):
         """ Validate the configuration file """
-        logging.debug("Validating fd55 config file")
-        logging.debug(
-            f"fd55 config file is located under {self.config_dir}/config.ini")
         if not self.validate_config_section(component):
             return False
         else:
