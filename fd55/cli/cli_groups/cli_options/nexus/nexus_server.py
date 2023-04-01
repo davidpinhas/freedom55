@@ -32,6 +32,13 @@ def run_repair_db_task(ctx):
     NexusRepositoryManager().run_repair_db_task()
 
 
+@server.command(help_priority=3)
+@click.pass_context
+def run_repair_db_date_md(ctx):
+    """ Run repair DB date metadata task """
+    NexusRepositoryManager().run_repair_db_date_md()
+
+
 @server.command(help_priority=4)
 @click.pass_context
 def list_repos(ctx):

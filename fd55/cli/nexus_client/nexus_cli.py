@@ -53,6 +53,10 @@ class NexusRepositoryManager:
         logging.info("Retrieving repair DB task ID")
         return self.get_tasks(task_type="blobstore.rebuildComponentDB")
 
+    def get_repair_db_date_md_task(self):
+        logging.info("Retrieving repair DB date metadata task ID")
+        return self.get_tasks(task_type="rebuild.asset.uploadMetadata")
+
     def check_task_status(self, task_id, retries=10):
         task_status = False
         while task_status != 'WAITING':
@@ -84,6 +88,11 @@ class NexusRepositoryManager:
     def run_repair_db_task(self):
         task_id = self.get_repair_db_task()
         logging.info("Running repair DB task")
+        self.run_task(task_id=task_id)
+
+    def run_repair_db_date_md(self):
+        task_id = self.get_repair_db_date_md_task()
+        logging.info("Running repair DB date metadata task")
         self.run_task(task_id=task_id)
 
     def list_repositories(self, print_list=True):
