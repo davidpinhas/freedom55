@@ -14,7 +14,14 @@ class NexusRepositoryManager:
             f"{str(config.get('NEXUS', 'user'))}",
             f"{str(config.get('NEXUS', 'password'))}")
 
+    def refresh_config(self):
+        config = Config()
+        self.auth = (
+            f"{str(config.get('NEXUS', 'user'))}",
+            f"{str(config.get('NEXUS', 'password'))}")
+
     def check_task_state(self, id):
+        self.refresh_config()
         response = requests.get(
             f"{self.url}/service/rest/v1/tasks/{id}",
             headers=self.headers,
@@ -25,6 +32,7 @@ class NexusRepositoryManager:
 
     def get_backup_task(self):
         logging.info("Retrieving backup task ID")
+        self.refresh_config()
         response = requests.get(
             f"{self.url}/service/rest/v1/tasks",
             headers=self.headers,
@@ -41,6 +49,7 @@ class NexusRepositoryManager:
         task_status = False
         task_id = self.get_backup_task()
         logging.info("Running backup task")
+        self.refresh_config()
         response = requests.post(
             url=f'{self.url}/service/rest/v1/tasks/{task_id}/run',
             headers=self.headers,
@@ -60,6 +69,7 @@ class NexusRepositoryManager:
 
     def list_repositories(self, print_list=True):
         logging.info("Retrieving list of repositories")
+        self.refresh_config()
         try:
             response = requests.get(
                 f"{self.url}/service/rest/v1/repositories",
@@ -77,6 +87,7 @@ class NexusRepositoryManager:
 
     def list_blob_stores(self, print_list=True):
         logging.info("Retrieving list of blob stores")
+        self.refresh_config()
         response = requests.get(
             f"{self.url}/service/rest/v1/blobstores",
             headers=self.headers,
