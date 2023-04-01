@@ -27,7 +27,6 @@ def run_backup_task(ctx):
 
 @server.command(help_priority=3)
 @click.pass_context
-
 def run_repair_db_task(ctx):
     """ Run repair DB task """
     NexusRepositoryManager().run_repair_db_task()
