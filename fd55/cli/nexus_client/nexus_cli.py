@@ -30,30 +30,31 @@ class NexusRepositoryManager:
             f"Task state: '{json.loads(response.text)['currentState']}'")
         return json.loads(response.text)['currentState']
 
-    def get_backup_task(self):
-        logging.info("Retrieving backup task ID")
+    def get_tasks(self, task_type):
         self.refresh_config()
         response = requests.get(
             f"{self.url}/service/rest/v1/tasks",
             headers=self.headers,
             auth=self.auth)
         backup_task_id = json.loads(response.text)
-        for i in backup_task_id['items']:
-            if i['type'] != 'db.backup':
-                pass
-            else:
-                logging.info(f"Backup task ID - '{i['id']}'")
-                return i['id']
+        if task_type:
+            for i in backup_task_id['items']:
+                if i['type'] != f'{task_type}':
+                    pass
+                else:
+                    logging.info(f"Backup task ID - '{i['id']}'")
+                    return i['id']
 
-    def run_backup_task(self, retries=10):
+    def get_backup_task(self):
+        logging.info("Retrieving backup task ID")
+        return self.get_tasks(task_type="db.backup")
+
+    def get_repair_db_task(self):
+        logging.info("Retrieving repair DB task ID")
+        return self.get_tasks(task_type="blobstore.rebuildComponentDB")
+
+    def check_task_status(self, task_id, retries=10):
         task_status = False
-        task_id = self.get_backup_task()
-        logging.info("Running backup task")
-        self.refresh_config()
-        response = requests.post(
-            url=f'{self.url}/service/rest/v1/tasks/{task_id}/run',
-            headers=self.headers,
-            auth=self.auth)
         while task_status != 'WAITING':
             for i in range(retries):
                 task_status = self.check_task_state(task_id)
@@ -62,10 +63,28 @@ class NexusRepositoryManager:
                     break
                 time.sleep(2)
 
-        if response.status_code not in range(200, 207):
-            logging.error(
-                f"Backup task failed with status code {response.status_code}")
-            exit(1)
+    def run_task(self, task_id=None):
+        if task_id:
+            self.refresh_config()
+            response = requests.post(
+                url=f'{self.url}/service/rest/v1/tasks/{task_id}/run',
+                headers=self.headers,
+                auth=self.auth)
+            self.check_task_status(task_id=task_id)
+            if response.status_code not in range(200, 207):
+                logging.error(
+                    f"Backup task failed with status code {response.status_code}")
+                exit(1)
+
+    def run_backup_task(self):
+        task_id = self.get_backup_task()
+        logging.info("Running backup task")
+        self.run_task(task_id=task_id)
+
+    def run_repair_db_task(self):
+        task_id = self.get_repair_db_task()
+        logging.info("Running repair DB task")
+        self.run_task(task_id=task_id)
 
     def list_repositories(self, print_list=True):
         logging.info("Retrieving list of repositories")
