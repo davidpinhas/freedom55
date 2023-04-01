@@ -60,10 +60,16 @@ class NexusRepositoryManager:
 
     def list_repositories(self, print_list=True):
         logging.info("Retrieving list of repositories")
-        response = requests.get(
-            f"{self.url}/service/rest/v1/repositories",
-            headers=self.headers,
-            auth=self.auth)
+        try:
+            response = requests.get(
+                f"{self.url}/service/rest/v1/repositories",
+                headers=self.headers,
+                auth=self.auth)
+            response.raise_for_status()  # raise an exception if status code indicates an error
+        except requests.exceptions.HTTPError as e:
+            logging.error(f"Failed to retrieve list of repositories: {e}")
+            return None
+
         if print_list:
             logging.info("List of repositories:")
             print(f"{json.dumps(json.loads(response.text), indent=4)}")
