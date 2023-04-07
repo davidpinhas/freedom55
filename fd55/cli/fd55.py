@@ -16,12 +16,12 @@ from fd55.cli.cli_groups.integration_nexus import nexus
 @click.version_option(version='3.6.3')
 @click.pass_context
 def main(ctx, verbosity):
-    import logging
-    from fd55.utils.functions import Functions as fn
     """Freedom 55 CLI.
 
-        Freedom 55 - The operational client crafted by David Pinhas
-        for maintaining, modifying, and operating your homelab."""
+        The operational client crafted by David Pinhas
+        for maintaining, modifying, and operating your homelabg."""
+    import logging
+    from fd55.utils.functions import Functions as fn
     ctx.ensure_object(dict)
     if verbosity == 'debug':
         log_level = logging.DEBUG
