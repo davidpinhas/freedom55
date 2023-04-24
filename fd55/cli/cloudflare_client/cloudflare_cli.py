@@ -249,8 +249,7 @@ class Cloudflare:
                 row = [
                     dns_record['id'],
                     dns_record['description'] if 'description' in dns_record else 'Null',
-                    dns_record['filter']['expression']
-                ]
+                    dns_record['filter']['expression']]
                 table.add_row(row)
             print(table)
         except Exception as e:
