@@ -58,7 +58,8 @@ class ArgoCD:
     def create_application(self, file: str = None):
         """ Create an application """
         if file is None:
-            raise ValueError('At least one of json_file or yaml_file must be provided')
+            raise ValueError(
+                'At least one of json_file or yaml_file must be provided')
         file_format = fn.validate_data_type(file)
         if file_format == 'json':
             data = fn.open_json_file(file)

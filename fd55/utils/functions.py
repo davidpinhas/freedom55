@@ -40,7 +40,8 @@ class Functions:
             return 'yaml'
         except yaml.YAMLError:
             pass
-        raise ValueError(f'File {filename} does not contain valid JSON or YAML')
+        raise ValueError(
+            f'File {filename} does not contain valid JSON or YAML')
 
     def delete_file(file_path):
         if Functions.file_exists(f"{str(file_path)}"):
