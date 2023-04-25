@@ -33,7 +33,7 @@ def create(ctx, file):
     argo = ArgoCD(
         api_endpoint=f"{config.get('ARGOCD', 'url')}",
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
-    argo.create_application(json_file=file)
+    argo.create_application(file=file)
 
 
 @app.command(help_priority=3)

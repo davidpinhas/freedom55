@@ -1,4 +1,6 @@
 import requests
+import yaml
+import os
 from prettytable import PrettyTable
 from fd55.utils.fd55_config import Config
 from fd55.utils.functions import Functions as fn
@@ -53,9 +55,24 @@ class ArgoCD:
             logging.error(
                 f'Encountered error listing ArgoCD applications:\n{response.text}')
 
-    def create_application(self, json_file: str):
+    def create_application(self, file: str = None):
         """ Create an application """
-        data = fn.open_json_file(json_file)
+        if file is None:
+            raise ValueError('At least one of json_file or yaml_file must be provided')
+        file_format = fn.validate_data_type(file)
+        if file_format == 'json':
+            data = fn.open_json_file(file)
+        elif file_format == 'yaml':
+            with open(file, 'r') as f:
+                yaml_data = f.read()
+            json_data = yaml.safe_load(yaml_data)
+            with open('temp.json', 'w') as f:
+                json.dump(json_data, f)
+            with open('temp.json', 'r') as f:
+                data = json.load(f)
+            os.remove('temp.json')
+        else:
+            raise ValueError(f'Invalid file format: {file_format}')
         try:
             response = fn.send_request(
                 self,

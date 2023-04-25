@@ -1,4 +1,5 @@
 import json
+import yaml
 import base64
 import logging
 import os
@@ -26,6 +27,21 @@ class Functions:
         else:
             return False
 
+    def validate_data_type(filename):
+        with open(filename, 'r') as f:
+            contents = f.read()
+        try:
+            json.loads(contents)
+            return 'json'
+        except json.JSONDecodeError:
+            pass
+        try:
+            yaml.safe_load(contents)
+            return 'yaml'
+        except yaml.YAMLError:
+            pass
+        raise ValueError(f'File {filename} does not contain valid JSON or YAML')
+
     def delete_file(file_path):
         if Functions.file_exists(f"{str(file_path)}"):
             user_input = Functions.modify_config_approval(
@@ -33,6 +49,20 @@ class Functions:
             if user_input:
                 os.remove(f"{str(file_path)}")
                 logging.info(f"Deleted config file {file_path}")
+
+    def yaml_to_json(yaml_str):
+        """
+        Convert a YAML string to a JSON string.
+        """
+        try:
+            yaml_data = yaml.safe_load(yaml_str)
+        except yaml.YAMLError as e:
+            raise ValueError(f'Invalid YAML: {e}')
+        try:
+            json_data = json.dumps(yaml_data)
+        except json.JSONDecodeError as e:
+            raise ValueError(f'Error converting YAML to JSON: {e}')
+        return json_data
 
     def json_parse(json_input, key=None):
         """ JSON parser """
