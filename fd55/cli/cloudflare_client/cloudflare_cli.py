@@ -33,6 +33,7 @@ class Cloudflare:
             exit()
 
     def set_default_headers(self):
+        """ Set default request headers """
         headers = {
             "X-Auth-Email": self.email,
             "Authorization": f"Bearer {self.api_key}",
@@ -41,6 +42,7 @@ class Cloudflare:
         return headers
 
     def set_global_headers(self):
+        """ Set global request headers """
         headers = {
             "X-Auth-Email": self.email,
             "Authorization": f"Bearer {self.global_api_key}",
@@ -55,6 +57,7 @@ class Cloudflare:
             content=None,
             ttl=None,
             proxied=None):
+        """ Create payload """
         payload = {
             "comment": comment or "DNS record updated with Freedom 55",
             "type": type or "A",
@@ -259,6 +262,7 @@ class Cloudflare:
                 f"Request failed with error: {firewall_rules['errors']}")
 
     def list_waf_rule_filters(self):
+        """ List firewall rules filters """
         r = self.cf.zones.filters.get(self.zone_id)
         table = PrettyTable()
         for obj in r:
@@ -351,6 +355,7 @@ class Cloudflare:
             '\n')
 
     def delete_waf_rule(self, name=None, id=None):
+        """ Delete firewall rule """
         try:
             r = self.cf.zones.firewall.rules.get(self.zone_id)
             logging.warn("Deleting firewall rule and filter")
@@ -369,6 +374,7 @@ class Cloudflare:
             raise e
 
     def delete_waf_rule_filter(self, id=None):
+        """ Delete firewall rule filter """
         try:
             r = self.cf.zones.filters.get(self.zone_id)
             for i in r:

@@ -5,7 +5,7 @@ from fd55.utils.cli_help_order import CliHelpOrder
 @click.group(cls=CliHelpOrder)
 @click.pass_context
 def app(ctx):
-    """ application commands """
+    """ ArgoCD application commands """
     ctx.ensure_object(dict)
 
 

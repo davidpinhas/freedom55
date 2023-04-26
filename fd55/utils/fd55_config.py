@@ -46,6 +46,7 @@ class Config:
         self.config.read(self.config_path)
 
     def get(self, section, option):
+        """ Get config option """
         if not Config().validate_config_option(component=section, key_list=option):
             if not self.config.has_section(section=section):
                 self.config.add_section(section=section)
@@ -64,9 +65,11 @@ class Config:
         return self.config.get(section, option)
 
     def get_section(self, section):
+        """ Get config section """
         return self.config.options(section)
 
     def create_option(self, section, option, value):
+        """ Create config option """
         self.config.read(self.config_path)
         if not self.config.has_section(section):
             self.config.add_section(section)
@@ -77,7 +80,7 @@ class Config:
             logging.info(f"Created option '{option}'")
 
     def get_config_dir(self):
-        """ Get configuration directory """
+        """ Get config file directory """
         if platform.system() == 'Windows':
             config_dir = os.path.join(os.environ['USERPROFILE'], '.fd55')
         else:
@@ -159,6 +162,7 @@ class Config:
         return True
 
     def run_config_validation(config):
+        """ Get config file validation for each component """
         logging.info("Running config validation")
         selected_items = Config.select_components_menu()
         config = Config()

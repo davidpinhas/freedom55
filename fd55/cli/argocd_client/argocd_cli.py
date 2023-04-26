@@ -27,6 +27,7 @@ class ArgoCD:
             }
 
     def load_response_json(self, response):
+        """ Load response as JSON """
         json_output = response.json()
         logging.debug(f"Loaded response json:\n{json_output}")
         return json_output
@@ -93,7 +94,7 @@ class ArgoCD:
                 f"Encountered error creating ArgoCD application: {r['error']}")
 
     def update_application(self, json_file: str):
-        """ Send an Update request to update the applciation configuration """
+        """ Update applciation configuration """
         with open(json_file, 'r') as f:
             data = fn.open_json_file(json_file)
         try:
@@ -114,7 +115,7 @@ class ArgoCD:
                 f'Encountered error updating ArgoCD application:\n{response.text}')
 
     def delete_application(self, application_name=None):
-        """ Send a Delete request to delete an application """
+        """ Delete an application """
         try:
             response = fn.send_request(
                 self,
@@ -160,7 +161,7 @@ class ArgoCD:
         print(table)
 
     def add_repo(self, repo_url, username=None, password=None, name=None):
-        """ Adding a repository """
+        """ Add repository """
         if not name:
             name = repo_url.split("/")[-1].replace(".git", "")
         if not username or not password:

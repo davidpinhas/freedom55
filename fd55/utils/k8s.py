@@ -8,6 +8,7 @@ class Kubectl:
         self.command = "kubectl"
 
     def run(self, args, shell=None):
+        """ Run subprocess command """
         try:
             if shell:
                 args = self.command + args
@@ -48,6 +49,7 @@ class K8s:
                 return item.metadata.name
 
     def copy_file_to_argocd_server_pod(self, file):
+        """ Copy file to ArgoCD pod """
         try:
             logging.info("Copying file to ArgoCD server pod")
             K8s().kubectl.run(["cp",

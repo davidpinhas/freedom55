@@ -19,7 +19,7 @@ def main(ctx, verbosity):
     """Freedom 55 CLI.
 
         The operational client crafted by David Pinhas
-        for maintaining, modifying, and operating your homelabg."""
+        for maintaining, modifying, and operating your homelab."""
     import logging
     from fd55.utils.functions import Functions as fn
     ctx.ensure_object(dict)

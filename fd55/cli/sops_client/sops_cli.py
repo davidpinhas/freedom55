@@ -37,6 +37,7 @@ class Sops:
             exit()
 
     def verify_key_file(key_file):
+        """ Verify Age key file """
         key_id = key_file
         if not key_file:
             key_id = Sops.find_age_key(f"{config.get('SOPS', 'key_file')}")

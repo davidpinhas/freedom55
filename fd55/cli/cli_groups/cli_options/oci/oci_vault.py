@@ -25,7 +25,7 @@ def list(ctx, id):
 @click.option('-n', '--name', help="Vault name", required=False)
 @click.pass_context
 def set(ctx, name):
-    """ set a vault as default """
+    """ Set default KMS vault """
     from fd55.cli.oci_client.oci_cli import OciValidator
     OciValidator.setup_kms_vault(vault_name=name)
 

@@ -25,19 +25,23 @@ class OciValidator:
         return config
 
     def set_config():
+        """ Set config file """
         config = OciValidator.validate_config_exist()
         return config
 
     def set_config_service_endpoint():
+        """ Set OCI config service endpoint """
         service_endpoint = OciValidator.set_config()["service_endpoint"]
         return service_endpoint
 
     def set_config_service_endpoint_mgmt():
+        """ Set OCI config service endpoint management """
         service_endpoint_mgmt = OciValidator.set_config()[
             "service_endpoint_mgmt"]
         return service_endpoint_mgmt
 
     def oci_key_list():
+        """ OCI keys list """
         keys_list = [
             "user",
             "fingerprint",
@@ -216,6 +220,7 @@ class OciValidator:
             value=result)
 
     def verify_kms_vault_key():
+        """ Verify KMS vault config key """
         if not cli_config.get(section="OCI", option="kms_vault"):
             logging.error("No KMS vault configured")
             fn.modify_config_approval(

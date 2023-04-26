@@ -16,6 +16,7 @@ class Functions:
         return logger
 
     def file_exists(filename):
+        """ Check file exists """
         return os.path.exists(filename)
 
     def modify_config_approval(string: str):
@@ -28,6 +29,7 @@ class Functions:
             return False
 
     def validate_data_type(filename):
+        """ Validate if data is JSON or YAML """
         with open(filename, 'r') as f:
             contents = f.read()
         try:
@@ -44,6 +46,7 @@ class Functions:
             f'File {filename} does not contain valid JSON or YAML')
 
     def delete_file(file_path):
+        """ Delete config file """
         if Functions.file_exists(f"{str(file_path)}"):
             user_input = Functions.modify_config_approval(
                 "Config file already exists, would you like to replace it? Y/n: ")
@@ -52,9 +55,7 @@ class Functions:
                 logging.info(f"Deleted config file {file_path}")
 
     def yaml_to_json(yaml_str):
-        """
-        Convert a YAML string to a JSON string.
-        """
+        """ Convert a YAML string to a JSON string """
         try:
             yaml_data = yaml.safe_load(yaml_str)
         except yaml.YAMLError as e:
@@ -66,7 +67,7 @@ class Functions:
         return json_data
 
     def json_parse(json_input, key=None):
-        """ JSON parser """
+        """ Parse JSON input """
         logging.debug("Running parser")
         json_data = json.loads(str(json_input))
         if key is None:
@@ -86,6 +87,7 @@ class Functions:
         return json_output
 
     def open_json_file(json_file):
+        """ Open json file """
         try:
             with open(json_file, 'r') as f:
                 return json.load(f)

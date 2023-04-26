@@ -15,12 +15,14 @@ class NexusRepositoryManager:
             f"{str(config.get('NEXUS', 'password'))}")
 
     def refresh_config(self):
+        """ Refresh CLI config file """
         config = Config()
         self.auth = (
             f"{str(config.get('NEXUS', 'user'))}",
             f"{str(config.get('NEXUS', 'password'))}")
 
     def check_task_state(self, id):
+        """ Check Nexus task state """
         self.refresh_config()
         response = requests.get(
             f"{self.url}/service/rest/v1/tasks/{id}",
@@ -31,6 +33,7 @@ class NexusRepositoryManager:
         return json.loads(response.text)['currentState']
 
     def get_tasks(self, task_type):
+        """ Get Nexus tasks """
         self.refresh_config()
         response = requests.get(
             f"{self.url}/service/rest/v1/tasks",
@@ -46,18 +49,22 @@ class NexusRepositoryManager:
                     return i['id']
 
     def get_backup_task(self):
+        """ Get Nexus backup task """
         logging.info("Retrieving backup task ID")
         return self.get_tasks(task_type="db.backup")
 
     def get_repair_db_task(self):
+        """ Get Nexus repair database task ID """
         logging.info("Retrieving repair DB task ID")
         return self.get_tasks(task_type="blobstore.rebuildComponentDB")
 
     def get_repair_db_date_md_task(self):
+        """ Get Nexus repair database date metadata task ID """
         logging.info("Retrieving repair DB date metadata task ID")
         return self.get_tasks(task_type="rebuild.asset.uploadMetadata")
 
     def check_task_status(self, task_id, retries=10):
+        """ Check Nexus task status """
         task_status = False
         while task_status != 'WAITING':
             for i in range(retries):
@@ -68,6 +75,7 @@ class NexusRepositoryManager:
                 time.sleep(2)
 
     def run_task(self, task_id=None):
+        """ Run Nexus task """
         if task_id:
             self.refresh_config()
             response = requests.post(
@@ -81,21 +89,25 @@ class NexusRepositoryManager:
                 exit(1)
 
     def run_backup_task(self):
+        """ Run Nexus backup task """
         task_id = self.get_backup_task()
         logging.info("Running backup task")
         self.run_task(task_id=task_id)
 
     def run_repair_db_task(self):
+        """ Run Nexus repair DB task """
         task_id = self.get_repair_db_task()
         logging.info("Running repair DB task")
         self.run_task(task_id=task_id)
 
     def run_repair_db_date_md(self):
+        """ Run Nexus repair DB date metadata task """
         task_id = self.get_repair_db_date_md_task()
         logging.info("Running repair DB date metadata task")
         self.run_task(task_id=task_id)
 
     def list_repositories(self, print_list=True):
+        """ List Nexus repositories """
         logging.info("Retrieving list of repositories")
         self.refresh_config()
         try:
@@ -114,6 +126,7 @@ class NexusRepositoryManager:
         return json.loads(response.text)
 
     def list_blob_stores(self, print_list=True):
+        """ List Nexus blob stores """
         logging.info("Retrieving list of blob stores")
         self.refresh_config()
         response = requests.get(

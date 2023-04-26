@@ -14,10 +14,12 @@ class ChatGPT:
         self.engine = "text-davinci-003"
 
     def backup_modified_file(file):
+        """ Create a backup for the modified file """
         shutil.copy2(file, file + '.bak')
         logging.info(f"Created backup of '{file}' as '{file}.bak'")
 
     def remove_first_comment(file):
+        """ Remove all comments at the head of the file """
         with open(file, 'r') as f:
             lines = f.readlines()
         with open(file, 'w') as f:
@@ -34,6 +36,7 @@ class ChatGPT:
                     f.write(line)
 
     def iterate_code_rewrite(self, file=None, iterations=0, prompt=None):
+        """ Iterate over a file with the same prompt """
         if iterations > 0 and file is not None:
             retry_count = 0
             logging.info(f"Backing up file '{file}'")
@@ -76,6 +79,7 @@ class ChatGPT:
             full_output=False,
             file=None,
             iterations=None):
+        """ Send OpenAI request """
         try:
             logging.info("Creating request to OpenAI")
             if file is not None:

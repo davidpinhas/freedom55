@@ -9,6 +9,7 @@ class TerraformCli:
         self.working_dir = working_dir
 
     def tf_init(self):
+        """ Run Terraform init """
         cmd = ["terraform", "init"]
         logging.info(
             f"Initializing Terraform in directory {self.working_dir}")
@@ -26,6 +27,7 @@ class TerraformCli:
             return e.returncode
 
     def tf_plan(self, outfile=None):
+        """ Run Terraform plan """
         cmd = ["terraform", "plan"]
         if outfile:
             cmd.extend(["-out", outfile])
@@ -44,6 +46,7 @@ class TerraformCli:
             return e.returncode
 
     def tf_apply(self, planfile):
+        """ Run Terraform apply """
         cmd = ["terraform", "apply", planfile]
         logging.info(f"Applying Terraform changes")
         try:
@@ -60,6 +63,7 @@ class TerraformCli:
             return e.returncode
 
     def tf_output(self):
+        """ Run Terraform output """
         cmd = ["terraform", "output"]
         logging.info(f"Running Terraform output")
         try:
@@ -76,6 +80,7 @@ class TerraformCli:
             return e.returncode
 
     def tf_destroy(self):
+        """ Run Terraform destroy """
         cmd = ["terraform", "destroy", "-auto-approve"]
         logging.info(f"Destroying Terraform resources")
         try:
