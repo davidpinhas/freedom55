@@ -269,7 +269,8 @@ class ArgoCD:
             file_name = f"argocd-export-{datetime.datetime.now().strftime('%d-%m-%Y')}.yaml"
             with open(f'{self.config_dir}/argocd/exports/{file_name}', 'w') as file:
                 file.write(clean_kubectl_output)
-                logging.info(f"saved ArgoCD export to file: {self.config_dir}/argocd/exports/{file_name}")
+                logging.info(
+                    f"saved ArgoCD export to file: {self.config_dir}/argocd/exports/{file_name}")
         except Exception as e:
             logging.error(
                 f"An error occurred while exporting ArgoCD server settings: {e}")
