@@ -1,6 +1,7 @@
 import requests
 import yaml
 import os
+import datetime
 from prettytable import PrettyTable
 from fd55.utils.fd55_config import Config
 from fd55.utils.functions import Functions as fn
@@ -13,6 +14,7 @@ config = Config()
 
 class ArgoCD:
     def __init__(self, api_endpoint=None, api_token=None):
+        self.config_dir = config.get_config_dir()
         self.api_endpoint = api_endpoint
         self.api_token = api_token
         self.headers = {
@@ -25,12 +27,18 @@ class ArgoCD:
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
+        if not os.path.exists(f'{self.config_dir}/argocd'):
+            os.mkdir(f'{self.config_dir}/argocd')
 
     def load_response_json(self, response):
         """ Load response as JSON """
         json_output = response.json()
         logging.debug(f"Loaded response json:\n{json_output}")
         return json_output
+
+    def check_exports_dir(self):
+        if not os.path.exists(f'{self.config_dir}/argocd/exports'):
+            os.mkdir(f'{self.config_dir}/argocd/exports')
 
     def get_applications(self):
         """ Get all ArgoCD applications """
@@ -240,6 +248,8 @@ class ArgoCD:
     def export_argocd_settings(self):
         """ Export ArgoCD server settings """
         try:
+            export_name = "argocd-export.yaml"
+            self.check_exports_dir()
             k8s_client = K8s(namespace="argocd")
             logging.info("Export started")
             kubectl_output = k8s_client.kubectl.run(
@@ -256,7 +266,10 @@ class ArgoCD:
                     "-n",
                     "argocd"])
             clean_kubectl_output = kubectl_output.stdout.strip()
-            print(clean_kubectl_output)
+            file_name = f"argocd-export-{datetime.datetime.now().strftime('%d-%m-%Y')}.yaml"
+            with open(f'{self.config_dir}/argocd/exports/{file_name}', 'w') as file:
+                file.write(clean_kubectl_output)
+                logging.info(f"saved ArgoCD export to file: {self.config_dir}/argocd/exports/{file_name}")
         except Exception as e:
             logging.error(
                 f"An error occurred while exporting ArgoCD server settings: {e}")
