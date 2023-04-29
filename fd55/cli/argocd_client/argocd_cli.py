@@ -47,8 +47,13 @@ class ArgoCD:
         """ Prompt the user to select ArgoCD export file """
         try:
             exports_dir = join(self.config_dir, 'argocd', 'exports')
-            logging.info(f"Searching for export files in direcrory '{exports_dir}'")
-            files = [f for f in listdir(exports_dir) if isfile(join(exports_dir, f))]
+            logging.info(
+                f"Searching for export files in direcrory '{exports_dir}'")
+            files = [
+                f for f in listdir(exports_dir) if isfile(
+                    join(
+                        exports_dir,
+                        f))]
             if not files:
                 raise ValueError("No export files found in directory.")
             selected_export = inquirer.select(
@@ -58,7 +63,8 @@ class ArgoCD:
             logging.info(f"Using export file: '{selected_export_file}'")
             return selected_export
         except OSError:
-            logging.error(f"Failed to access export files directory '{exports_dir}'.")
+            logging.error(
+                f"Failed to access export files directory '{exports_dir}'.")
             return None
         except ValueError as ve:
             logging.error(str(ve))
@@ -304,7 +310,8 @@ class ArgoCD:
             k8s_client = K8s(namespace="argocd")
             logging.info("Import started")
             export_file = self.select_export_file()
-            k8s_client.copy_file_to_argocd_server_pod(file=f"{self.config_dir}/argocd/exports/{export_file}")
+            k8s_client.copy_file_to_argocd_server_pod(
+                file=f"{self.config_dir}/argocd/exports/{export_file}")
             k8s_client.kubectl.run(['exec',
                                     f'{k8s_client.get_argocd_server_pod()}',
                                     '-n',
