@@ -1,7 +1,10 @@
 import requests
 import yaml
 import os
+from os import listdir
+from os.path import isfile, join
 import datetime
+from InquirerPy import inquirer
 from prettytable import PrettyTable
 from fd55.utils.fd55_config import Config
 from fd55.utils.functions import Functions as fn
@@ -39,6 +42,27 @@ class ArgoCD:
     def check_exports_dir(self):
         if not os.path.exists(f'{self.config_dir}/argocd/exports'):
             os.mkdir(f'{self.config_dir}/argocd/exports')
+
+    def select_export_file(self):
+        """ Prompt the user to select ArgoCD export file """
+        try:
+            exports_dir = join(self.config_dir, 'argocd', 'exports')
+            logging.info(f"Searching for export files in direcrory '{exports_dir}'")
+            files = [f for f in listdir(exports_dir) if isfile(join(exports_dir, f))]
+            if not files:
+                raise ValueError("No export files found in directory.")
+            selected_export = inquirer.select(
+                message='Select an export file:',
+                choices=files).execute()
+            selected_export_file = join(exports_dir, selected_export)
+            logging.info(f"Using export file: '{selected_export_file}'")
+            return selected_export
+        except OSError:
+            logging.error(f"Failed to access export files directory '{exports_dir}'.")
+            return None
+        except ValueError as ve:
+            logging.error(str(ve))
+            return None
 
     def get_applications(self):
         """ Get all ArgoCD applications """
@@ -248,7 +272,6 @@ class ArgoCD:
     def export_argocd_settings(self):
         """ Export ArgoCD server settings """
         try:
-            export_name = "argocd-export.yaml"
             self.check_exports_dir()
             k8s_client = K8s(namespace="argocd")
             logging.info("Export started")
@@ -275,12 +298,13 @@ class ArgoCD:
             logging.error(
                 f"An error occurred while exporting ArgoCD server settings: {e}")
 
-    def import_argocd_settings(self, file):
+    def import_argocd_settings(self):
         """ Import ArgoCD server settings """
         try:
             k8s_client = K8s(namespace="argocd")
             logging.info("Import started")
-            k8s_client.copy_file_to_argocd_server_pod(file=file)
+            export_file = self.select_export_file()
+            k8s_client.copy_file_to_argocd_server_pod(file=f"{self.config_dir}/argocd/exports/{export_file}")
             k8s_client.kubectl.run(['exec',
                                     f'{k8s_client.get_argocd_server_pod()}',
                                     '-n',
@@ -289,7 +313,7 @@ class ArgoCD:
                                     'argocd',
                                     'admin',
                                     'import',
-                                    f'/tmp/{file}',
+                                    f'/tmp/{export_file}',
                                     '-n',
                                     'argocd'])
             logging.info("Import finished")

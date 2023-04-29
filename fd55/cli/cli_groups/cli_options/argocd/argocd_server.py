@@ -23,9 +23,8 @@ def export(ctx):
 
 
 @server.command(name='import', help_priority=2)
-@click.option('-f', '--file', help="ArgoCD backup file", required=True)
 @click.pass_context
-def import_command(ctx, file):
+def import_command(ctx):
     """ Import ArgoCD server settings """
     from fd55.cli.argocd_client.argocd_cli import ArgoCD
     from fd55.utils.fd55_config import Config
@@ -33,7 +32,7 @@ def import_command(ctx, file):
     argo = ArgoCD(
         api_endpoint=f"{config.get('ARGOCD', 'url')}",
         api_token=f"{str(config.get('ARGOCD', 'api_token'))}")
-    argo.import_argocd_settings(file=file)
+    argo.import_argocd_settings()
 
 
 @server.command(help_priority=3)
