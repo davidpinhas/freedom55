@@ -19,7 +19,8 @@ def encrypt(ctx, input_file, output_file, encrypted_regex, key_file, in_place):
     """ Encrypt file using SOPS with Age encryption """
     from fd55.cli.sops_client.sops_cli import Sops
     if in_place and output_file:
-        raise click.UsageError("Cannot specify both --in-place and --output-file")
+        raise click.UsageError(
+            "Cannot specify both --in-place and --output-file")
     if in_place:
         output_file = input_file
     Sops.encrypt(
@@ -28,6 +29,7 @@ def encrypt(ctx, input_file, output_file, encrypted_regex, key_file, in_place):
         encrypted_regex=encrypted_regex,
         key_file=key_file,
         in_place=in_place)
+
 
 @sops.command()
 @click.option('-i', '--input-file', help='file to decrypt', required=True)
@@ -39,7 +41,8 @@ def decrypt(ctx, input_file, output_file, in_place, key_file=None):
     """ Decrypt file using SOPS with Age encryption """
     from fd55.cli.sops_client.sops_cli import Sops
     if in_place and output_file:
-        raise click.UsageError("Cannot specify both --in-place and --output-file")
+        raise click.UsageError(
+            "Cannot specify both --in-place and --output-file")
     if in_place and output_file is None:
         output_file = input_file
     Sops.decrypt(

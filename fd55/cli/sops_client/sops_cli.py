@@ -49,7 +49,12 @@ class Sops:
             exit()
         return key_id
 
-    def encrypt(input_file, output_file, encrypted_regex=None, key_file=None, in_place=False):
+    def encrypt(
+            input_file,
+            output_file,
+            encrypted_regex=None,
+            key_file=None,
+            in_place=False):
         """ Encrypt file with SOPS using Age """
         logging.info("Encrypting file with SOPS")
         key_id = Sops.verify_key_file(key_file=key_file)
@@ -58,29 +63,58 @@ class Sops:
         logging.debug(f"Using key ID - {key_id}")
         if not encrypted_regex:
             if in_place:
-                cmd = ['sops', '--encrypt', '--age', key_id, '--in-place', input_file]
+                cmd = [
+                    'sops',
+                    '--encrypt',
+                    '--age',
+                    key_id,
+                    '--in-place',
+                    input_file]
             else:
                 cmd = ['sops', '--encrypt', '--age', key_id,
                        '--output', output_file, input_file]
             logging.debug(f"Running the command - {cmd}")
-            proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            proc = subprocess.run(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
             if proc.returncode != 0:
-                logging.error(f'Error encrypting file {input_file}: {proc.stderr.decode()}')
+                logging.error(
+                    f'Error encrypting file {input_file}: {proc.stderr.decode()}')
                 exit()
             if in_place:
                 output_file = input_file
         else:
             logging.info(f"Using regex: {encrypted_regex}")
             if in_place:
-                cmd = ['sops', '--encrypt', '--age', key_id, '--encrypted-regex',
-                       f'{encrypted_regex}', '--in-place', input_file]
+                cmd = [
+                    'sops',
+                    '--encrypt',
+                    '--age',
+                    key_id,
+                    '--encrypted-regex',
+                    f'{encrypted_regex}',
+                    '--in-place',
+                    input_file]
             else:
-                cmd = ['sops', '--encrypt', '--age', key_id, '--encrypted-regex',
-                       f'{encrypted_regex}', '--output', output_file, input_file]
+                cmd = [
+                    'sops',
+                    '--encrypt',
+                    '--age',
+                    key_id,
+                    '--encrypted-regex',
+                    f'{encrypted_regex}',
+                    '--output',
+                    output_file,
+                    input_file]
             logging.debug(f"Running the command - {cmd}")
-            proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            proc = subprocess.run(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
             if proc.returncode != 0:
-                logging.error(f'Error encrypting file {input_file}: {proc.stderr.decode()}')
+                logging.error(
+                    f'Error encrypting file {input_file}: {proc.stderr.decode()}')
                 exit()
             if in_place:
                 output_file = input_file
@@ -110,8 +144,12 @@ class Sops:
             cmd.extend(['--output', output_file])
 
         logging.debug(f"Running the command - {cmd}")
-        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        proc = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
         if proc.returncode != 0:
-            logging.error(f'Error decrypting file "{input_file}" with sops: {proc.stderr.decode()}')
+            logging.error(
+                f'Error decrypting file "{input_file}" with sops: {proc.stderr.decode()}')
             exit()
         logging.info(f"Finished decrypting {input_file}")
