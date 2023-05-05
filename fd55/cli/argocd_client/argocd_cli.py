@@ -75,8 +75,9 @@ class ArgoCD:
         try:
             k8s_client = K8s(namespace="argocd")
             logging.info("Cleaning ArgoCD server /tmp directory")
-            k8s_client.kubectl.run(f" exec -it {k8s_client.get_argocd_server_pod()} -n argocd -- sh -c 'rm /tmp/*'",
-                                   shell=True)
+            k8s_client.kubectl.run(
+                f" exec -it {k8s_client.get_argocd_server_pod()} -n argocd -- sh -c 'rm /tmp/*'",
+                shell=True)
         except Exception as e:
             logging.error(
                 f"An error occurred while cleaning /tmp directory: {e}")
