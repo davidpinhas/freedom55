@@ -99,6 +99,7 @@ class Oci:
                 key_id=OciValidator.set_config()["key_id"],
                 key_version_id=OciValidator.set_config()["key_version_id"]))
         data = fn.base64_decode(decrypt_response)
+        data = data.replace('\\\\', '\\')
         logging.info(f"Decrypted string - {data}")
 
     def list_kms_vaults(id=None):
