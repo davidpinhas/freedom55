@@ -70,6 +70,17 @@ class ArgoCD:
             logging.error(str(ve))
             return None
 
+    def clean_argo_server_tmp_dir(self):
+        """ Clean ArgoCD server tmp directory """
+        try:
+            k8s_client = K8s(namespace="argocd")
+            logging.info("Cleaning ArgoCD server /tmp directory")
+            k8s_client.kubectl.run(f" exec -it {k8s_client.get_argocd_server_pod()} -n argocd -- sh -c 'rm /tmp/*'",
+                                   shell=True)
+        except Exception as e:
+            logging.error(
+                f"An error occurred while cleaning /tmp directory: {e}")
+
     def get_applications(self):
         """ Get all ArgoCD applications """
         logging.info("Retrieving ArgoCD applications")
@@ -324,6 +335,7 @@ class ArgoCD:
                                     '-n',
                                     'argocd'])
             logging.info("Import finished")
+            self.clean_argo_server_tmp_dir()
         except Exception as e:
             logging.error(
                 f"An error occurred while importing ArgoCD server settings: {e}")

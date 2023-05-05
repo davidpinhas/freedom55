@@ -17,7 +17,8 @@ class Kubectl:
                     shell=True,
                     capture_output=True,
                     text=True,
-                    universal_newlines=True)
+                    universal_newlines=True,
+                    check=True)
                 lines = proc.stdout.split("\n")
                 for line in lines:
                     if line:
