@@ -23,7 +23,8 @@ class TerraformCli:
             fn.log_process_output(proc)
             proc.communicate()
             if proc.returncode != 0:
-                logging.error(f"Terraform init failed with exit code {proc.returncode}")
+                logging.error(
+                    f"Terraform init failed with exit code {proc.returncode}")
             return proc.returncode
         except subprocess.CalledProcessError as e:
             logging.error(e.stderr)
@@ -45,7 +46,8 @@ class TerraformCli:
             fn.log_process_output(proc)
             proc.communicate()
             if proc.returncode != 0:
-                logging.error(f"Terraform plan failed with exit code {proc.returncode}")
+                logging.error(
+                    f"Terraform plan failed with exit code {proc.returncode}")
             return proc.returncode
         except subprocess.CalledProcessError as e:
             logging.error(e.stderr)
@@ -65,7 +67,8 @@ class TerraformCli:
             fn.log_process_output(proc)
             proc.communicate()
             if proc.returncode != 0:
-                logging.error(f"Terraform apply failed with exit code {proc.returncode}")
+                logging.error(
+                    f"Terraform apply failed with exit code {proc.returncode}")
             return proc.returncode
         except subprocess.CalledProcessError as e:
             logging.error(e.stderr)
@@ -85,7 +88,8 @@ class TerraformCli:
             fn.log_process_output(proc)
             proc.communicate()
             if proc.returncode != 0:
-                logging.error(f"Terraform destroy failed with exit code {proc.returncode}")
+                logging.error(
+                    f"Terraform destroy failed with exit code {proc.returncode}")
             return proc.returncode
         except subprocess.CalledProcessError as e:
             logging.error(e.stderr)
@@ -105,7 +109,8 @@ class TerraformCli:
             fn.log_process_output(proc)
             output, _ = proc.communicate()
             if proc.returncode != 0:
-                logging.error(f"Failed to retrieve Terraform output '{output_name}'")
+                logging.error(
+                    f"Failed to retrieve Terraform output '{output_name}'")
                 return None
             else:
                 return output.strip()
