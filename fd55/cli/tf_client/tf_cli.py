@@ -1,6 +1,6 @@
 import subprocess
 import logging
-
+from fd55.utils.functions import Functions as fn
 logger = logging.getLogger()
 
 
@@ -14,14 +14,17 @@ class TerraformCli:
         logging.info(
             f"Initializing Terraform in directory {self.working_dir}")
         try:
-            result = subprocess.run(
+            proc = subprocess.Popen(
                 cmd,
                 cwd=self.working_dir,
-                check=True,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True)
-            logging.debug(result.stdout)
-            return 0
+            fn.log_process_output(proc)
+            proc.communicate()
+            if proc.returncode != 0:
+                logging.error(f"Terraform init failed with exit code {proc.returncode}")
+            return proc.returncode
         except subprocess.CalledProcessError as e:
             logging.error(e.stderr)
             return e.returncode
@@ -33,14 +36,17 @@ class TerraformCli:
             cmd.extend(["-out", outfile])
         logging.info(f"Running Terraform plan")
         try:
-            result = subprocess.run(
+            proc = subprocess.Popen(
                 cmd,
                 cwd=self.working_dir,
-                check=True,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True)
-            logging.debug(result.stdout)
-            return 0
+            fn.log_process_output(proc)
+            proc.communicate()
+            if proc.returncode != 0:
+                logging.error(f"Terraform plan failed with exit code {proc.returncode}")
+            return proc.returncode
         except subprocess.CalledProcessError as e:
             logging.error(e.stderr)
             return e.returncode
@@ -50,31 +56,17 @@ class TerraformCli:
         cmd = ["terraform", "apply", planfile]
         logging.info(f"Applying Terraform changes")
         try:
-            result = subprocess.run(
+            proc = subprocess.Popen(
                 cmd,
                 cwd=self.working_dir,
-                check=True,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True)
-            logging.debug(result.stdout)
-            return 0
-        except subprocess.CalledProcessError as e:
-            logging.error(e.stderr)
-            return e.returncode
-
-    def tf_output(self):
-        """ Run Terraform output """
-        cmd = ["terraform", "output"]
-        logging.info(f"Running Terraform output")
-        try:
-            result = subprocess.run(
-                cmd,
-                cwd=self.working_dir,
-                check=True,
-                capture_output=True,
-                text=True)
-            logging.info(f"Terraform output result:\n{result.stdout}")
-            return result.stdout
+            fn.log_process_output(proc)
+            proc.communicate()
+            if proc.returncode != 0:
+                logging.error(f"Terraform apply failed with exit code {proc.returncode}")
+            return proc.returncode
         except subprocess.CalledProcessError as e:
             logging.error(e.stderr)
             return e.returncode
@@ -82,16 +74,41 @@ class TerraformCli:
     def tf_destroy(self):
         """ Run Terraform destroy """
         cmd = ["terraform", "destroy", "-auto-approve"]
-        logging.info(f"Destroying Terraform resources")
+        logging.info(f"Destroying Terraform infrastructure")
         try:
-            result = subprocess.run(
+            proc = subprocess.Popen(
                 cmd,
                 cwd=self.working_dir,
-                check=True,
-                capture_output=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True)
-            logging.debug(result.stdout)
-            return 0
+            fn.log_process_output(proc)
+            proc.communicate()
+            if proc.returncode != 0:
+                logging.error(f"Terraform destroy failed with exit code {proc.returncode}")
+            return proc.returncode
         except subprocess.CalledProcessError as e:
             logging.error(e.stderr)
             return e.returncode
+
+    def tf_output(self, output_name):
+        """ Get the output of a Terraform variable """
+        cmd = ["terraform", "output", output_name]
+        logging.info(f"Retrieving Terraform output '{output_name}'")
+        try:
+            proc = subprocess.Popen(
+                cmd,
+                cwd=self.working_dir,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True)
+            fn.log_process_output(proc)
+            output, _ = proc.communicate()
+            if proc.returncode != 0:
+                logging.error(f"Failed to retrieve Terraform output '{output_name}'")
+                return None
+            else:
+                return output.strip()
+        except subprocess.CalledProcessError as e:
+            logging.error(e.stderr)
+            return None

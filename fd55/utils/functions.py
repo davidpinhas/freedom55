@@ -15,6 +15,11 @@ class Functions:
             format='%(asctime)s|%(levelname)s|%(message)s')
         return logger
 
+    def log_process_output(process):
+        """ Logs subprocess output line by line """
+        for line in process.stdout:
+            logging.info(line.strip())
+
     def file_exists(filename):
         """ Check file exists """
         return os.path.exists(filename)
