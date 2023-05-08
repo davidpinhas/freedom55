@@ -95,10 +95,10 @@ class TerraformCli:
             logging.error(e.stderr)
             return e.returncode
 
-    def tf_output(self, output_name):
+    def tf_output(self):
         """ Get the output of a Terraform variable """
-        cmd = ["terraform", "output", output_name]
-        logging.info(f"Retrieving Terraform output '{output_name}'")
+        cmd = ["terraform", "output"]
+        logging.info(f"Retrieving Terraform output")
         try:
             proc = subprocess.Popen(
                 cmd,
@@ -110,7 +110,7 @@ class TerraformCli:
             output, _ = proc.communicate()
             if proc.returncode != 0:
                 logging.error(
-                    f"Failed to retrieve Terraform output '{output_name}'")
+                    f"Failed to retrieve Terraform output")
                 return None
             else:
                 return output.strip()
