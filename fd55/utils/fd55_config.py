@@ -22,9 +22,9 @@ class Config:
     nexus_key_list = ["url", "user", "password"]
     argo_key_list = ["url", "api_token"]
     sops_key_list = ["key_file"]
-    tf_key_list = []
-    cf_key_list = ['email', 'api_key', 'global_api_key', 'domain_name']
-    ai_key_list = ['api_key']
+    tf_key_list = ["path"]
+    cf_key_list = ["email", "api_key", "global_api_key", "domain_name"]
+    ai_key_list = ["api_key"]
     all_lists = [
         oci_key_list,
         nexus_key_list,
