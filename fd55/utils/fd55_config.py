@@ -18,7 +18,7 @@ component_list = [
 
 
 class Config:
-    oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file"]
+    oci_key_list = ["user", "fingerprint", "tenancy", "region", "key_file", "ssh_key_file"]
     nexus_key_list = ["url", "user", "password"]
     argo_key_list = ["url", "api_token"]
     sops_key_list = ["key_file"]
