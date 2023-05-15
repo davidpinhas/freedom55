@@ -46,5 +46,6 @@ setup(
         "kubernetes",
         "CloudFlare",
         "tabulate",
-        "openai"],
+        "openai",
+        "colorlog"],
 )

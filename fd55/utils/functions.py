@@ -3,16 +3,32 @@ import yaml
 import base64
 import logging
 import os
+import colorlog
 import requests
 logger = logging.getLogger()
 
 
 class Functions:
     """ CLI functions """
+
     def set_logger(verbosity):
-        logger = logging.basicConfig(
-            level=verbosity,
-            format='%(asctime)s|%(levelname)s|%(message)s')
+        log_colors = {
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red',
+        }
+        logger = logging.getLogger()
+        logger.setLevel(verbosity)
+        formatter = colorlog.ColoredFormatter(
+            fmt='%(asctime)s|%(log_color)s%(levelname)s%(reset)s|%(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S',
+            log_colors=log_colors
+        )
+        handler = logging.StreamHandler()
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
         return logger
 
     def log_process_output(process):
