@@ -95,7 +95,7 @@ class TerraformCli:
             logging.error(e.stderr)
             return e.returncode
 
-    def tf_output(self):
+    def tf_output(self, output_logs=True):
         """ Get the output of a Terraform variable """
         cmd = ["terraform", "output"]
         logging.info(f"Retrieving Terraform output")
@@ -106,7 +106,8 @@ class TerraformCli:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True)
-            fn.log_process_output(proc)
+            if output_logs:
+                fn.log_process_output(proc)
             output, _ = proc.communicate()
             if proc.returncode != 0:
                 logging.error(
