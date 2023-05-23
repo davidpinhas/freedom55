@@ -37,12 +37,19 @@ class ArgoCD:
     def find_latest_import_file(self):
         import_files = []
         for filename in os.listdir(f'{self.config_dir}/argocd/exports'):
-            if filename.startswith("argocd-export-") and filename.endswith(".yaml"):
+            if filename.startswith(
+                    "argocd-export-") and filename.endswith(".yaml"):
                 import_files.append(filename)
         if not import_files:
             return None
         date_pattern = r"\d{2}-\d{2}-\d{4}"
-        latest_file = max(import_files, key=lambda f: datetime.datetime.strptime(re.search(date_pattern, f).group(), "%d-%m-%Y"))
+        latest_file = max(
+            import_files,
+            key=lambda f: datetime.datetime.strptime(
+                re.search(
+                    date_pattern,
+                    f).group(),
+                "%d-%m-%Y"))
         logging.info(f"Using latest ArgoCD export: {latest_file}")
         return latest_file
 
