@@ -1,6 +1,7 @@
 import requests
 import yaml
 import os
+import re
 from os import listdir
 from os.path import isfile, join
 import datetime
@@ -32,6 +33,18 @@ class ArgoCD:
             }
         if not os.path.exists(f'{self.config_dir}/argocd'):
             os.mkdir(f'{self.config_dir}/argocd')
+
+    def find_latest_import_file(self):
+        import_files = []
+        for filename in os.listdir(f'{self.config_dir}/argocd/exports'):
+            if filename.startswith("argocd-export-") and filename.endswith(".yaml"):
+                import_files.append(filename)
+        if not import_files:
+            return None
+        date_pattern = r"\d{2}-\d{2}-\d{4}"
+        latest_file = max(import_files, key=lambda f: datetime.datetime.strptime(re.search(date_pattern, f).group(), "%d-%m-%Y"))
+        logging.info(f"Using latest ArgoCD export: {latest_file}")
+        return latest_file
 
     def load_response_json(self, response):
         """ Load response as JSON """
@@ -316,14 +329,18 @@ class ArgoCD:
             logging.error(
                 f"An error occurred while exporting ArgoCD server settings: {e}")
 
-    def import_argocd_settings(self):
+    def import_argocd_settings(self, backup=None):
         """ Import ArgoCD server settings """
         try:
             k8s_client = K8s(namespace="argocd")
             logging.info("Import started")
-            export_file = self.select_export_file()
+            if backup:
+                export_file = self.find_latest_import_file()
+                export_file_basename = os.path.basename(export_file)
+            else:
+                export_file_basename = self.select_export_file()
             k8s_client.copy_file_to_argocd_server_pod(
-                file=f"{self.config_dir}/argocd/exports/{export_file}")
+                file=f"{self.config_dir}/argocd/exports/{export_file_basename}")
             k8s_client.kubectl.run(['exec',
                                     f'{k8s_client.get_argocd_server_pod()}',
                                     '-n',
@@ -332,7 +349,7 @@ class ArgoCD:
                                     'argocd',
                                     'admin',
                                     'import',
-                                    f'/tmp/{export_file}',
+                                    f'/tmp/{export_file_basename}',
                                     '-n',
                                     'argocd'])
             logging.info("Import finished")
