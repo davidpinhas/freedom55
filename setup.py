@@ -12,7 +12,7 @@ setup(
     license="MIT",
     author="Dave Pinhas",
     author_email="davepinhas89@gmail.com",
-    url="ssh://git@github.com:davidpinhas/freedom55.git",
+    url="https://github.com/davidpinhas/freedom55.git",
     classifiers=["Programming Language :: Python :: 3.10"],
     packages=[
         "fd55/cli/cli_groups",

@@ -6,28 +6,6 @@ on:
       - master
 
 jobs:
-  # cli-tests:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Set up Python 3.11
-  #       uses: actions/setup-python@v3
-  #       with:
-  #         python-version: 3.11
-  #     - name: Python Unittest
-  #       run: |
-  #         sudo apt update
-  #         sudo apt install age -y
-  #         echo "${{ secrets.OCI_KEY}}" > oci.key
-  #         pip install --upgrade pip
-  #         python3.11 -m venv freedom55-venv
-  #         source freedom55-venv/bin/activate
-  #         pip3 install -r requirements.txt
-  #         bash tests/run_tests.sh --oci-user "${{ secrets.OCI_USER}}" --oci-fingerprint "${{ secrets.OCI_FINGERPRINT}}" --oci-tenancy "${{ secrets.OCI_TENANCY}}" --oci-region "${{ secrets.OCI_REGION}}" --oci-key-file "oci.key" --oci-vault "${{ secrets.OCI_VAULT}}" --argocd-url "${{ secrets.ARGO_URL}}" --argocd-token "${{ secrets.ARGO_TOKEN}}" --cloudflare-email "${{ secrets.CLOUDFLARE_EMAIL}}" --cloudflare-api-key "${{ secrets.CLOUDFLARE_API_KEY}}" --cloudflare-domain "${{ secrets.CLOUDFLARE_DOMAIN}}"
-  #     - name: Verify tests
-  #       if: env.TEST_RESULTS != 'true'
-  #       run: exit 1
-
   update-version:
     runs-on: ubuntu-latest
     steps:
@@ -75,7 +53,7 @@ jobs:
         echo "New CLI version: $(cat fd55/cli/fd55.py | grep 'version=')"
         git commit -m "Update version to $NEW_VERSION"
         git push origin
-    # needs: [cli-tests]
+    needs: []
 
   build-publish:
     runs-on: ubuntu-latest
@@ -88,28 +66,13 @@ jobs:
     - name: Install dependencies
       run: |
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
-        wget -qO - https://releases.jfrog.io/artifactory/jfrog-gpg-public/jfrog_public_gpg.key | sudo apt-key add -
-        echo "deb https://releases.jfrog.io/artifactory/jfrog-debs xenial contrib" | sudo tee -a /etc/apt/sources.list && sudo apt update
-        sudo apt install -y jfrog-cli-v2-jf && jf intro
-        jf c add artifactory --url ${{ secrets.ARTIFACTORY_URL }} --user ${{ secrets.USERNAME }} --password ${{ secrets.PASSWORD}} --interactive=false
-        jf pip-config --server-id-resolve=artifactory --repo-resolve=pypi
-        jf pip install -r requirements.txt --build-name fd55-build --build-number ${CURRENT_VERSION} --no-cache-dir --force-reinstall
-        pip3 install -r requirements.txt
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
     - name: Build package
-      run: python3 -m build
-    - name: Deploy package to Artifactory
+      run: python -m build
+    - name: Publish package to Azure Artifacts
       run: |
         CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
-        jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}-py3-none-any.whl ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}-py3-none-any.whl --build-name fd55-build --build-number ${CURRENT_VERSION}
-        jf rt u --url ${{ secrets.JF_URL }} --password ${{ secrets.PASSWORD}} --user ${{ secrets.USERNAME }} dist/fd55-${CURRENT_VERSION}.tar.gz ${{ secrets.REPO }}/fd55/${CURRENT_VERSION}/fd55-${CURRENT_VERSION}.tar.gz --build-name fd55-build --build-number ${CURRENT_VERSION}
-    - name: Publish build info
-      run: |
-        CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
-        jf rt bag fd55-build ${CURRENT_VERSION}
-        jf rt bp fd55-build ${CURRENT_VERSION}
-    - name: Scan published build
-      run: |
-        CURRENT_VERSION=$(grep "version=" setup.py | cut -d '"' -f2)
-        jf bs fd55-build ${CURRENT_VERSION} --server-id=artifactory
+        python -m pip install twine
+        twine upload --repository-url ${{ secrets.PYPI_URL }} --username ${{ secrets.USERNAME }} --password ${{ secrets.PYPI_PASSWORD }} dist/*
     needs: [update-version]
-
