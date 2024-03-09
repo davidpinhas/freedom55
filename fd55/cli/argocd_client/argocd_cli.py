@@ -201,7 +201,7 @@ class ArgoCD:
             logging.error(
                 f'Encountered error deleting ArgoCD application:\n{response.text}')
 
-    def list_repositories(self):
+    def list_repositories(self, silent=False):
         """ List all repositories """
         table = PrettyTable()
         try:
@@ -228,7 +228,9 @@ class ArgoCD:
                 obj['connectionState']['status'],
                 obj['type']]
             table.add_row(row)
-        print(table)
+        if not silent:
+            print(table)
+        return argo_repos
 
     def add_repo(self, repo_url, username=None, password=None, name=None):
         """ Add repository """
