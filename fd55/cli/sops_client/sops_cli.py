@@ -81,7 +81,7 @@ class Sops:
         target_file = output_file if output_file and not in_place else input_file
         logging.info(f"Finished encrypting {target_file} file")
 
-    def decrypt(input_file, output_file=None, key_file=None, in_place=False):
+    def decrypt(input_file, output_file=None, key_file=None, in_place=False, silent=False):
         """Decrypt file with SOPS using Age."""
         key_id = Sops.verify_key_file(key_file=key_file)
         if not key_file:
@@ -105,5 +105,6 @@ class Sops:
         if output_specified:
             logging.info(f"Finished decrypting {input_file}")
         else:
-            print(proc.stdout)
-            return proc.stdout
+            if silent is False:
+                print(proc.stdout)
+        return proc.stdout
