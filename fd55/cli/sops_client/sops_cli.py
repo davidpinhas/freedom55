@@ -49,7 +49,12 @@ class Sops:
             exit()
         return key_id
 
-    def encrypt(input_file, output_file=None, encrypted_regex=None, key_file=None, in_place=False):
+    def encrypt(
+            input_file,
+            output_file=None,
+            encrypted_regex=None,
+            key_file=None,
+            in_place=False):
         """Encrypt file with SOPS using Age."""
         logging.info("Encrypting file with SOPS")
         key_id = Sops.verify_key_file(key_file=key_file)
@@ -64,9 +69,14 @@ class Sops:
             cmd.extend(['--output', output_file])
         cmd.append(input_file)
         logging.debug(f"Running the command - {cmd}")
-        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        proc = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True)
         if proc.returncode != 0:
-            logging.error(f'Error encrypting file {input_file}: {proc.stderr.decode()}')
+            logging.error(
+                f'Error encrypting file {input_file}: {proc.stderr.decode()}')
             exit()
         target_file = output_file if output_file and not in_place else input_file
         logging.info(f"Finished encrypting {target_file} file")
@@ -83,9 +93,14 @@ class Sops:
         elif output_file:
             cmd.extend(['--output', output_file])
         cmd.append(input_file)
-        proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        proc = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True)
         if proc.returncode != 0:
-            logging.error(f'Error decrypting file "{input_file}" with sops: {proc.stderr.decode()}')
+            logging.error(
+                f'Error decrypting file "{input_file}" with sops: {proc.stderr.decode()}')
             exit()
         if output_specified:
             logging.info(f"Finished decrypting {input_file}")
