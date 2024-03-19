@@ -6,7 +6,6 @@ from fd55.cli.cli_groups.integration_argocd import argo
 from fd55.cli.cli_groups.integration_cli_config import config
 from fd55.cli.cli_groups.integration_cloudflare import cf
 from fd55.cli.cli_groups.integration_ai import ai
-from fd55.cli.cli_groups.integration_nexus import nexus
 
 
 @click.group()
@@ -40,7 +39,6 @@ def main(ctx, verbosity):
 
 
 main.add_command(oci)
-main.add_command(nexus)
 main.add_command(sops)
 main.add_command(tf)
 main.add_command(argo)
