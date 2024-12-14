@@ -163,6 +163,7 @@ class Oci:
             id=None,
             **kwargs
         )
+        return json.loads(str(nat_gateway_list.data))
 
     def list_lb_nsg(id=None):
         """ List load balancer NSG """
