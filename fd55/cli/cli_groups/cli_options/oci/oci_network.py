@@ -118,6 +118,7 @@ def update_nsg_rule(
         udp_source_min=udp_source_min,
         udp_source_max=udp_source_max)
 
+
 @network.command(help_priority=4)
 @click.option('--id', help="Display vaults IDs", is_flag=True)
 @click.pass_context
@@ -128,6 +129,7 @@ def list_lb(ctx, id):
         Oci.list_lb(id=True)
     else:
         Oci.list_lb()
+
 
 @network.command(help_priority=5)
 @click.pass_context

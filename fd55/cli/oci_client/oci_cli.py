@@ -40,7 +40,8 @@ class Oci:
             for display_name, field_name in kwargs.items():
                 value = obj.get(field_name, 'N/A')
                 if field_name == 'ip_addresses' and isinstance(value, list):
-                    public_ips = [ip['ip_address'] for ip in value if ip.get('is_public')]
+                    public_ips = [ip['ip_address']
+                                  for ip in value if ip.get('is_public')]
                     value = ', '.join(public_ips) if public_ips else 'N/A'
 
                 default_field_names.append(display_name)
@@ -141,7 +142,8 @@ class Oci:
         """ List load balancers """
         kwargs = {'Public IP': 'ip_addresses'}
         lb_client = OciValidator.set_lb_client()
-        lb_list = lb_client.list_network_load_balancers(compartment_id=OciValidator.set_config()["tenancy"])
+        lb_list = lb_client.list_network_load_balancers(
+            compartment_id=OciValidator.set_config()["tenancy"])
         Oci.oci_data_table(
             object_list=lb_list,
             items=True,
@@ -153,7 +155,8 @@ class Oci:
         """List NAT Gateways."""
         kwargs = {'NAT IP': 'nat_ip'}
         vn_client = OciValidator.set_virtual_network_client()
-        nat_gateway_list = vn_client.list_nat_gateways(OciValidator.set_config()["tenancy"])
+        nat_gateway_list = vn_client.list_nat_gateways(
+            OciValidator.set_config()["tenancy"])
         Oci.oci_data_table(
             object_list=nat_gateway_list,
             items=True,
