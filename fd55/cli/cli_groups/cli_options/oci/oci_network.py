@@ -4,12 +4,12 @@ from fd55.utils.cli_help_order import CliHelpOrder
 
 @click.group(cls=CliHelpOrder)
 @click.pass_context
-def waf(ctx):
+def network(ctx):
     """ OCI firewall related commands """
     ctx.ensure_object(dict)
 
 
-@waf.command(help_priority=1)
+@network.command(help_priority=1)
 @click.option('--id', help="Set the description", is_flag=True)
 @click.pass_context
 def list_nsg(ctx, id=None):
@@ -21,7 +21,7 @@ def list_nsg(ctx, id=None):
         Oci.list_lb_nsg()
 
 
-@waf.command(help_priority=2)
+@network.command(help_priority=2)
 @click.option('--id', help="Set network security group ID", required=True)
 @click.pass_context
 def list_nsg_rules(ctx, id=None):
@@ -30,7 +30,7 @@ def list_nsg_rules(ctx, id=None):
     Oci.list_lb_nsg_rules(id=id)
 
 
-@waf.command(help_priority=3)
+@network.command(help_priority=3)
 @click.option('--id', help="Set NSG ID", required=True)
 @click.option('--rule-id', help="Set NSG rule ID", required=True)
 @click.option('--protocol', help="Set the protocol", required=True)
@@ -117,3 +117,21 @@ def update_nsg_rule(
         udp_destination_max=udp_destination_max,
         udp_source_min=udp_source_min,
         udp_source_max=udp_source_max)
+
+@network.command(help_priority=4)
+@click.option('--id', help="Display vaults IDs", is_flag=True)
+@click.pass_context
+def list_lb(ctx, id):
+    """ List load balancers """
+    from fd55.cli.oci_client.oci_cli import Oci
+    if id:
+        Oci.list_lb(id=True)
+    else:
+        Oci.list_lb()
+
+@network.command(help_priority=5)
+@click.pass_context
+def list_nat(ctx):
+    """ List NAT gateways """
+    from fd55.cli.oci_client.oci_cli import Oci
+    Oci.list_nat_gateways()

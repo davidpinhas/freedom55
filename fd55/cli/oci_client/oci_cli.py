@@ -29,32 +29,27 @@ class Oci:
         table = PrettyTable()
         new_data = json.loads(str(object_list.data))
         object_items = new_data
-        default_row = []
-        if items:
+        if isinstance(new_data, dict) and 'items' in new_data:
             object_items = new_data['items']
         for obj in object_items:
-            data = obj
-            if kwargs:
-                for key, value in kwargs.items():
-                    for inner_key, inner_value in value.items():
-                        default_field_names.append(str(inner_key))
-                        default_row = [
-                            data['display_name'],
-                            data['lifecycle_state'],
-                            data['time_created']]
-                        for ip in data[inner_value]:
-                            if ip['is_public']:
-                                default_row.append(ip['ip_address'])
-            else:
-                default_field_names = ['Name', 'State', 'Time Created']
-                default_row = [
-                    data['display_name'],
-                    data['lifecycle_state'],
-                    data['time_created']]
+            default_row = [
+                obj.get('display_name', 'N/A'),
+                obj.get('lifecycle_state', 'N/A'),
+                obj.get('time_created', 'N/A')
+            ]
+            for display_name, field_name in kwargs.items():
+                value = obj.get(field_name, 'N/A')
+                if field_name == 'ip_addresses' and isinstance(value, list):
+                    public_ips = [ip['ip_address'] for ip in value if ip.get('is_public')]
+                    value = ', '.join(public_ips) if public_ips else 'N/A'
+
+                default_field_names.append(display_name)
+                default_row.append(value)
             if id:
                 default_field_names.append('ID')
-                default_row.append(data['id'])
-            table.field_names = default_field_names
+                default_row.append(obj.get('id', 'N/A'))
+            if not table.field_names:
+                table.field_names = default_field_names
             table.add_row(default_row)
         print(table)
 
@@ -146,13 +141,25 @@ class Oci:
         """ List load balancers """
         kwargs = {'Public IP': 'ip_addresses'}
         lb_client = OciValidator.set_lb_client()
-        lb_list = lb_client.list_network_load_balancers(
-            compartment_id=OciValidator.set_config()["tenancy"])
+        lb_list = lb_client.list_network_load_balancers(compartment_id=OciValidator.set_config()["tenancy"])
         Oci.oci_data_table(
             object_list=lb_list,
             items=True,
             id=id,
-            kwargs=kwargs)
+            **kwargs
+        )
+
+    def list_nat_gateways():
+        """List NAT Gateways."""
+        kwargs = {'NAT IP': 'nat_ip'}
+        vn_client = OciValidator.set_virtual_network_client()
+        nat_gateway_list = vn_client.list_nat_gateways(OciValidator.set_config()["tenancy"])
+        Oci.oci_data_table(
+            object_list=nat_gateway_list,
+            items=True,
+            id=None,
+            **kwargs
+        )
 
     def list_lb_nsg(id=None):
         """ List load balancer NSG """

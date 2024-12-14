@@ -1,5 +1,5 @@
 import click
-from fd55.cli.cli_groups.cli_options.oci import oci_kms, oci_vault, oci_lb, oci_waf
+from fd55.cli.cli_groups.cli_options.oci import oci_kms, oci_vault, oci_network
 
 
 @click.group()
@@ -11,5 +11,4 @@ def oci(ctx):
 
 oci.add_command(oci_kms.kms)
 oci.add_command(oci_vault.vault)
-oci.add_command(oci_lb.lb)
-oci.add_command(oci_waf.waf)
+oci.add_command(oci_network.network)
