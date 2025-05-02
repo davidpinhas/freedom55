@@ -192,9 +192,11 @@ class Cloudflare:
         """ Update DNS record """
         logging.info(f"Updating DNS record '{dns_zone_name}'")
         try:
-            dns_record_id, dns_record_ip = self.get_dns_record_id(name=dns_zone_name)
+            dns_record_id, dns_record_ip = self.get_dns_record_id(
+                name=dns_zone_name)
             if not dns_record_id:
-                logging.error(f"DNS record ID for '{dns_zone_name}' could not be found.")
+                logging.error(
+                    f"DNS record ID for '{dns_zone_name}' could not be found.")
                 raise ValueError(f"No DNS record found for '{dns_zone_name}'")
             url = f"{self.base_url}/zones/{self.zone_id}/dns_records/{dns_record_id}"
             payload = Cloudflare.set_payload(
@@ -211,11 +213,13 @@ class Cloudflare:
                 data=json.dumps(payload)
             )
             if response.status_code != 200:
-                logging.error(f"Failed to update DNS record '{dns_zone_name}'.")
+                logging.error(
+                    f"Failed to update DNS record '{dns_zone_name}'.")
                 response_data = response.json()
                 errors = response_data.get("errors", [])
                 for error in errors:
-                    logging.error(f"Error {error.get('code')}: {error.get('message')}")
+                    logging.error(
+                        f"Error {error.get('code')}: {error.get('message')}")
                 raise Exception("DNS record update failed due to API errors.")
             records = response.json()
             logging.info(f"New metadata for '{dns_zone_name}' record:")
