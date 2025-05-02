@@ -1,5 +1,6 @@
 import requests
 import json
+import yaml
 import traceback
 import logging
 import CloudFlare
@@ -106,14 +107,23 @@ class Cloudflare:
 
     @retry(exceptions=(Exception,), tries=3,
            delay=1, backoff=2, logger=logging)
-    def list_dns_records(self, id=None):
+    def list_dns_records(self, id=None, output=None):
         """ List DNS records """
-        logging.info(f"Retrieving DNS records for domain '{self.domain_name}'")
+        if output is None:
+            logging.info(f"Retrieving DNS records for domain '{self.domain_name}'")
+
         table = PrettyTable()
         url = f"{self.base_url}/zones/{self.zone_id}/dns_records"
         try:
             response = requests.get(url, headers=self.set_default_headers())
             records = json.loads(response.text)
+            if output == "json":
+                print(json.dumps(records["result"], indent=2))
+                return
+            elif output == "yaml":
+                print(yaml.dump(records["result"], default_flow_style=False))
+                return
+
             for obj in range(len(records["result"])):
                 dns_record = records['result'][obj]
                 if id is not None:
@@ -139,9 +149,9 @@ class Cloudflare:
                 table.add_row(row)
             print(table)
         except Exception as e:
-            logging.error(
-                f"Failed to retrieve DNS records list with error: {e}")
-            logging.error(f"Request failed with error: {records['errors']}")
+            if output is None:
+                logging.error(f"Failed to retrieve DNS records list with error: {e}")
+                logging.error(f"Request failed with error: {records.get('errors')}")
 
     @retry(exceptions=(Exception,), tries=3,
            delay=1, backoff=2, logger=logging)
@@ -250,30 +260,38 @@ class Cloudflare:
 
     @retry(exceptions=(Exception,), tries=3,
            delay=1, backoff=2, logger=logging)
-    def list_waf_rules(self):
+    def list_waf_rules(self, output):
         """ List firewall rules """
-        logging.info(
-            f"Retrieving firewall rules for domain '{self.domain_name}'")
+        if output is None:
+            logging.info(f"Retrieving firewall rules for domain '{self.domain_name}'")
+
         table = PrettyTable()
         url = f"{self.base_url}/zones/{self.zone_id}/firewall/rules"
         try:
             response = requests.get(url, headers=self.set_default_headers())
             firewall_rules = json.loads(response.text)
+
+            if output == "json":
+                print(json.dumps(firewall_rules["result"], indent=2))
+                return
+            elif output == "yaml":
+                print(yaml.dump(firewall_rules["result"], default_flow_style=False))
+                return
+
             for obj in range(len(firewall_rules["result"])):
                 dns_record = firewall_rules['result'][obj]
-                table.field_names = [
-                    'ID', 'Description', 'Expression']
+                table.field_names = ['ID', 'Description', 'Expression']
                 row = [
                     dns_record['id'],
-                    dns_record['description'] if 'description' in dns_record else 'Null',
-                    dns_record['filter']['expression']]
+                    dns_record.get('description', 'Null'),
+                    dns_record['filter']['expression']
+                ]
                 table.add_row(row)
             print(table)
         except Exception as e:
-            logging.error(
-                f"Failed to retrieve firewall rules with error: {e}")
-            logging.error(
-                f"Request failed with error: {firewall_rules['errors']}")
+            if output is None:
+                logging.error(f"Failed to retrieve firewall rules with error: {e}")
+                logging.error(f"Request failed with error: {firewall_rules.get('errors')}")
 
     def list_waf_rule_filters(self):
         """ List firewall rules filters """

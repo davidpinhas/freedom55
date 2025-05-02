@@ -14,13 +14,15 @@ def dns(ctx):
 @click.option('--id',
               help='Get ID with records list',
               is_flag=True)
+@click.option('--output', '-o',
+              help='Set output method')
 @click.pass_context
-def list(ctx, id):
+def list(ctx, id, output):
     """ List DNS records """
     if id:
-        Cloudflare().list_dns_records(id=True)
+        Cloudflare().list_dns_records(id=True, output=output)
     else:
-        Cloudflare().list_dns_records()
+        Cloudflare().list_dns_records(output=output)
 
 
 @dns.command(help_priority=2)

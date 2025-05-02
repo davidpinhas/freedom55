@@ -20,10 +20,12 @@ def waf(ctx):
 
 
 @waf.command(help_priority=1)
+@click.option('--output', '-o',
+              help='Set output method')
 @click.pass_context
-def list(ctx):
+def list(ctx, output):
     """ List firewall rules """
-    Cloudflare().list_waf_rules()
+    Cloudflare().list_waf_rules(output=output)
 
 
 @waf.command(help_priority=2)
