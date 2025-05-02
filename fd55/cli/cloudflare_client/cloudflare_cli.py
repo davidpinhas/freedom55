@@ -110,7 +110,8 @@ class Cloudflare:
     def list_dns_records(self, id=None, output=None):
         """ List DNS records """
         if output is None:
-            logging.info(f"Retrieving DNS records for domain '{self.domain_name}'")
+            logging.info(
+                f"Retrieving DNS records for domain '{self.domain_name}'")
 
         table = PrettyTable()
         url = f"{self.base_url}/zones/{self.zone_id}/dns_records"
@@ -150,8 +151,10 @@ class Cloudflare:
             print(table)
         except Exception as e:
             if output is None:
-                logging.error(f"Failed to retrieve DNS records list with error: {e}")
-                logging.error(f"Request failed with error: {records.get('errors')}")
+                logging.error(
+                    f"Failed to retrieve DNS records list with error: {e}")
+                logging.error(
+                    f"Request failed with error: {records.get('errors')}")
 
     @retry(exceptions=(Exception,), tries=3,
            delay=1, backoff=2, logger=logging)
@@ -263,7 +266,8 @@ class Cloudflare:
     def list_waf_rules(self, output):
         """ List firewall rules """
         if output is None:
-            logging.info(f"Retrieving firewall rules for domain '{self.domain_name}'")
+            logging.info(
+                f"Retrieving firewall rules for domain '{self.domain_name}'")
 
         table = PrettyTable()
         url = f"{self.base_url}/zones/{self.zone_id}/firewall/rules"
@@ -275,7 +279,10 @@ class Cloudflare:
                 print(json.dumps(firewall_rules["result"], indent=2))
                 return
             elif output == "yaml":
-                print(yaml.dump(firewall_rules["result"], default_flow_style=False))
+                print(
+                    yaml.dump(
+                        firewall_rules["result"],
+                        default_flow_style=False))
                 return
 
             for obj in range(len(firewall_rules["result"])):
@@ -290,8 +297,10 @@ class Cloudflare:
             print(table)
         except Exception as e:
             if output is None:
-                logging.error(f"Failed to retrieve firewall rules with error: {e}")
-                logging.error(f"Request failed with error: {firewall_rules.get('errors')}")
+                logging.error(
+                    f"Failed to retrieve firewall rules with error: {e}")
+                logging.error(
+                    f"Request failed with error: {firewall_rules.get('errors')}")
 
     def list_waf_rule_filters(self):
         """ List firewall rules filters """
