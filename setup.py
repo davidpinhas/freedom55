@@ -42,7 +42,7 @@ setup(
         "InquirerPy",
         "prettytable",
         "kubernetes",
-        "CloudFlare",
+        "cloudflare",
         "tabulate",
         "openai",
         "colorlog"],

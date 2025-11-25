@@ -77,7 +77,7 @@ if [[ "${machine}" == "MinGw" ]]; then
   python_bin="python"
   venv="python -m virtualenv freedom55-venv > /dev/null"
   venv_activate="source $PWD/freedom55-venv/Scripts/activate"
-  pip install virtualenv &> /dev/null
+  pip3 install virtualenv &> /dev/null
 else
   python_bin="python3"
   venv="virtualenv --python=python3 freedom55-venv"
@@ -90,7 +90,7 @@ if [ -d "freedom55-venv" ]; then
   echo "INFO: Activating virtualenv"
   eval $venv_activate || { echo "ERROR: Failed to activate virtualenv."; return 0; }
   echo "INFO: Installing requirements"
-  pip install -r requirements.txt &> /dev/null || { echo "ERROR: Failed to install requirements."; return 0; }
+  pip3 install -r requirements.txt &> /dev/null || { echo "ERROR: Failed to install requirements."; return 0; }
   echo "INFO: Developing setup.py"
   $python_bin setup.py develop &> /dev/null || { echo "ERROR: Failed to develop setup.py."; return 0; }
 else
@@ -100,7 +100,7 @@ else
   echo "INFO: Activating virtualenv"
   eval $venv_activate || { echo "ERROR: Failed to activate virtualenv."; return 0; }
   echo "INFO: Installing requirements"
-  pip install -r requirements.txt &> /dev/null || { echo "ERROR: Failed to install requirements."; return 0; }
+  pip3 install -r requirements.txt &> /dev/null || { echo "ERROR: Failed to install requirements."; return 0; }
   echo "INFO: Developing setup.py"
   $python_bin setup.py develop &> /dev/null || { echo "ERROR: Failed to develop setup.py."; return 0; }
   eval $venv_activate

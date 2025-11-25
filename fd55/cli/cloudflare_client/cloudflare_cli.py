@@ -3,7 +3,7 @@ import json
 import yaml
 import traceback
 import logging
-import CloudFlare
+from cloudflare import Cloudflare
 from retry import retry
 from prettytable import PrettyTable
 from fd55.utils.fd55_config import Config
@@ -12,7 +12,7 @@ logger = logging.getLogger()
 config = Config()
 
 
-class Cloudflare:
+class CloudflareClient:
     def __init__(self):
         blocked_domains = ['.cf', '.ga', '.gq', '.ml', '.tk']
         self.api_key = config.get('CLOUDFLARE', 'api_key')
@@ -21,8 +21,7 @@ class Cloudflare:
         self.domain_name = config.get('CLOUDFLARE', 'domain_name')
         self.base_url = "https://api.cloudflare.com/client/v4"
         self.zone_id = self.get_zone_id()
-        self.cf = CloudFlare.CloudFlare(
-            email=self.email, key=self.global_api_key)
+        self.cf = Cloudflare(api_key=self.global_api_key, api_email=self.email)
         if any(self.domain_name.endswith(option)
                for option in blocked_domains):
             logging.error(
@@ -52,6 +51,7 @@ class Cloudflare:
         return headers
 
     def set_payload(
+            self,
             comment=None,
             type=None,
             name=None,
@@ -169,7 +169,7 @@ class Cloudflare:
         """ Create DNS record """
         logging.info(f"Creating DNS record '{dns_zone_name}'")
         url = f"{self.base_url}/zones/{self.zone_id}/dns_records"
-        payload = Cloudflare.set_payload(
+        payload = self.set_payload(
             comment=comment,
             type=type,
             name=dns_zone_name,
@@ -212,7 +212,7 @@ class Cloudflare:
                     f"DNS record ID for '{dns_zone_name}' could not be found.")
                 raise ValueError(f"No DNS record found for '{dns_zone_name}'")
             url = f"{self.base_url}/zones/{self.zone_id}/dns_records/{dns_record_id}"
-            payload = Cloudflare.set_payload(
+            payload = self.set_payload(
                 comment=comment,
                 type=type,
                 name=dns_zone_name,

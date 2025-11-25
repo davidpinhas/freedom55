@@ -1,6 +1,6 @@
 import click
 from fd55.utils.cli_help_order import CliHelpOrder
-from fd55.cli.cloudflare_client.cloudflare_cli import Cloudflare
+from fd55.cli.cloudflare_client.cloudflare_cli import CloudflareClient
 
 
 @click.group(cls=CliHelpOrder)
@@ -20,9 +20,9 @@ def dns(ctx):
 def list(ctx, id, output):
     """ List DNS records """
     if id:
-        Cloudflare().list_dns_records(id=True, output=output)
+        CloudflareClient().list_dns_records(id=True, output=output)
     else:
-        Cloudflare().list_dns_records(output=output)
+        CloudflareClient().list_dns_records(output=output)
 
 
 @dns.command(help_priority=2)
@@ -53,7 +53,7 @@ def list(ctx, id, output):
 @click.pass_context
 def create(ctx, name, content, type, ttl, comment, proxied):
     """ Create DNS record """
-    Cloudflare().create_dns_record(
+    CloudflareClient().create_dns_record(
         dns_zone_name=name,
         content=content,
         type=type,
@@ -90,7 +90,7 @@ def create(ctx, name, content, type, ttl, comment, proxied):
 @click.pass_context
 def update(ctx, name, content, type, ttl, comment, proxied):
     """ Update DNS record """
-    Cloudflare().update_dns_record(
+    CloudflareClient().update_dns_record(
         dns_zone_name=name,
         content=content,
         type=type,
@@ -107,4 +107,4 @@ def update(ctx, name, content, type, ttl, comment, proxied):
 @click.pass_context
 def delete(ctx, name):
     """ Update DNS record """
-    Cloudflare().delete_dns_record(dns_zone_name=name)
+    CloudflareClient().delete_dns_record(dns_zone_name=name)

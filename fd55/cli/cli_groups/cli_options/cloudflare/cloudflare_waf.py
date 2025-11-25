@@ -1,6 +1,6 @@
 import click
 from fd55.utils.cli_help_order import CliHelpOrder
-from fd55.cli.cloudflare_client.cloudflare_cli import Cloudflare
+from fd55.cli.cloudflare_client.cloudflare_cli import CloudflareClient
 from fd55.utils.fd55_config import Config
 from fd55.utils.functions import Functions as fn
 import logging
@@ -25,7 +25,7 @@ def waf(ctx):
 @click.pass_context
 def list(ctx, output):
     """ List firewall rules """
-    Cloudflare().list_waf_rules(output=output)
+    CloudflareClient().list_waf_rules(output=output)
 
 
 @waf.command(help_priority=2)
@@ -58,7 +58,7 @@ def create(
         name=None,
         description=None):
     """ Create firewall rule """
-    Cloudflare().create_waf_rule(
+    CloudflareClient().create_waf_rule(
         name=name,
         action=action,
         expression=expression,
@@ -97,7 +97,7 @@ def update(ctx,
            name=None,
            description=None):
     """ Update firewall rule """
-    Cloudflare().update_waf_rule(
+    CloudflareClient().update_waf_rule(
         id=id,
         name=name,
         action=action,
@@ -113,7 +113,7 @@ def update(ctx,
 def delete(ctx, name=None, id=None):
     """ Delete firewall rule """
     if name or id:
-        Cloudflare().delete_waf_rule(name=name, id=id)
+        CloudflareClient().delete_waf_rule(name=name, id=id)
     else:
         logging.error("Requires name or id flag")
 
@@ -122,7 +122,7 @@ def delete(ctx, name=None, id=None):
 @click.pass_context
 def list_filters(ctx):
     """ List firewall rules filters """
-    Cloudflare().list_waf_rule_filters()
+    CloudflareClient().list_waf_rule_filters()
 
 
 @waf.command(help_priority=6)
@@ -130,4 +130,4 @@ def list_filters(ctx):
 @click.option('--id', help='rule id', required=True)
 def delete_filter(ctx, id=None):
     """ Delete firewall rule filter """
-    Cloudflare().delete_waf_rule_filter(id=id)
+    CloudflareClient().delete_waf_rule_filter(id=id)
