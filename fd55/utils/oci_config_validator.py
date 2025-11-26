@@ -19,7 +19,7 @@ class OciValidator:
         except BaseException:
             logging.error(
                 "An error occurred while attempting to read the OCI configuration file")
-            logging.warn(
+            logging.warning(
                 "Verify that the file exists and contains the correct keys")
             exit()
         return config
@@ -127,7 +127,7 @@ class OciValidator:
     def set_schedule_vault_deletion(days=None):
         """ Set deletion details for vault deletion """
         if not days:
-            logging.warn(f"No argument was provided for days")
+            logging.warning(f"No argument was provided for days")
             logging.info(
                 f"Scheduling deletion to the default setting of 30 days from today")
             schedule_vault_deletion = oci.key_management.models.ScheduleVaultDeletionDetails()
@@ -278,7 +278,7 @@ class OciValidator:
         OciValidator.retrieve_oci_service_accounts()
         missing_keys_list = OciValidator.oci_find_missing_keys()
         if missing_keys_list:
-            logging.warn(
+            logging.warning(
                 f"The OCI configuration is missing the following keys: \n{missing_keys_list}")
             fn.modify_config_approval(
                 "Would you like to generate the missing keys? Y/n: ")

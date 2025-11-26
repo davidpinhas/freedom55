@@ -65,7 +65,7 @@ class Oci:
         elif OciValidator.init_oci():
             config = OciValidator.validate_config_exist()
         else:
-            logging.warn(
+            logging.warning(
                 f"Something went wrong! Check the config file is valid {config}")
             logging.error(f"Failed to load config, exiting...")
             exit()

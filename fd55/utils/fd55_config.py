@@ -97,7 +97,7 @@ class Config:
         file_dir = Config().config_path.strip('config.ini')
         backup_dir = f"{file_dir}config_backup"
         if not os.path.exists(backup_dir):
-            logging.warn(
+            logging.warning(
                 f"'conf_backup' directory doesn't exist, created the dir under {backup_dir}")
             os.makedirs(backup_dir)
         if os.path.exists(Config().config_path):
