@@ -105,7 +105,8 @@ class CloudflareClient:
             logging.error(f"Failed to get DNS record ID with error: {e}")
             logging.error(f"Request failed with error: {records['errors']}")
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def list_dns_records(self, id=None):
         """ List DNS records """
         url = f"{self.base_url}/zones/{self.zone_id}/dns_records"
@@ -113,11 +114,13 @@ class CloudflareClient:
             response = requests.get(url, headers=self.set_default_headers())
             records = json.loads(response.text)
             if records.get('errors'):
-                logging.error(f"Request failed with error: {records.get('errors')}")
+                logging.error(
+                    f"Request failed with error: {records.get('errors')}")
                 return
             print(json.dumps(records["result"], indent=2))
         except Exception as e:
-            logging.error(f"Failed to retrieve DNS records list with error: {e}")
+            logging.error(
+                f"Failed to retrieve DNS records list with error: {e}")
             raise e
 
     @retry(exceptions=(Exception,), tries=3,
@@ -225,7 +228,8 @@ class CloudflareClient:
             logging.error(f"Request failed with error: {records['errors']}")
             raise e
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
     def list_waf_rules(self):
         """ List firewall rules """
         url = f"{self.base_url}/zones/{self.zone_id}/firewall/rules"
@@ -233,7 +237,8 @@ class CloudflareClient:
             response = requests.get(url, headers=self.set_default_headers())
             firewall_rules = json.loads(response.text)
             if firewall_rules.get('errors'):
-                logging.error(f"Request failed with error: {firewall_rules.get('errors')}")
+                logging.error(
+                    f"Request failed with error: {firewall_rules.get('errors')}")
                 return
             print(json.dumps(firewall_rules["result"], indent=2))
         except Exception as e:
@@ -247,12 +252,15 @@ class CloudflareClient:
             response = requests.get(url, headers=self.set_default_headers())
             filters_data = json.loads(response.text)
             if filters_data.get('errors'):
-                logging.error(f"Request failed with error: {filters_data.get('errors')}")
+                logging.error(
+                    f"Request failed with error: {filters_data.get('errors')}")
                 return
-            filters_list = [{'id': f.get('id'), 'expression': f.get('expression')} for f in filters_data.get('result', [])]
+            filters_list = [{'id': f.get('id'), 'expression': f.get(
+                'expression')} for f in filters_data.get('result', [])]
             print(json.dumps(filters_list, indent=2))
         except Exception as e:
-            logging.error(f"Failed to retrieve firewall rule filters with error: {e}")
+            logging.error(
+                f"Failed to retrieve firewall rule filters with error: {e}")
             raise e
 
     def _model_to_dict(self, obj):
@@ -263,19 +271,32 @@ class CloudflareClient:
             return obj.dict()
         return obj
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
-    def create_waf_rule(self, name=None, action=None, expression=None, paused=False, description=None):
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
+    def create_waf_rule(
+            self,
+            name=None,
+            action=None,
+            expression=None,
+            paused=False,
+            description=None):
         """ Create firewall rules """
         logging.info(f"Creating firewall rule for domain '{self.domain_name}'")
         try:
-            filter_payload = {'expression': f"({expression})", 'paused': paused}
+            filter_payload = {
+                'expression': f"({expression})",
+                'paused': paused}
             if description:
                 filter_payload['description'] = description or "No description provided"
             filter_url = f"{self.base_url}/zones/{self.zone_id}/filters"
-            filter_response = requests.post(filter_url, headers=self.set_default_headers(), data=json.dumps(filter_payload))
+            filter_response = requests.post(
+                filter_url,
+                headers=self.set_default_headers(),
+                data=json.dumps(filter_payload))
             filter_data = json.loads(filter_response.text)
             if filter_response.status_code != 200:
-                raise Exception(f"Failed to create filter: {filter_data.get('errors', [])}")
+                raise Exception(
+                    f"Failed to create filter: {filter_data.get('errors', [])}")
             filter_id = filter_data['result'][0]['id']
             rule_payload = {
                 'action': action or "block",
@@ -284,18 +305,32 @@ class CloudflareClient:
             if name:
                 rule_payload['description'] = name
             rule_url = f"{self.base_url}/zones/{self.zone_id}/firewall/rules"
-            rule_response = requests.post(rule_url, headers=self.set_default_headers(), data=json.dumps([rule_payload]))
+            rule_response = requests.post(
+                rule_url,
+                headers=self.set_default_headers(),
+                data=json.dumps(
+                    [rule_payload]))
             rule_data = json.loads(rule_response.text)
             if rule_response.status_code != 200:
-                raise Exception(f"Failed to create firewall rule: {rule_data.get('errors', [])}")
-            logging.info(f'Firewall rule created:\n{json.dumps(rule_data["result"][0], indent=4, sort_keys=False, default=str)}\n')
+                raise Exception(
+                    f"Failed to create firewall rule: {rule_data.get('errors', [])}")
+            logging.info(
+                f'Firewall rule created:\n{json.dumps(rule_data["result"][0], indent=4, sort_keys=False, default=str)}\n')
         except Exception as e:
             logging.error(f"Failed with error: '{e}'")
             logging.error(traceback.format_exc())
             raise e
 
-    @retry(exceptions=(Exception,), tries=3, delay=1, backoff=2, logger=logging)
-    def update_waf_rule(self, id=None, name=None, action=None, expression=None, paused=False, description=None):
+    @retry(exceptions=(Exception,), tries=3,
+           delay=1, backoff=2, logger=logging)
+    def update_waf_rule(
+            self,
+            id=None,
+            name=None,
+            action=None,
+            expression=None,
+            paused=False,
+            description=None):
         """ Update firewall rule """
         logging.info(f"Updating firewall rule for domain '{self.domain_name}'")
         try:
@@ -309,7 +344,10 @@ class CloudflareClient:
             if description:
                 filter_update_body['description'] = description
             if filter_update_body:
-                self.cf.filters.update(filter_id=filter_id, zone_id=self.zone_id, body=filter_update_body)
+                self.cf.filters.update(
+                    filter_id=filter_id,
+                    zone_id=self.zone_id,
+                    body=filter_update_body)
             rule_params = {
                 'rule_id': id,
                 'zone_id': self.zone_id,
@@ -319,7 +357,8 @@ class CloudflareClient:
             if name:
                 rule_params['description'] = name
             updated_rule = self.cf.firewall.rules.update(**rule_params)
-            logging.info(f'Firewall rule updated:\n{json.dumps(self._model_to_dict(updated_rule), indent=4, sort_keys=False, default=str)}\n')
+            logging.info(
+                f'Firewall rule updated:\n{json.dumps(self._model_to_dict(updated_rule), indent=4, sort_keys=False, default=str)}\n')
         except Exception as e:
             logging.error(f"Failed with error: '{e}'")
             logging.error(traceback.format_exc())
@@ -337,11 +376,14 @@ class CloudflareClient:
                 if name == rule.get('description') or id == rule.get('id'):
                     rule_id = rule.get('id')
                     delete_url = f"{self.base_url}/zones/{self.zone_id}/firewall/rules/{rule_id}"
-                    delete_response = requests.delete(delete_url, headers=self.set_default_headers())
+                    delete_response = requests.delete(
+                        delete_url, headers=self.set_default_headers())
                     if delete_response.status_code == 200:
-                        logging.info(f'Deleted firewall rule with ID {rule_id}')
+                        logging.info(
+                            f'Deleted firewall rule with ID {rule_id}')
                     else:
-                        logging.error(f'Failed to delete firewall rule: {delete_response.text}')
+                        logging.error(
+                            f'Failed to delete firewall rule: {delete_response.text}')
                     return
         except Exception as e:
             logging.error(f"Failed with error: '{e}'")
@@ -350,8 +392,10 @@ class CloudflareClient:
 
     def delete_waf_rule_filter(self, id=None):
         """ Delete firewall rule filter (deprecated - Filters API is deprecated) """
-        logging.error("Filters API is deprecated. To delete a filter, delete the associated firewall rule instead.")
-        logging.info("Listing firewall rules to find the rule associated with this filter...")
+        logging.error(
+            "Filters API is deprecated. To delete a filter, delete the associated firewall rule instead.")
+        logging.info(
+            "Listing firewall rules to find the rule associated with this filter...")
         try:
             url = f"{self.base_url}/zones/{self.zone_id}/firewall/rules"
             response = requests.get(url, headers=self.set_default_headers())
@@ -360,7 +404,8 @@ class CloudflareClient:
                 filter_id = rule.get('filter', {}).get('id')
                 if filter_id == id:
                     rule_id = rule.get('id')
-                    logging.info(f"Found firewall rule '{rule_id}' using filter '{id}'. Delete the rule to remove the filter.")
+                    logging.info(
+                        f"Found firewall rule '{rule_id}' using filter '{id}'. Delete the rule to remove the filter.")
                     logging.info(f"Use: fd55 cf waf delete --id {rule_id}")
                     return
             logging.warning(f"No firewall rule found using filter ID '{id}'")
