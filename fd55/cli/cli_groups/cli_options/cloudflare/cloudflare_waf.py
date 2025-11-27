@@ -20,6 +20,7 @@ def waf(ctx):
         if user_input:
             input("Enter the value for global_api_key: ")
 
+
 @waf.command(name="ruleset-list", help_priority=1)
 @click.pass_context
 def ruleset_list(ctx):
@@ -37,7 +38,8 @@ def ruleset_get(ctx, id):
 
 @waf.command(name="ruleset-update", help_priority=3)
 @click.option('--id', required=True, help="Ruleset ID")
-@click.option('--phase', required=False, help="Ruleset phase (e.g. http_request_firewall_custom)")
+@click.option('--phase', required=False,
+              help="Ruleset phase (e.g. http_request_firewall_custom)")
 @click.pass_context
 def ruleset_update(ctx, id, phase):
     """Update ruleset metadata"""
@@ -47,7 +49,8 @@ def ruleset_update(ctx, id, phase):
 @waf.command(name="ruleset-rule-add", help_priority=4)
 @click.option('--ruleset-id', required=True, help="Ruleset ID")
 @click.option('-n', '--name', required=True, help="Rule name")
-@click.option('-a', '--action', default='block', help="Rule action (e.g. block, skip)")
+@click.option('-a', '--action', default='block',
+              help="Rule action (e.g. block, skip)")
 @click.option('-e', '--expression', required=True, help="Rule expression")
 @click.pass_context
 def ruleset_rule_add(ctx, ruleset_id, name, action, expression):
@@ -92,6 +95,7 @@ def ruleset_rule_delete(ctx, ruleset_id, rule_id):
 # ============================================================
 #  LEGACY FIREWALL RULES (DEPRECATED)
 # ============================================================
+
 
 @waf.command(name="old-list", help_priority=7)
 @click.pass_context

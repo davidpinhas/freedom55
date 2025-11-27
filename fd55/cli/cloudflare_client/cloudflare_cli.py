@@ -23,10 +23,14 @@ class CloudflareClient:
         self.base_url = "https://api.cloudflare.com/client/v4"
         self.zone_id = self.get_zone_id()
         self.cf = Cloudflare(api_key=self.global_api_key, api_email=self.email)
-        if any(self.domain_name.endswith(option) for option in blocked_domains):
-            logging.error("Cloudflare not supporting domains ending with '.cf, .ga, .gq, .ml, or .tk'")
-            logging.warning("This was a design desicion by Cloudflare to block free domains")
-            logging.warning("Read more here - https://community.cloudflare.com/t/unable-to-update-ddns-using-api-for-some-tlds/167228/11")
+        if any(self.domain_name.endswith(option)
+               for option in blocked_domains):
+            logging.error(
+                "Cloudflare not supporting domains ending with '.cf, .ga, .gq, .ml, or .tk'")
+            logging.warning(
+                "This was a design desicion by Cloudflare to block free domains")
+            logging.warning(
+                "Read more here - https://community.cloudflare.com/t/unable-to-update-ddns-using-api-for-some-tlds/167228/11")
             exit()
 
     def _sanitize(self, obj):
@@ -333,7 +337,8 @@ class CloudflareClient:
             if not id:
                 raise ValueError("Rule id is required")
             rule_url = f"{self.base_url}/zones/{self.zone_id}/firewall/rules/{id}"
-            rule_resp = requests.get(rule_url, headers=self.set_default_headers())
+            rule_resp = requests.get(
+                rule_url, headers=self.set_default_headers())
             rule_data = rule_resp.json()
             if rule_resp.status_code != 200:
                 raise Exception(rule_data.get('errors', []))
@@ -410,7 +415,8 @@ class CloudflareClient:
                         if f_resp.status_code == 200:
                             logging.info(f"Deleted filter with ID {filter_id}")
                         else:
-                            logging.error(f"Failed to delete filter: {f_resp.text}")
+                            logging.error(
+                                f"Failed to delete filter: {f_resp.text}")
                     return
         except Exception as e:
             logging.error(f"Failed with error: '{e}'")
@@ -443,14 +449,16 @@ class CloudflareClient:
     def ruleset_list(self):
         try:
             rulesets = self.cf.rulesets.list(zone_id=self.zone_id)
-            print(json.dumps([rs.model_dump() for rs in rulesets], indent=2, default=str))
+            print(json.dumps([rs.model_dump()
+                              for rs in rulesets], indent=2, default=str))
         except Exception as e:
             logging.error(f"Failed to list rulesets: {e}")
             raise
 
     def ruleset_get(self, ruleset_id):
         try:
-            rs = self.cf.rulesets.get(zone_id=self.zone_id, ruleset_id=ruleset_id)
+            rs = self.cf.rulesets.get(
+                zone_id=self.zone_id, ruleset_id=ruleset_id)
             print(json.dumps(rs.model_dump(), indent=2, default=str))
         except Exception as e:
             logging.error(f"Failed to fetch ruleset '{ruleset_id}': {e}")
@@ -458,7 +466,8 @@ class CloudflareClient:
 
     def ruleset_rule_add(self, ruleset_id, name, action, expression):
         try:
-            rs = self.cf.rulesets.get(zone_id=self.zone_id, ruleset_id=ruleset_id)
+            rs = self.cf.rulesets.get(
+                zone_id=self.zone_id, ruleset_id=ruleset_id)
             updated = rs.model_dump()
 
             new_rule = {
@@ -482,10 +491,17 @@ class CloudflareClient:
             logging.error(f"Failed to add rule to ruleset '{ruleset_id}': {e}")
             raise
 
-    def ruleset_rule_update(self, ruleset_id, rule_id, name=None, action=None, expression=None):
+    def ruleset_rule_update(
+            self,
+            ruleset_id,
+            rule_id,
+            name=None,
+            action=None,
+            expression=None):
         try:
             # 1. Fetch the ruleset
-            rs = self.cf.rulesets.get(zone_id=self.zone_id, ruleset_id=ruleset_id)
+            rs = self.cf.rulesets.get(
+                zone_id=self.zone_id, ruleset_id=ruleset_id)
             updated = rs.model_dump()
 
             # 2. Modify the desired rule
@@ -509,7 +525,8 @@ class CloudflareClient:
             # 4. Perform RAW PATCH request
             url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{ruleset_id}"
             headers = self.set_global_headers()
-            response = requests.patch(url, headers=headers, data=json.dumps(sanitized))
+            response = requests.patch(
+                url, headers=headers, data=json.dumps(sanitized))
             result = response.json()
 
             if response.status_code not in (200, 201):
@@ -518,16 +535,19 @@ class CloudflareClient:
             print(json.dumps(result, indent=2))
 
         except Exception as e:
-            logging.error(f"Failed to update rule '{rule_id}' in ruleset '{ruleset_id}': {e}")
+            logging.error(
+                f"Failed to update rule '{rule_id}' in ruleset '{ruleset_id}': {e}")
             raise
 
     def ruleset_rule_delete(self, ruleset_id, rule_id):
         try:
-            rs = self.cf.rulesets.get(zone_id=self.zone_id, ruleset_id=ruleset_id)
+            rs = self.cf.rulesets.get(
+                zone_id=self.zone_id, ruleset_id=ruleset_id)
             updated = rs.model_dump()
 
             before = len(updated["rules"])
-            updated["rules"] = [r for r in updated["rules"] if r["id"] != rule_id]
+            updated["rules"] = [
+                r for r in updated["rules"] if r["id"] != rule_id]
 
             if len(updated["rules"]) == before:
                 raise ValueError(f"Rule '{rule_id}' not found")
@@ -541,5 +561,6 @@ class CloudflareClient:
             print(json.dumps(result.model_dump(), indent=2, default=str))
 
         except Exception as e:
-            logging.error(f"Failed to delete rule '{rule_id}' from ruleset '{ruleset_id}': {e}")
+            logging.error(
+                f"Failed to delete rule '{rule_id}' from ruleset '{ruleset_id}': {e}")
             raise
