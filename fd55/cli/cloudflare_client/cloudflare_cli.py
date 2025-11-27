@@ -500,7 +500,8 @@ class CloudflareClient:
 
             url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{id}"
             headers = self.set_global_headers()
-            response = requests.put(url, headers=headers, data=json.dumps(clean))
+            response = requests.put(
+                url, headers=headers, data=json.dumps(clean))
             result = response.json()
 
             if response.status_code not in (200, 201):
@@ -533,7 +534,8 @@ class CloudflareClient:
             url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{ruleset_id}"
             headers = self.set_global_headers()
 
-            response = requests.put(url, headers=headers, data=json.dumps(clean))
+            response = requests.put(
+                url, headers=headers, data=json.dumps(clean))
             result = response.json()
 
             if response.status_code not in (200, 201):
@@ -553,7 +555,8 @@ class CloudflareClient:
             action=None,
             expression=None):
         try:
-            rs = self.cf.rulesets.get(zone_id=self.zone_id, ruleset_id=ruleset_id)
+            rs = self.cf.rulesets.get(
+                zone_id=self.zone_id, ruleset_id=ruleset_id)
             updated = rs.model_dump()
             found = False
             for r in updated["rules"]:
@@ -573,7 +576,8 @@ class CloudflareClient:
 
             url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{ruleset_id}"
             headers = self.set_global_headers()
-            response = requests.put(url, headers=headers, data=json.dumps(clean))
+            response = requests.put(
+                url, headers=headers, data=json.dumps(clean))
             result = response.json()
 
             if response.status_code not in (200, 201):
@@ -605,7 +609,8 @@ class CloudflareClient:
             url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{ruleset_id}"
             headers = self.set_global_headers()
 
-            response = requests.put(url, headers=headers, data=json.dumps(clean))
+            response = requests.put(
+                url, headers=headers, data=json.dumps(clean))
             result = response.json()
 
             if response.status_code not in (200, 201):

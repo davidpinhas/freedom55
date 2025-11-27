@@ -12,7 +12,7 @@ from fd55.cli.cli_groups.integration_ai import ai
 @click.option('-v', '--verbosity', default='info',
               help='Logging level (info, warn, error, debug)',
               required=False)
-@click.version_option(version='3.9.5')
+@click.version_option(version='3.9.6')
 @click.pass_context
 def main(ctx, verbosity):
     """Freedom 55 CLI.
