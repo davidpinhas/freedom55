@@ -43,6 +43,28 @@ class CloudflareClient:
             return obj.isoformat()
         return obj
 
+    def _strip_readonly_fields(self, obj):
+        """Remove Cloudflare read-only fields from ruleset payload."""
+        readonly = {
+            "last_updated",
+            "version",
+            "kind",
+            "ref",
+            "phase",
+            "created_on",
+            "modified_on"
+        }
+
+        if isinstance(obj, dict):
+            return {
+                k: self._strip_readonly_fields(v)
+                for k, v in obj.items()
+                if k not in readonly
+            }
+        if isinstance(obj, list):
+            return [self._strip_readonly_fields(i) for i in obj]
+        return obj
+
     def set_default_headers(self):
         headers = {
             "X-Auth-Email": self.email,
@@ -54,7 +76,7 @@ class CloudflareClient:
     def set_global_headers(self):
         headers = {
             "X-Auth-Email": self.email,
-            "Authorization": f"Bearer {self.global_api_key}",
+            "X-Auth-Key": self.global_api_key,
             "Content-Type": "application/json"
         }
         return headers
@@ -464,6 +486,32 @@ class CloudflareClient:
             logging.error(f"Failed to fetch ruleset '{ruleset_id}': {e}")
             raise
 
+    def ruleset_update(self, id, phase=None, description=None):
+        try:
+            rs = self.cf.rulesets.get(zone_id=self.zone_id, ruleset_id=id)
+            updated = rs.model_dump()
+            if description:
+                updated["description"] = description
+            if phase:
+                updated["phase"] = phase
+
+            clean = self._strip_readonly_fields(updated)
+            clean = self._sanitize(clean)
+
+            url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{id}"
+            headers = self.set_global_headers()
+            response = requests.put(url, headers=headers, data=json.dumps(clean))
+            result = response.json()
+
+            if response.status_code not in (200, 201):
+                raise Exception(result)
+
+            print(json.dumps(result, indent=2))
+
+        except Exception as e:
+            logging.error(f"Failed to update ruleset '{id}': {e}")
+            raise
+
     def ruleset_rule_add(self, ruleset_id, name, action, expression):
         try:
             rs = self.cf.rulesets.get(
@@ -479,13 +527,19 @@ class CloudflareClient:
 
             updated["rules"].append(new_rule)
 
-            result = self.cf.rulesets.update(
-                zone_id=self.zone_id,
-                ruleset_id=ruleset_id,
-                body=updated
-            )
+            clean = self._strip_readonly_fields(updated)
+            clean = self._sanitize(clean)
 
-            print(json.dumps(result.model_dump(), indent=2, default=str))
+            url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{ruleset_id}"
+            headers = self.set_global_headers()
+
+            response = requests.put(url, headers=headers, data=json.dumps(clean))
+            result = response.json()
+
+            if response.status_code not in (200, 201):
+                raise Exception(result)
+
+            print(json.dumps(result, indent=2))
 
         except Exception as e:
             logging.error(f"Failed to add rule to ruleset '{ruleset_id}': {e}")
@@ -499,12 +553,8 @@ class CloudflareClient:
             action=None,
             expression=None):
         try:
-            # 1. Fetch the ruleset
-            rs = self.cf.rulesets.get(
-                zone_id=self.zone_id, ruleset_id=ruleset_id)
+            rs = self.cf.rulesets.get(zone_id=self.zone_id, ruleset_id=ruleset_id)
             updated = rs.model_dump()
-
-            # 2. Modify the desired rule
             found = False
             for r in updated["rules"]:
                 if r["id"] == rule_id:
@@ -518,15 +568,12 @@ class CloudflareClient:
 
             if not found:
                 raise ValueError(f"Rule '{rule_id}' not found")
+            clean = self._strip_readonly_fields(updated)
+            clean = self._sanitize(clean)
 
-            # 3. Sanitize (remove datetimes)
-            sanitized = self._sanitize(updated)
-
-            # 4. Perform RAW PATCH request
             url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{ruleset_id}"
             headers = self.set_global_headers()
-            response = requests.patch(
-                url, headers=headers, data=json.dumps(sanitized))
+            response = requests.put(url, headers=headers, data=json.dumps(clean))
             result = response.json()
 
             if response.status_code not in (200, 201):
@@ -552,13 +599,19 @@ class CloudflareClient:
             if len(updated["rules"]) == before:
                 raise ValueError(f"Rule '{rule_id}' not found")
 
-            result = self.cf.rulesets.update(
-                zone_id=self.zone_id,
-                ruleset_id=ruleset_id,
-                body=updated
-            )
+            clean = self._strip_readonly_fields(updated)
+            clean = self._sanitize(clean)
 
-            print(json.dumps(result.model_dump(), indent=2, default=str))
+            url = f"{self.base_url}/zones/{self.zone_id}/rulesets/{ruleset_id}"
+            headers = self.set_global_headers()
+
+            response = requests.put(url, headers=headers, data=json.dumps(clean))
+            result = response.json()
+
+            if response.status_code not in (200, 201):
+                raise Exception(result)
+
+            print(json.dumps(result, indent=2))
 
         except Exception as e:
             logging.error(

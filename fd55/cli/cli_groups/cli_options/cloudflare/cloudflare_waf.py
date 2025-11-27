@@ -38,12 +38,12 @@ def ruleset_get(ctx, id):
 
 @waf.command(name="ruleset-update", help_priority=3)
 @click.option('--id', required=True, help="Ruleset ID")
-@click.option('--phase', required=False,
-              help="Ruleset phase (e.g. http_request_firewall_custom)")
+@click.option('--phase', required=False, help="Ruleset phase (e.g. http_request_firewall_custom)")
+@click.option('--description', required=False, help="Ruleset description")
 @click.pass_context
-def ruleset_update(ctx, id, phase):
+def ruleset_update(ctx, id, phase, description):
     """Update ruleset metadata"""
-    CloudflareClient().ruleset_update(id=id, phase=phase)
+    CloudflareClient().ruleset_update(id=id, phase=phase, description=description)
 
 
 @waf.command(name="ruleset-rule-add", help_priority=4)
